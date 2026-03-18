@@ -1,0 +1,19 @@
+{
+  "name": "Вместе",
+  "short_name": "Вместе",
+  "description": "Общайся. Играй. Будь с людьми.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d0d18",
+  "theme_color": "#a855f7",
+  "orientation": "portrait",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
