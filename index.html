@@ -324,6 +324,32 @@ button,input,textarea{font-family:inherit;}
 .pba-btn{background:var(--gr);border:none;color:#fff;padding:.45rem .9rem;border-radius:9px;font-size:.76rem;font-weight:700;cursor:pointer;}
 .pba-cl{background:transparent;border:none;color:var(--t3);font-size:1rem;cursor:pointer;padding:.2rem;}
 
+/* CLICKER RACE */
+.clk-track{width:100%;max-width:340px;background:var(--bg4);border:2px solid var(--brd2);border-radius:12px;height:36px;position:relative;overflow:hidden;margin:.4rem 0;}
+.clk-car{position:absolute;top:50%;transform:translateY(-50%);font-size:1.6rem;line-height:1;transition:left .15s linear;}
+.clk-timer{font-size:2.5rem;font-weight:900;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.clk-btn{width:100%;max-width:300px;height:80px;background:var(--gr);border:none;color:#fff;font-size:1.5rem;font-weight:900;border-radius:20px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;active:opacity:.8;}
+.clk-btn:active{opacity:.8;transform:scale(.97);}
+.clk-cnt{font-size:2rem;font-weight:900;}
+/* BATTLESHIP */
+.sea-phase{font-size:.82rem;color:var(--t3);margin:.25rem 0 .6rem;}
+.sea-boards{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;}
+.sea-board-wrap{text-align:center;}
+.sea-board-lbl{font-size:.7rem;color:var(--t3);margin-bottom:.25rem;font-weight:600;}
+.sea-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;}
+.sea-cell{width:28px;height:28px;background:var(--bg4);border:1px solid var(--brd2);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:background .1s;}
+.sea-cell.ship{background:var(--brd2);}
+.sea-cell.sel{background:var(--pu)40;border-color:var(--pu);}
+.sea-cell.hit{background:var(--rd)40;border-color:var(--rd);}
+.sea-cell.miss{background:var(--bl)20;border-color:var(--bl)40;}
+.sea-cell.sunk{background:var(--rd)70;border-color:var(--rd);}
+.sea-cell.fog{cursor:pointer;}
+.sea-cell:disabled{cursor:default;}
+.sea-ships-left{display:flex;gap:.35rem;flex-wrap:wrap;justify-content:center;margin:.5rem 0;font-size:.75rem;}
+.sea-ship-chip{background:var(--bg4);border:1px solid var(--brd2);border-radius:8px;padding:.2rem .5rem;cursor:pointer;}
+.sea-ship-chip.done{opacity:.3;cursor:default;}
+.sea-ship-chip.active{border-color:var(--pu);background:var(--pu)20;color:var(--pu);}
+.sea-turn-timer{font-size:1.6rem;font-weight:900;color:var(--rd);min-width:2.5rem;}
 /* CREATE GROUP */
 #create-group-ov{z-index:200;}.cg-body{flex:1;overflow-y:auto;padding:1rem;}
 .cg-label{font-size:.75rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin:.75rem 0 .4rem;}
@@ -497,6 +523,8 @@ button,input,textarea{font-family:inherit;}
         <div class="gc" onclick="startGame('quiz')"><div class="gc-ic">🧠</div><div class="gc-n">Викторина</div><div class="gc-d">10 вопросов</div></div>
         <div class="gc" onclick="startGame('memory')"><div class="gc-ic">🃏</div><div class="gc-n">Мемори</div><div class="gc-d">Найди пары</div></div>
         <div class="gc" onclick="startGame('rps')"><div class="gc-ic">✊</div><div class="gc-n">КНБ</div><div class="gc-d">Камень-ножницы</div></div>
+        <div class="gc" onclick="startGame('clicker')"><div class="gc-ic">🏎️</div><div class="gc-n">Гоночный кликер</div><div class="gc-d">Жми быстрее!</div></div>
+        <div class="gc" onclick="startGame('sea')"><div class="gc-ic">🚢</div><div class="gc-n">Морской бой</div><div class="gc-d">Классика</div></div>
       </div>
     </div>
   </div>
@@ -1654,7 +1682,7 @@ window.saveBio = async () => {
 // GAMES — MULTIPLAYER (Firebase)
 // ══════════════════════════════
 let rTimer;
-const GNAME={ttt:'Крестики-нолики',reaction:'Реакция',word:'Угадай слово',quiz:'Викторина',memory:'Мемори',rps:'КНБ'};
+const GNAME={ttt:'Крестики-нолики',reaction:'Реакция',word:'Угадай слово',quiz:'Викторина',memory:'Мемори',rps:'КНБ',clicker:'Гоночный кликер',sea:'Морской бой'};
 
 let currentGame = null;
 let gameUnsub = null;
@@ -1748,6 +1776,14 @@ function buildInitState(type, lobbyData) {
   if (type === 'quiz') { const questions = [...QD].sort(()=>Math.random()-.5).slice(0,10); return { ...base, questions, hostAnswers: [], guestAnswers: [], hostScore: 0, guestScore: 0 }; }
   if (type === 'word') { const p = WORDS[~~(Math.random()*WORDS.length)]; return { ...base, word: p.w, hint: p.h, guessed: [], wrong: 0, status: 'playing' }; }
   if (type === 'memory') { const p = [...MEMJ,...MEMJ].sort(()=>Math.random()-.5); return { ...base, cards: p, flipped: [], matched: [], hostMoves: 0, guestMoves: 0, turn: 'host', lockFlip: false }; }
+  if (type === 'clicker') return { ...base, phase: 'countdown', countdown: 3, hostClicks: 0, guestClicks: 0, startAt: null };
+  if (type === 'sea') {
+    return { ...base, phase: 'place',
+      hostBoard: Array(100).fill(0), guestBoard: Array(100).fill(0),
+      hostReady: false, guestReady: false,
+      hostShots: [], guestShots: [],
+      turn: 'host', turnStartAt: null, winner: null };
+  }
   return base;
 }
 
@@ -1758,6 +1794,8 @@ function renderGameState(state, type, role, lobbyId) {
   else if (type === 'quiz') renderQuiz(state, role, lobbyId);
   else if (type === 'word') renderWord(state, role, lobbyId);
   else if (type === 'memory') renderMemory(state, role, lobbyId);
+  else if (type === 'clicker') renderClicker(state, role, lobbyId);
+  else if (type === 'sea') renderSea(state, role, lobbyId);
 }
 
 window.leaveGame = async () => {
@@ -1839,6 +1877,437 @@ window.wordGuess=async l=>{if(!currentGame)return;const gameRef=doc(db,'games',c
 const MEMJ=['🚀','🦁','🌈','⚡','🎸','🦋','🍕','🎯'];
 function renderMemory(state,role,lobbyId){const area=document.getElementById('game-area');const flipped=state.flipped||[];const matched=state.matched||[];const myMoves=role==='host'?state.hostMoves:state.guestMoves;const opMoves=role==='host'?state.guestMoves:state.hostMoves;const isMyTurn=state.turn===role;const opName=role==='host'?esc(state.guestName||'Гость'):esc(state.hostName||'Хост');const totalPairs=(state.cards?.length||0)/2;const matchedPairs=matched.length/2;const done=matchedPairs>=totalPairs;const cards=(state.cards||[]).map((v,i)=>{const isMatched=matched.includes(i);const isFlipped=flipped.includes(i);const canClick=isMyTurn&&!isMatched&&!isFlipped&&!state.lockFlip&&!done;return'<div class="mc'+(isMatched?' mt':isFlipped?' fl':'')+'"'+(canClick?' onclick="memoryClick('+i+')"':'')+'>'+( isMatched||isFlipped?v:'❓')+'</div>';}).join('');const statusTxt=done?'Все пары найдены! 🎉':isMyTurn?'Твой ход!':'Ход '+opName;area.innerHTML='<button class="gback" onclick="leaveGame()">← Назад</button><div class="gtit">🃏 Мемори</div><div class="gst">'+statusTxt+'</div><div class="srow"><div class="si"><div class="sv">'+myMoves+'</div><div class="sl">Твои ходы</div></div><div class="si"><div class="sv">'+matchedPairs+'/'+totalPairs+'</div><div class="sl">Пары</div></div><div class="si"><div class="sv">'+opMoves+'</div><div class="sl">'+opName+'</div></div></div><div class="mg">'+cards+'</div>'+(done?'<button class="gbtn" onclick="startGame(\'memory\')">Ещё раз</button>':'');if(done&&!area.dataset.ended){area.dataset.ended='1';gameEnd(myMoves<=opMoves,'Мемори',(myMoves+opMoves)+' ходов',lobbyId);}}
 window.memoryClick=async i=>{if(!currentGame)return;const gameRef=doc(db,'games',currentGame.lobbyId);const snap=await getDoc(gameRef);if(!snap.exists())return;const state=snap.data();if(state.turn!==currentGame.role||state.lockFlip||state.matched.includes(i)||state.flipped.includes(i))return;const newFlipped=[...state.flipped,i];const movesField=currentGame.role==='host'?'hostMoves':'guestMoves';const updates={flipped:newFlipped};if(newFlipped.length===2){updates.lockFlip=true;updates[movesField]=(currentGame.role==='host'?state.hostMoves:state.guestMoves)+1;const[a,b]=newFlipped;if(state.cards[a]===state.cards[b]){updates.matched=[...state.matched,a,b];updates.flipped=[];updates.lockFlip=false;updates.turn=currentGame.role;}else{await updateDoc(gameRef,updates);setTimeout(async()=>{const cur=await getDoc(gameRef);if(cur.exists())await updateDoc(gameRef,{flipped:[],lockFlip:false,turn:currentGame.role==='host'?'guest':'host'});},1000);return;}}await updateDoc(gameRef,updates);};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CLICKER — Гоночный кликер
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let clickerInterval = null;
+let clickerLocalClicks = 0;
+let clickerPhase = 'idle'; // idle | countdown | racing | done
+
+function renderClicker(state, role, lobbyId) {
+  const area = document.getElementById('game-area');
+  const myClicks = role === 'host' ? state.hostClicks : state.guestClicks;
+  const opClicks = role === 'host' ? state.guestClicks : state.hostClicks;
+  const opName = role === 'host' ? esc(state.guestName||'Гость') : esc(state.hostName||'Хост');
+  const myAv = role === 'host' ? (state.hostAv||'👤') : (state.guestAv||'👤');
+  const opAv = role === 'host' ? (state.guestAv||'👤') : (state.hostAv||'👤');
+  const total = 10; // 10 sec race
+
+  // Countdown phase
+  if (state.phase === 'countdown') {
+    if (clickerInterval) { clearInterval(clickerInterval); clickerInterval = null; }
+    clickerPhase = 'countdown';
+    clickerLocalClicks = 0;
+    if (role === 'host') {
+      // host drives countdown
+      let cd = 3;
+      const gameRef = doc(db,'games',lobbyId);
+      if (!area.dataset.cdStarted) {
+        area.dataset.cdStarted = '1';
+        const cdInt = setInterval(async () => {
+          cd--;
+          if (cd <= 0) {
+            clearInterval(cdInt);
+            await updateDoc(gameRef, { phase: 'racing', startAt: Date.now(), countdown: 0 });
+          } else {
+            await updateDoc(gameRef, { countdown: cd });
+          }
+        }, 1000);
+      }
+    }
+    area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button>
+      <div class="gtit">🏎️ Гоночный кликер</div>
+      <div class="gst">Приготовься!</div>
+      <div class="clk-timer">${state.countdown > 0 ? state.countdown : '🚦'}</div>`;
+    return;
+  }
+
+  // Racing phase
+  if (state.phase === 'racing') {
+    if (clickerPhase !== 'racing') {
+      clickerPhase = 'racing';
+      clickerLocalClicks = myClicks;
+      // local tick to show time left
+      if (clickerInterval) clearInterval(clickerInterval);
+      const gameRef = doc(db,'games',lobbyId);
+      const endAt = state.startAt + total * 1000;
+      clickerInterval = setInterval(async () => {
+        const left = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+        const timerEl = document.getElementById('clk-time');
+        if (timerEl) timerEl.textContent = left;
+        if (Date.now() >= endAt) {
+          clearInterval(clickerInterval); clickerInterval = null;
+          clickerPhase = 'done';
+          if (role === 'host') {
+            await updateDoc(gameRef, { phase: 'done' });
+          }
+        }
+      }, 200);
+    }
+    const pct = Math.min(myClicks / 150 * 100, 96);
+    const opPct = Math.min(opClicks / 150 * 100, 96);
+    const left = Math.max(0, Math.ceil((state.startAt + total * 1000 - Date.now()) / 1000));
+    area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button>
+      <div class="gtit">🏎️ Гоночный кликер</div>
+      <div style="font-size:.8rem;color:var(--t3)">Кликай как можно быстрее!</div>
+      <div style="margin:.5rem 0;display:flex;align-items:center;gap:.5rem">
+        <div style="font-size:1.1rem">${myAv}</div>
+        <div style="flex:1">
+          <div style="font-size:.65rem;color:var(--t3);text-align:left;margin-bottom:2px">Ты: ${myClicks} кликов</div>
+          <div class="clk-track"><div class="clk-car" style="left:calc(${pct}% - 20px)">🏎️</div></div>
+        </div>
+      </div>
+      <div style="margin:.5rem 0;display:flex;align-items:center;gap:.5rem">
+        <div style="font-size:1.1rem">${opAv}</div>
+        <div style="flex:1">
+          <div style="font-size:.65rem;color:var(--t3);text-align:left;margin-bottom:2px">${opName}: ${opClicks} кликов</div>
+          <div class="clk-track"><div class="clk-car" style="left:calc(${opPct}% - 20px)">🚗</div></div>
+        </div>
+      </div>
+      <div id="clk-time" style="font-size:2rem;font-weight:900;color:var(--rd);margin:.5rem 0">${left}</div>
+      <button class="clk-btn" id="clk-btn" ontouchstart="event.preventDefault();clickerTap()" onclick="clickerTap()">👆 ЖМИ!</button>`;
+    return;
+  }
+
+  // Done phase
+  if (state.phase === 'done') {
+    if (clickerInterval) { clearInterval(clickerInterval); clickerInterval = null; }
+    clickerPhase = 'idle';
+    const won = myClicks > opClicks;
+    const draw = myClicks === opClicks;
+    const ico = draw ? '🤝' : won ? '🏆' : '😢';
+    const txt = draw ? 'Ничья!' : won ? 'Победа!' : 'Поражение';
+    if (!area.dataset.ended) {
+      area.dataset.ended = '1';
+      gopSys(draw ? `🤝 Ничья! Оба по ${myClicks} кликов` : won ? `🏎️ ${ME.username} победил: ${myClicks} vs ${opClicks}` : `🏎️ ${opName} победил: ${opClicks} vs ${myClicks}`);
+      if (!draw) gameEnd(won, 'Гоночный кликер', myClicks+' кликов', lobbyId);
+    }
+    area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button>
+      <div class="gtit">🏎️ Гоночный кликер</div>
+      <div style="font-size:3rem;margin:.5rem 0">${ico}</div>
+      <div style="font-size:1.3rem;font-weight:900;margin:.3rem 0">${txt}</div>
+      <div style="font-size:.85rem;color:var(--t3);margin:.3rem 0">Ты: <b>${myClicks}</b> | ${opName}: <b>${opClicks}</b></div>
+      <button class="gbtn" onclick="startGame('clicker')">Ещё раз</button>`;
+  }
+}
+
+window.clickerTap = async () => {
+  if (clickerPhase !== 'racing' || !currentGame) return;
+  clickerLocalClicks++;
+  // Update Firestore every 2 clicks to reduce writes
+  if (clickerLocalClicks % 2 === 0) {
+    const field = currentGame.role === 'host' ? 'hostClicks' : 'guestClicks';
+    await updateDoc(doc(db,'games',currentGame.lobbyId), { [field]: clickerLocalClicks }).catch(()=>{});
+  }
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SEA — Морской бой
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Ships: 1×4, 1×3, 2×2, 2×1 (total 10 cells)
+const SEA_SHIPS = [{len:4,n:1},{len:3,n:1},{len:2,n:2},{len:1,n:2}];
+let seaPlaceShips = null; // {remainingShips, orientation, selectedShip, board}
+let seaTurnTimer = null;
+
+function seaGridHtml(board, shots, isOwn, canShoot, role) {
+  let html = '<div class="sea-grid">';
+  for (let i = 0; i < 100; i++) {
+    const hasShip = board[i] > 0;
+    const shot = shots.includes(i);
+    const hit = shot && hasShip;
+    const miss = shot && !hasShip;
+    let cls = 'sea-cell';
+    let content = '';
+    if (isOwn) {
+      if (hasShip) cls += ' ship';
+      if (hit) { cls += ' hit'; content = '💥'; }
+      else if (miss) { cls += ' miss'; content = '·'; }
+    } else {
+      if (hit) { cls += ' hit'; content = '💥'; }
+      else if (miss) { cls += ' miss'; content = '·'; }
+      else { cls += ' fog'; }
+    }
+    const clickable = canShoot && !isOwn && !shot;
+    html += `<div class="${cls}" ${clickable ? `onclick="seaShoot(${i})"` : ''}>${content}</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function seaSunkCheck(board, shots) {
+  // Find sunk ships (all cells of a connected ship group are hit)
+  const sunk = [];
+  const visited = new Set();
+  for (let i = 0; i < 100; i++) {
+    if (board[i] > 0 && !visited.has(i)) {
+      const row = Math.floor(i/10), col = i%10;
+      // find connected ship cells (horizontal or vertical)
+      const cells = [i]; visited.add(i);
+      // horizontal
+      let c = col+1;
+      while(c < 10 && board[row*10+c] > 0) { cells.push(row*10+c); visited.add(row*10+c); c++; }
+      // vertical
+      let r = row+1;
+      while(r < 10 && board[r*10+col] > 0) { cells.push(r*10+col); visited.add(r*10+col); r++; }
+      if (cells.every(idx => shots.includes(idx))) sunk.push(...cells);
+    }
+  }
+  return sunk;
+}
+
+function renderSea(state, role, lobbyId) {
+  const area = document.getElementById('game-area');
+  const myBoard = role === 'host' ? state.hostBoard : state.guestBoard;
+  const opBoard = role === 'host' ? state.guestBoard : state.hostBoard;
+  const myShots = role === 'host' ? state.hostShots : state.guestShots;
+  const opShots = role === 'host' ? state.guestShots : state.hostShots;
+  const myReady = role === 'host' ? state.hostReady : state.guestReady;
+  const opReady = role === 'host' ? state.guestReady : state.hostReady;
+  const opName = role === 'host' ? esc(state.guestName||'Гость') : esc(state.hostName||'Хост');
+
+  // ── PLACE phase ──
+  if (state.phase === 'place') {
+    if (!seaPlaceShips) {
+      seaPlaceShips = {
+        remainingShips: SEA_SHIPS.flatMap(s => Array(s.n).fill(s.len)),
+        orientation: 'h',
+        selectedLen: null,
+        board: [...myBoard]
+      };
+    }
+    if (myReady) {
+      area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button>
+        <div class="gtit">🚢 Морской бой</div>
+        <div class="sea-phase">✅ Готов! Ждём ${opName}...</div>
+        ${seaGridHtml(seaPlaceShips.board, [], true, false, role)}`;
+      return;
+    }
+    const remaining = seaPlaceShips.remainingShips;
+    const uniqueLens = [...new Set(remaining)];
+    const shipsHtml = uniqueLens.length === 0 ? '' :
+      '<div class="sea-ships-left">' +
+      uniqueLens.map(len => {
+        const cnt = remaining.filter(l=>l===len).length;
+        const active = seaPlaceShips.selectedLen === len ? ' active' : '';
+        return `<div class="sea-ship-chip${active}" onclick="seaSelectShip(${len})">${'🟦'.repeat(len)} ×${cnt}</div>`;
+      }).join('') +
+      `<div class="sea-ship-chip" onclick="seaToggleOrient()" style="margin-left:.5rem">${seaPlaceShips.orientation==='h'?'↔️ Гориз':'↕️ Верт'}</div>` +
+      '</div>';
+    const allPlaced = remaining.length === 0;
+    area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button>
+      <div class="gtit">🚢 Морской бой</div>
+      <div class="sea-phase">Расставь корабли ${seaPlaceShips.selectedLen ? '(выбран: '+('🟦'.repeat(seaPlaceShips.selectedLen))+')' : '— выбери корабль'}</div>
+      ${shipsHtml}
+      <div class="sea-board-wrap">
+        <div class="sea-board-lbl">Твоё поле</div>
+        ${seaPlaceGridHtml(seaPlaceShips.board)}
+      </div>
+      <div style="display:flex;gap:.7rem;margin-top:.7rem">
+        ${allPlaced ? `<button class="gbtn" onclick="seaConfirmPlace('${lobbyId}','${role}')">Готов! ✅</button>` : ''}
+        <button class="gbtn-s" onclick="seaResetBoard()">Сбросить</button>
+      </div>`;
+    return;
+  }
+
+  // ── BATTLE phase ──
+  if (state.phase === 'battle') {
+    seaPlaceShips = null;
+    const isMyTurn = state.turn === role;
+    const mySunk = seaSunkCheck(myBoard, opShots);
+    const opSunk = seaSunkCheck(opBoard, myShots);
+    const myTotal = myBoard.filter(c=>c>0).length;
+    const opTotal = opBoard.filter(c=>c>0).length;
+    const myLeft = myTotal - opShots.filter(i=>myBoard[i]>0).length;
+    const opLeft = opTotal - myShots.filter(i=>opBoard[i]>0).length;
+    const done = state.winner !== null && state.winner !== undefined;
+    const canShoot = isMyTurn && !done;
+
+    // Turn timer
+    if (isMyTurn && !done) {
+      if (!area.dataset.turnStart || area.dataset.turnStart !== String(state.turnStartAt)) {
+        area.dataset.turnStart = String(state.turnStartAt);
+        if (seaTurnTimer) clearInterval(seaTurnTimer);
+        seaTurnTimer = setInterval(() => {
+          const el = document.getElementById('sea-ttimer');
+          if (!el) { clearInterval(seaTurnTimer); return; }
+          const left = Math.max(0, Math.ceil((state.turnStartAt + 30000 - Date.now()) / 1000));
+          el.textContent = left;
+          if (left <= 0) {
+            clearInterval(seaTurnTimer);
+            // auto-pass with random shot
+            const unshotCells = Array.from({length:100},(_,i)=>i).filter(i=>!myShots.includes(i));
+            if (unshotCells.length > 0) {
+              const rand = unshotCells[Math.floor(Math.random()*unshotCells.length)];
+              seaShootCell(rand, lobbyId, role, state);
+            }
+          }
+        }, 500);
+      }
+    } else {
+      if (seaTurnTimer) { clearInterval(seaTurnTimer); seaTurnTimer = null; }
+    }
+
+    const statusTxt = done ? (state.winner === role ? '🏆 Победа!' : '😢 Поражение') : (isMyTurn ? '🎯 Твой ход!' : `⏳ Ход ${opName}`);
+    area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button>
+      <div class="gtit">🚢 Морской бой</div>
+      <div style="display:flex;align-items:center;gap:.7rem;justify-content:center;margin:.2rem 0">
+        <div class="gst" style="margin:0">${statusTxt}</div>
+        ${isMyTurn && !done ? `<div class="sea-turn-timer" id="sea-ttimer">30</div>` : ''}
+      </div>
+      <div class="sea-boards">
+        <div class="sea-board-wrap">
+          <div class="sea-board-lbl">Твоё поле (осталось: ${myLeft})</div>
+          ${seaBattleGridHtml(myBoard, opShots, mySunk, true, false)}
+        </div>
+        <div class="sea-board-wrap">
+          <div class="sea-board-lbl">${opName} (осталось: ${opLeft})</div>
+          ${seaBattleGridHtml(opBoard, myShots, opSunk, false, canShoot, lobbyId, role, state)}
+        </div>
+      </div>
+      ${done ? `<button class="gbtn" onclick="startGame('sea')">Ещё раз</button>` : ''}`;
+
+    if (done && !area.dataset.ended) {
+      area.dataset.ended = '1';
+      if (seaTurnTimer) { clearInterval(seaTurnTimer); seaTurnTimer = null; }
+      const won = state.winner === role;
+      gopSys(won ? `🏆 ${ME.username} победил в морском бою!` : `🏆 ${opName} победил в морском бою!`);
+      gameEnd(won, 'Морской бой', '', lobbyId);
+    }
+  }
+}
+
+function seaPlaceGridHtml(board) {
+  let html = '<div class="sea-grid">';
+  for (let i = 0; i < 100; i++) {
+    const hasShip = board[i] > 0;
+    html += `<div class="sea-cell${hasShip?' ship':''}" onclick="seaPlaceClick(${i})">${hasShip?'🟦':''}</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function seaBattleGridHtml(board, shots, sunk, isOwn, canShoot) {
+  let html = '<div class="sea-grid">';
+  for (let i = 0; i < 100; i++) {
+    const hasShip = board[i] > 0;
+    const shot = shots.includes(i);
+    const hit = shot && hasShip;
+    const miss = shot && !hasShip;
+    const isSunk = sunk.includes(i);
+    let cls = 'sea-cell';
+    let content = '';
+    if (isOwn) {
+      if (hasShip && !hit) cls += ' ship';
+      if (isSunk) { cls += ' sunk'; content = '💀'; }
+      else if (hit) { cls += ' hit'; content = '💥'; }
+      else if (miss) { cls += ' miss'; content = '·'; }
+    } else {
+      if (isSunk) { cls += ' sunk'; content = '💀'; }
+      else if (hit) { cls += ' hit'; content = '💥'; }
+      else if (miss) { cls += ' miss'; content = '·'; }
+    }
+    const clickable = canShoot && !isOwn && !shot;
+    html += `<div class="${cls}"${clickable ? ` onclick="seaShoot(${i})"` : ''}>${content}</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+window.seaSelectShip = len => {
+  if (!seaPlaceShips) return;
+  seaPlaceShips.selectedLen = seaPlaceShips.remainingShips.includes(len) ? len : null;
+  renderGameState(null, 'sea', currentGame.role, currentGame.lobbyId);
+  // re-render place from local state — need to re-fetch
+  const area = document.getElementById('game-area');
+  if (area) { getDoc(doc(db,'games',currentGame.lobbyId)).then(s => { if(s.exists()) renderSea(s.data(), currentGame.role, currentGame.lobbyId); }); }
+};
+window.seaToggleOrient = () => {
+  if (!seaPlaceShips) return;
+  seaPlaceShips.orientation = seaPlaceShips.orientation === 'h' ? 'v' : 'h';
+  getDoc(doc(db,'games',currentGame.lobbyId)).then(s => { if(s.exists()) renderSea(s.data(), currentGame.role, currentGame.lobbyId); });
+};
+window.seaResetBoard = () => {
+  if (!seaPlaceShips) return;
+  seaPlaceShips.board = Array(100).fill(0);
+  seaPlaceShips.remainingShips = SEA_SHIPS.flatMap(s => Array(s.n).fill(s.len));
+  seaPlaceShips.selectedLen = null;
+  getDoc(doc(db,'games',currentGame.lobbyId)).then(s => { if(s.exists()) renderSea(s.data(), currentGame.role, currentGame.lobbyId); });
+};
+window.seaPlaceClick = idx => {
+  if (!seaPlaceShips || seaPlaceShips.selectedLen === null) return;
+  const len = seaPlaceShips.selectedLen;
+  const orient = seaPlaceShips.orientation;
+  const row = Math.floor(idx/10), col = idx%10;
+  // check fit
+  const cells = [];
+  for (let k = 0; k < len; k++) {
+    const r = orient === 'v' ? row+k : row;
+    const c = orient === 'h' ? col+k : col;
+    if (r >= 10 || c >= 10) { toast('Корабль не помещается!'); return; }
+    cells.push(r*10+c);
+  }
+  // check overlap + adjacency
+  for (const ci of cells) {
+    const r=Math.floor(ci/10), c=ci%10;
+    for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++) {
+      const nr=r+dr, nc=c+dc;
+      if (nr>=0&&nr<10&&nc>=0&&nc<10&&seaPlaceShips.board[nr*10+nc]>0&&!cells.includes(nr*10+nc)) {
+        toast('Корабли не могут касаться!'); return;
+      }
+    }
+  }
+  const newBoard = [...seaPlaceShips.board];
+  cells.forEach(ci => { newBoard[ci] = len; });
+  seaPlaceShips.board = newBoard;
+  const idx2 = seaPlaceShips.remainingShips.indexOf(len);
+  seaPlaceShips.remainingShips.splice(idx2, 1);
+  seaPlaceShips.selectedLen = seaPlaceShips.remainingShips.includes(len) ? len : (seaPlaceShips.remainingShips[0] || null);
+  getDoc(doc(db,'games',currentGame.lobbyId)).then(s => { if(s.exists()) renderSea(s.data(), currentGame.role, currentGame.lobbyId); });
+};
+window.seaConfirmPlace = async (lobbyId, role) => {
+  if (!seaPlaceShips || seaPlaceShips.remainingShips.length > 0) { toast('Расставь все корабли!'); return; }
+  const boardField = role === 'host' ? 'hostBoard' : 'guestBoard';
+  const readyField = role === 'host' ? 'hostReady' : 'guestReady';
+  const gameRef = doc(db,'games',lobbyId);
+  await updateDoc(gameRef, { [boardField]: seaPlaceShips.board, [readyField]: true });
+  // check if both ready
+  const snap = await getDoc(gameRef);
+  const d = snap.data();
+  if (d.hostReady && d.guestReady) {
+    await updateDoc(gameRef, { phase: 'battle', turn: 'host', turnStartAt: Date.now() });
+  }
+};
+window.seaShoot = async idx => {
+  if (!currentGame) return;
+  const gameRef = doc(db,'games',currentGame.lobbyId);
+  const snap = await getDoc(gameRef);
+  if (!snap.exists()) return;
+  const state = snap.data();
+  await seaShootCell(idx, currentGame.lobbyId, currentGame.role, state);
+};
+async function seaShootCell(idx, lobbyId, role, state) {
+  const gameRef = doc(db,'games',lobbyId);
+  const myShots = role === 'host' ? state.hostShots : state.guestShots;
+  const opBoard = role === 'host' ? state.guestBoard : state.hostBoard;
+  if (myShots.includes(idx)) return;
+  const newShots = [...myShots, idx];
+  const hit = opBoard[idx] > 0;
+  const shotsField = role === 'host' ? 'hostShots' : 'guestShots';
+  // check if all op ships sunk
+  const opTotal = opBoard.filter(c=>c>0).length;
+  const opHits = newShots.filter(i=>opBoard[i]>0).length;
+  const won = opHits >= opTotal;
+  const nextTurn = hit ? role : (role === 'host' ? 'guest' : 'host'); // if hit, shoot again
+  const updates = {
+    [shotsField]: newShots,
+    turn: won ? role : nextTurn,
+    turnStartAt: Date.now(),
+    ...(won ? { winner: role, phase: 'done' } : {})
+  };
+  await updateDoc(gameRef, updates);
+  if (seaTurnTimer) { clearInterval(seaTurnTimer); seaTurnTimer = null; }
+}
 
 // ══════════════════════════════
 // UTILS
