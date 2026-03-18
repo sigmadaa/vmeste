@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8"/>
@@ -417,6 +417,67 @@ button,input,textarea{font-family:inherit;}
   .mg{max-width:280px;}.mc{width:62px;height:62px;}
 }
 
+/* ══════════════ NOTIFICATIONS CENTER ══════════════ */
+#notif-ov{position:fixed;inset:0;z-index:250;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);}
+#notif-ov.on{transform:translateX(0);}
+.notif-head{height:var(--top-h);background:var(--bg3);border-bottom:1px solid var(--brd);display:flex;align-items:center;padding:0 .75rem;gap:.5rem;flex-shrink:0;}
+.notif-head-tit{flex:1;font-size:.95rem;font-weight:700;}
+.notif-clear{font-size:.75rem;color:var(--pu);background:transparent;border:none;cursor:pointer;padding:.3rem .5rem;}
+.notif-list{flex:1;overflow-y:auto;}
+.notif-item{display:flex;align-items:flex-start;gap:.7rem;padding:.85rem 1rem;border-bottom:1px solid var(--brd);cursor:pointer;transition:background .15s;position:relative;}
+.notif-item:active{background:var(--bg3);}
+.notif-item.unread::after{content:'';position:absolute;left:.3rem;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--pu);}
+.notif-av{width:42px;height:42px;border-radius:50%;background:var(--bg4);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.notif-body{flex:1;min-width:0;}
+.notif-title{font-size:.88rem;font-weight:700;}
+.notif-sub{font-size:.78rem;color:var(--t3);margin-top:.12rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.notif-time{font-size:.65rem;color:var(--t3);flex-shrink:0;margin-top:.15rem;}
+/* top banner for in-app notifications */
+#notif-banner{position:fixed;top:.6rem;left:50%;transform:translateX(-50%) translateY(-120%);background:var(--bg4);border:1px solid var(--brd2);border-radius:16px;padding:.7rem 1rem;z-index:600;width:calc(100% - 2rem);max-width:400px;display:flex;align-items:center;gap:.7rem;box-shadow:0 6px 24px #0008;transition:transform .3s cubic-bezier(.4,0,.2,1);}
+#notif-banner.on{transform:translateX(-50%) translateY(0);}
+.nb-av{font-size:1.6rem;flex-shrink:0;}
+.nb-body{flex:1;min-width:0;}
+.nb-title{font-size:.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nb-sub{font-size:.75rem;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nb-close{background:transparent;border:none;color:var(--t3);font-size:1rem;cursor:pointer;flex-shrink:0;}
+
+/* ══════════════ GAME INVITE ══════════════ */
+#ginv-sheet{position:fixed;bottom:0;left:0;right:0;z-index:350;background:var(--bg4);border-radius:20px 20px 0 0;border-top:1px solid var(--brd2);padding:1rem;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);max-height:70vh;overflow-y:auto;}
+#ginv-sheet.on{transform:translateY(0);}
+#ginv-backdrop{position:fixed;inset:0;z-index:349;background:#0007;display:none;}
+#ginv-backdrop.on{display:block;}
+.ginv-title{font-weight:700;text-align:center;margin-bottom:.25rem;font-size:.95rem;}
+.ginv-sub{font-size:.75rem;color:var(--t3);text-align:center;margin-bottom:.85rem;}
+.ginv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem;}
+.ginv-gc{background:var(--bg3);border:2px solid var(--brd2);border-radius:14px;padding:.9rem .7rem;cursor:pointer;text-align:center;transition:all .15s;}
+.ginv-gc:active{transform:scale(.95);}
+.ginv-gc.sel{border-color:var(--pu);background:var(--pu)15;}
+.ginv-gic{font-size:1.8rem;margin-bottom:.2rem;}
+.ginv-gn{font-size:.8rem;font-weight:700;}
+.ginv-send-row{margin-top:.9rem;display:flex;gap:.6rem;}
+.ginv-send{flex:1;background:var(--gr);border:none;color:#fff;padding:.75rem;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;}
+.ginv-cancel{background:transparent;border:1px solid var(--brd2);color:var(--t2);padding:.75rem 1rem;border-radius:12px;cursor:pointer;font-size:.85rem;}
+/* incoming game invite banner */
+#ginv-incoming{position:fixed;top:.6rem;left:50%;transform:translateX(-50%) translateY(-120%);background:var(--bg4);border:1.5px solid var(--pu)60;border-radius:16px;padding:.8rem 1rem;z-index:601;width:calc(100% - 2rem);max-width:400px;display:flex;align-items:center;gap:.7rem;box-shadow:0 6px 28px #0009;transition:transform .3s cubic-bezier(.4,0,.2,1);}
+#ginv-incoming.on{transform:translateX(-50%) translateY(0);}
+.ginv-ic-av{font-size:1.6rem;flex-shrink:0;}
+.ginv-ic-body{flex:1;min-width:0;}
+.ginv-ic-name{font-size:.88rem;font-weight:700;}
+.ginv-ic-game{font-size:.75rem;color:var(--t3);}
+.ginv-ic-btns{display:flex;gap:.4rem;flex-shrink:0;}
+.ginv-ic-btn{padding:.4rem .75rem;border-radius:10px;border:none;font-size:.78rem;font-weight:700;cursor:pointer;}
+.ginv-ic-btn.acc{background:var(--pu);color:#fff;}
+.ginv-ic-btn.dec{background:var(--brd2);color:var(--t2);}
+
+/* ══════════════ ADD MEMBER TO GROUP ══════════════ */
+#grp-add-sheet{position:fixed;bottom:0;left:0;right:0;z-index:350;background:var(--bg4);border-radius:20px 20px 0 0;border-top:1px solid var(--brd2);padding:1rem;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);max-height:65vh;overflow-y:auto;}
+#grp-add-sheet.on{transform:translateY(0);}
+#grp-add-backdrop{position:fixed;inset:0;z-index:349;background:#0007;display:none;}
+#grp-add-backdrop.on{display:block;}
+.grp-add-title{font-weight:700;text-align:center;margin-bottom:.75rem;font-size:.95rem;}
+.grp-add-srch{width:100%;background:var(--bg);border:1px solid var(--brd2);border-radius:10px;padding:.6rem 1rem;color:var(--t1);font-size:.88rem;outline:none;margin-bottom:.65rem;}
+.grp-add-srch:focus{border-color:var(--pu);}
+
 /* ══════════════ LIGHT THEME ══════════════ */
 body.light{
   --bg:#f0f4f8;--bg2:#ffffff;--bg3:#ffffff;--bg4:#f0f2f5;
@@ -543,7 +604,8 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <span class="tbar-ic" id="tb-ic">💬</span>
     <span class="tbar-title" id="tb-tit">Вместе</span>
     <button class="ibtn" id="tb-add" onclick="openWritePost()" style="display:none"><span>✏️</span></button>
-    <button class="ibtn" onclick="goTab('friends')"><span>🔔</span><span class="ibadge" id="tb-nbdg"></span></button>
+    <button class="ibtn" onclick="openNotifCenter()"><span>🔔</span><span class="ibadge" id="tb-notif-bdg"></span></button>
+    <button class="ibtn" onclick="goTab('friends')"><span>👥</span><span class="ibadge" id="tb-nbdg"></span></button>
     <button class="ibtn" onclick="doLogout()">🚪</button>
   </div>
   <div id="pwa-bar">
@@ -615,15 +677,19 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <!-- GAMES -->
     <div class="tp" id="tp-games">
       <div class="g-head">Мини-игры 🎮</div>
+      <div style="padding:.3rem 1rem .6rem;font-size:.78rem;color:var(--t3)">Нажми — найдём соперника. Долгое нажатие — вызов другу.</div>
       <div class="gg">
-        <div class="gc" onclick="startGame('ttt')"><div class="gc-ic">❌⭕</div><div class="gc-n">Крестики-нолики</div><div class="gc-d">Классика</div></div>
-        <div class="gc" onclick="startGame('reaction')"><div class="gc-ic">⚡</div><div class="gc-n">Реакция</div><div class="gc-d">Кто быстрее?</div></div>
-        <div class="gc" onclick="startGame('word')"><div class="gc-ic">💬</div><div class="gc-n">Угадай слово</div><div class="gc-d">Виселица</div></div>
-        <div class="gc" onclick="startGame('quiz')"><div class="gc-ic">🧠</div><div class="gc-n">Викторина</div><div class="gc-d">10 вопросов</div></div>
-        <div class="gc" onclick="startGame('memory')"><div class="gc-ic">🃏</div><div class="gc-n">Мемори</div><div class="gc-d">Найди пары</div></div>
-        <div class="gc" onclick="startGame('rps')"><div class="gc-ic">✊</div><div class="gc-n">КНБ</div><div class="gc-d">Камень-ножницы</div></div>
-        <div class="gc" onclick="startGame('clicker')"><div class="gc-ic">🏎️</div><div class="gc-n">Гоночный кликер</div><div class="gc-d">Жми быстрее!</div></div>
-        <div class="gc" onclick="startGame('sea')"><div class="gc-ic">🚢</div><div class="gc-n">Морской бой</div><div class="gc-d">Классика</div></div>
+        <div class="gc" onclick="startGame('ttt')" oncontextmenu="openGameInvite('ttt');return false"><div class="gc-ic">❌⭕</div><div class="gc-n">Крестики-нолики</div><div class="gc-d">Классика</div></div>
+        <div class="gc" onclick="startGame('reaction')" oncontextmenu="openGameInvite('reaction');return false"><div class="gc-ic">⚡</div><div class="gc-n">Реакция</div><div class="gc-d">Кто быстрее?</div></div>
+        <div class="gc" onclick="startGame('word')" oncontextmenu="openGameInvite('word');return false"><div class="gc-ic">💬</div><div class="gc-n">Угадай слово</div><div class="gc-d">Виселица</div></div>
+        <div class="gc" onclick="startGame('quiz')" oncontextmenu="openGameInvite('quiz');return false"><div class="gc-ic">🧠</div><div class="gc-n">Викторина</div><div class="gc-d">10 вопросов</div></div>
+        <div class="gc" onclick="startGame('memory')" oncontextmenu="openGameInvite('memory');return false"><div class="gc-ic">🃏</div><div class="gc-n">Мемори</div><div class="gc-d">Найди пары</div></div>
+        <div class="gc" onclick="startGame('rps')" oncontextmenu="openGameInvite('rps');return false"><div class="gc-ic">✊</div><div class="gc-n">КНБ</div><div class="gc-d">Камень-ножницы</div></div>
+        <div class="gc" onclick="startGame('clicker')" oncontextmenu="openGameInvite('clicker');return false"><div class="gc-ic">🏎️</div><div class="gc-n">Гоночный кликер</div><div class="gc-d">Жми быстрее!</div></div>
+        <div class="gc" onclick="startGame('sea')" oncontextmenu="openGameInvite('sea');return false"><div class="gc-ic">🚢</div><div class="gc-n">Морской бой</div><div class="gc-d">Классика</div></div>
+      </div>
+      <div style="padding:.5rem 1rem 1rem;text-align:center">
+        <button onclick="openGameInviteAll()" style="background:var(--pu)20;border:1px solid var(--pu)50;color:var(--pu);padding:.55rem 1.4rem;border-radius:50px;font-size:.82rem;font-weight:700;cursor:pointer">🎮 Вызвать друга на игру</button>
       </div>
     </div>
   </div>
@@ -645,6 +711,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <button class="ibtn" id="cd-call-btn" onclick="callUser(false)" style="display:none" title="Голосовой звонок">📞</button>
     <button class="ibtn" id="cd-vcall-btn" onclick="callUser(true)" style="display:none" title="Видеозвонок">📹</button>
     <button class="ibtn" id="cd-atg-btn" onclick="openAddToGroup()" style="display:none" title="Добавить в группу">👥</button>
+    <button class="ibtn" id="cd-grp-add-btn" onclick="openGrpAddMember()" style="display:none" title="Добавить участника">👤➕</button>
   </div>
   <div class="chat-inner">
     <div class="mlist" id="msg-list"></div>
@@ -807,6 +874,63 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 <div id="img-viewer" onclick="document.getElementById('img-viewer').classList.remove('on')">
   <img id="img-viewer-src" src="" alt=""/>
   <button id="img-viewer-cl" onclick="document.getElementById('img-viewer').classList.remove('on')">✕</button>
+</div>
+
+<!-- NOTIFICATIONS OVERLAY -->
+<div id="notif-ov">
+  <div class="notif-head">
+    <button class="ibtn" onclick="document.getElementById('notif-ov').classList.remove('on')">←</button>
+    <span class="notif-head-tit">🔔 Уведомления</span>
+    <button class="notif-clear" onclick="clearAllNotifs()">Очистить всё</button>
+  </div>
+  <div class="notif-list" id="notif-list">
+    <div class="empty"><div class="ei">🔔</div><div class="et">Нет уведомлений</div></div>
+  </div>
+</div>
+<!-- IN-APP NOTIFICATION BANNER -->
+<div id="notif-banner">
+  <div class="nb-av" id="nb-av-el">💬</div>
+  <div class="nb-body">
+    <div class="nb-title" id="nb-title-el"></div>
+    <div class="nb-sub" id="nb-sub-el"></div>
+  </div>
+  <button class="nb-close" onclick="document.getElementById('notif-banner').classList.remove('on')">✕</button>
+</div>
+
+<!-- GAME INVITE SHEET -->
+<div id="ginv-backdrop" onclick="closeGinvSheet()"></div>
+<div id="ginv-sheet">
+  <div class="ginv-title">🎮 Вызов на игру</div>
+  <div class="ginv-sub" id="ginv-target-name">Выбери игру и друга</div>
+  <div class="ginv-grid" id="ginv-grid"></div>
+  <div style="margin-top:.9rem">
+    <div style="font-size:.75rem;font-weight:700;color:var(--t3);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.5px">Выбрать друга</div>
+    <div id="ginv-friends-list"></div>
+  </div>
+  <div class="ginv-send-row">
+    <button class="ginv-send" onclick="sendGameInvite()">🎮 Отправить вызов</button>
+    <button class="ginv-cancel" onclick="closeGinvSheet()">Отмена</button>
+  </div>
+</div>
+<!-- INCOMING GAME INVITE -->
+<div id="ginv-incoming">
+  <div class="ginv-ic-av" id="ginv-ic-av">👤</div>
+  <div class="ginv-ic-body">
+    <div class="ginv-ic-name" id="ginv-ic-name">—</div>
+    <div class="ginv-ic-game" id="ginv-ic-game">🎮 вызывает на игру</div>
+  </div>
+  <div class="ginv-ic-btns">
+    <button class="ginv-ic-btn dec" onclick="declineGameInvite()">✕</button>
+    <button class="ginv-ic-btn acc" onclick="acceptGameInvite()">Играть!</button>
+  </div>
+</div>
+
+<!-- ADD MEMBER TO GROUP SHEET -->
+<div id="grp-add-backdrop" onclick="closeGrpAddSheet()"></div>
+<div id="grp-add-sheet">
+  <div class="grp-add-title">👥 Добавить участника</div>
+  <input class="grp-add-srch" id="grp-add-srch" placeholder="Поиск по имени..." oninput="grpAddSearch(this.value)"/>
+  <div id="grp-add-list"></div>
 </div>
 
 <!-- FIREBASE -->
@@ -978,6 +1102,8 @@ function launchApp() {
   goTab('chats');
   checkPWA();
   listenIncomingCalls();
+  listenNotifications();
+  listenGameInvites();
 }
 
 window.goTab = t => {
@@ -1125,6 +1251,7 @@ window.openChat = async uid => {
   document.getElementById('cd-call-btn').style.display = '';
   document.getElementById('cd-vcall-btn').style.display = '';
   document.getElementById('cd-atg-btn').style.display = '';
+  document.getElementById('cd-grp-add-btn').style.display = 'none';
   listenMessages(uid); listenPresence(uid); markRead(uid);
 };
 
@@ -1140,6 +1267,7 @@ window.openGroup = async gid => {
   document.getElementById('cd-call-btn').style.display = 'none';
   document.getElementById('cd-vcall-btn').style.display = 'none';
   document.getElementById('cd-atg-btn').style.display = 'none';
+  document.getElementById('cd-grp-add-btn').style.display = '';
   chatMode = 'group'; chatGroupId = gid; chatWith = null;
   cancelReply(); openOv('chat-detail');
   listenMessages(gid);
@@ -2916,6 +3044,353 @@ window.toggleCallVideo = () => {
   callVideoOff = !callVideoOff;
   callStreamLocal.getVideoTracks().forEach(t => t.enabled = !callVideoOff);
   document.getElementById('call-vid-btn').textContent = callVideoOff ? '📷' : '🎥';
+};
+
+// ══════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════
+let notifUnsub = null;
+let notifBannerTimer = null;
+
+function listenNotifications() {
+  if (!ME) return;
+  if (notifUnsub) { notifUnsub(); notifUnsub = null; }
+  const q2 = query(
+    collection(db, 'notifications'),
+    where('to', '==', ME.uid),
+    orderBy('ts', 'desc'),
+    limit(50)
+  );
+  notifUnsub = onSnapshot(q2, snap => {
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const unread = items.filter(n => !n.read).length;
+    setBadge('tb-notif-bdg', unread);
+    // Show banner for latest if it just arrived (within 8s)
+    const newest = items[0];
+    if (newest && !newest.read && newest.ts) {
+      const age = Date.now() - newest.ts.toMillis();
+      if (age < 8000 && !document.getElementById('notif-ov').classList.contains('on')) {
+        showNotifBanner(newest);
+      }
+    }
+    // Update list if center is open
+    if (document.getElementById('notif-ov').classList.contains('on')) {
+      renderNotifList(items);
+    }
+  });
+}
+
+function renderNotifList(items) {
+  const el = document.getElementById('notif-list');
+  if (!el) return;
+  if (!items.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">🔔</div><div class="et">Нет уведомлений</div></div>';
+    return;
+  }
+  el.innerHTML = items.map(n => {
+    const ico = n.type === 'message' ? '💬' : n.type === 'friend_req' ? '👥' : n.type === 'game_invite' ? '🎮' : '🔔';
+    const tsStr = n.ts ? fmtAgo(n.ts.toDate()) : '';
+    return `<div class="notif-item${n.read ? '' : ' unread'}" onclick="handleNotifClick('${n.id}','${n.type||''}','${esc(n.payload||'')}')">
+      <div class="notif-av">${esc(n.fromAv || ico)}</div>
+      <div class="notif-body">
+        <div class="notif-title">${esc(n.title || '')}</div>
+        <div class="notif-sub">${esc(n.body || '')}</div>
+      </div>
+      <div class="notif-time">${tsStr}</div>
+    </div>`;
+  }).join('');
+}
+
+function showNotifBanner(n) {
+  const el = document.getElementById('notif-banner');
+  if (!el) return;
+  document.getElementById('nb-av-el').textContent = n.fromAv || '🔔';
+  document.getElementById('nb-title-el').textContent = n.title || '';
+  document.getElementById('nb-sub-el').textContent = n.body || '';
+  el.onclick = ev => {
+    if (ev.target.classList.contains('nb-close')) { el.classList.remove('on'); return; }
+    el.classList.remove('on');
+    handleNotifClick(n.id, n.type || '', n.payload || '');
+  };
+  el.classList.add('on');
+  clearTimeout(notifBannerTimer);
+  notifBannerTimer = setTimeout(() => el.classList.remove('on'), 5000);
+}
+
+window.openNotifCenter = () => {
+  document.getElementById('notif-ov').classList.add('on');
+  // Load and render current notifs
+  getDocs(query(collection(db, 'notifications'), where('to', '==', ME.uid), orderBy('ts', 'desc'), limit(50))).then(snap => {
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderNotifList(items);
+    // Mark all read
+    snap.docs.filter(d => !d.data().read).forEach(d => updateDoc(d.ref, { read: true }).catch(() => {}));
+    setBadge('tb-notif-bdg', 0);
+  });
+};
+
+window.clearAllNotifs = async () => {
+  const snap = await getDocs(query(collection(db, 'notifications'), where('to', '==', ME.uid)));
+  await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+  document.getElementById('notif-list').innerHTML = '<div class="empty"><div class="ei">🔔</div><div class="et">Нет уведомлений</div></div>';
+};
+
+window.handleNotifClick = (nid, type, payload) => {
+  document.getElementById('notif-ov').classList.remove('on');
+  updateDoc(doc(db, 'notifications', nid), { read: true }).catch(() => {});
+  if (type === 'message' && payload) openChat(payload);
+  else if (type === 'friend_req') goTab('friends');
+  else if (type === 'game_invite' && payload) acceptGameInviteById(payload);
+};
+
+async function sendNotif(toUid, type, title, body, fromAv, payload) {
+  if (!toUid || toUid === ME.uid) return;
+  await addDoc(collection(db, 'notifications'), {
+    to: toUid, type, title, body,
+    fromAv: fromAv || ME.av || '💬',
+    payload: payload || '',
+    read: false,
+    ts: serverTimestamp()
+  }).catch(() => {});
+}
+
+// ══════════════════════════════
+// ADD MEMBER TO GROUP (from inside group)
+// ══════════════════════════════
+let grpAddGid = null;
+let grpAddAllUsers = [];
+
+window.openGrpAddMember = async () => {
+  grpAddGid = chatGroupId;
+  if (!grpAddGid) return;
+  document.getElementById('grp-add-srch').value = '';
+  document.getElementById('grp-add-list').innerHTML = '<div class="empty" style="padding:1rem"><div class="et">Загрузка...</div></div>';
+  document.getElementById('grp-add-sheet').classList.add('on');
+  document.getElementById('grp-add-backdrop').classList.add('on');
+
+  const gSnap = await getDoc(doc(db, 'groups', grpAddGid));
+  const currentMembers = gSnap.data()?.members || [];
+
+  const friends = ME.friends || [];
+  const chatSnap = await getDocs(query(collection(db, 'chats'), where('users', 'array-contains', ME.uid)));
+  const chatUids = chatSnap.docs.map(d => (d.data().users || []).find(u => u !== ME.uid)).filter(Boolean);
+  const candidates = [...new Set([...friends, ...chatUids])].filter(u => !currentMembers.includes(u));
+
+  if (!candidates.length) {
+    document.getElementById('grp-add-list').innerHTML = '<div class="empty" style="padding:1rem"><div class="et">Нет доступных пользователей</div></div>';
+    return;
+  }
+  const rows = await Promise.all(candidates.map(async uid => {
+    const s = await getDoc(doc(db, 'users', uid));
+    if (!s.exists()) return null;
+    return { uid, ...s.data() };
+  }));
+  grpAddAllUsers = rows.filter(Boolean);
+  renderGrpAddList(grpAddAllUsers);
+};
+
+function renderGrpAddList(users) {
+  const el = document.getElementById('grp-add-list');
+  if (!users.length) {
+    el.innerHTML = '<div class="empty" style="padding:1rem"><div class="et">Никого не найдено</div></div>';
+    return;
+  }
+  el.innerHTML = users.map(p =>
+    `<div class="urow" style="padding:.6rem 0;border-bottom:1px solid var(--brd)">
+      <div class="ur-av">${p.av || '👤'}</div>
+      <div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio || '')}</div></div>
+      <div class="ur-btns"><button class="sb sb-acc" onclick="grpAddConfirm('${p.uid}')">Добавить</button></div>
+    </div>`
+  ).join('');
+}
+
+window.grpAddSearch = q => {
+  const filtered = grpAddAllUsers.filter(p => p.username.toLowerCase().includes(q.toLowerCase()));
+  renderGrpAddList(filtered);
+};
+
+window.grpAddConfirm = async uid => {
+  closeGrpAddSheet();
+  const uSnap = await getDoc(doc(db, 'users', uid));
+  const uName = uSnap.exists() ? uSnap.data().username : uid;
+  const uAv = uSnap.exists() ? uSnap.data().av : '👤';
+  await updateDoc(doc(db, 'groups', grpAddGid), { members: arrayUnion(uid) });
+  await addDoc(collection(db, 'groups', grpAddGid, 'messages'), {
+    from: ME.uid, senderName: ME.username,
+    text: `${ME.username} добавил ${uName} в группу`,
+    type: 'system', ts: serverTimestamp(), read: false
+  }).catch(() => {});
+  const gSnap2 = await getDoc(doc(db, 'groups', grpAddGid));
+  const cnt = (gSnap2.data()?.members || []).length;
+  const stEl = document.getElementById('cd-st');
+  if (stEl) stEl.textContent = `👥 ${cnt} участников`;
+  // Notify added user
+  const grpName = gSnap2.data()?.name || 'группу';
+  await sendNotif(uid, 'message', 'Добавлен в группу', `${ME.username} добавил тебя в «${grpName}»`, ME.av || '💬', grpAddGid);
+  toast(`${uName} добавлен! 🎉`);
+};
+
+window.closeGrpAddSheet = () => {
+  document.getElementById('grp-add-sheet').classList.remove('on');
+  document.getElementById('grp-add-backdrop').classList.remove('on');
+};
+
+// ══════════════════════════════
+// GAME INVITES (1v1 direct invite)
+// ══════════════════════════════
+const GAME_ICONS = { ttt: '❌⭕', reaction: '⚡', word: '💬', quiz: '🧠', memory: '🃏', rps: '✊', clicker: '🏎️', sea: '🚢' };
+let ginvSelectedGame = null;
+let ginvSelectedFriend = null;
+let ginvIncomingId = null;
+let ginvIncomingSub = null;
+
+window.openGameInvite = preselect => {
+  ginvSelectedGame = preselect || null;
+  ginvSelectedFriend = null;
+  document.getElementById('ginv-grid').innerHTML = Object.entries(GNAME).map(([k, v]) =>
+    `<div class="ginv-gc${ginvSelectedGame === k ? ' sel' : ''}" onclick="ginvSelectGame('${k}')">
+      <div class="ginv-gic">${GAME_ICONS[k]}</div>
+      <div class="ginv-gn">${v}</div>
+    </div>`
+  ).join('');
+  document.getElementById('ginv-sheet').classList.add('on');
+  document.getElementById('ginv-backdrop').classList.add('on');
+  renderGinvFriends();
+  updateGinvSubtitle();
+};
+
+window.openGameInviteAll = () => openGameInvite(null);
+
+window.ginvSelectGame = type => {
+  ginvSelectedGame = type;
+  document.querySelectorAll('.ginv-gc').forEach(el => {
+    el.classList.toggle('sel', el.querySelector('.ginv-gic')?.textContent === GAME_ICONS[type]);
+  });
+  updateGinvSubtitle();
+};
+
+window.ginvSelectFriend = (uid, name) => {
+  ginvSelectedFriend = uid;
+  document.querySelectorAll('[id^="ginv-chk-"]').forEach(el => {
+    el.textContent = ''; el.style.background = ''; el.style.borderColor = 'var(--brd2)'; el.style.color = '';
+  });
+  const chk = document.getElementById('ginv-chk-' + uid);
+  if (chk) { chk.textContent = '✓'; chk.style.background = 'var(--pu)'; chk.style.borderColor = 'var(--pu)'; chk.style.color = '#fff'; }
+  updateGinvSubtitle();
+};
+
+async function renderGinvFriends() {
+  const friends = ME.friends || [];
+  const el = document.getElementById('ginv-friends-list');
+  if (!friends.length) {
+    el.innerHTML = '<div style="color:var(--t3);font-size:.85rem;padding:.5rem 0">Сначала добавь друзей</div>';
+    return;
+  }
+  const rows = await Promise.all(friends.map(async uid => {
+    const s = await getDoc(doc(db, 'users', uid));
+    if (!s.exists()) return '';
+    const p = s.data();
+    return `<div class="urow" style="padding:.5rem 0;border-bottom:1px solid var(--brd);cursor:pointer" onclick="ginvSelectFriend('${uid}','${esc(p.username)}')">
+      <div class="ur-av" style="width:38px;height:38px;font-size:1.2rem">${p.av || '👤'}</div>
+      <div class="ur-info"><div class="ur-name">${esc(p.username)}</div></div>
+      <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0" id="ginv-chk-${uid}"></div>
+    </div>`;
+  }));
+  el.innerHTML = rows.filter(Boolean).join('');
+}
+
+function updateGinvSubtitle() {
+  const el = document.getElementById('ginv-target-name');
+  if (!el) return;
+  if (ginvSelectedGame && ginvSelectedFriend) {
+    const frEl = document.getElementById('ginv-fr-' + ginvSelectedFriend);
+    const nm = frEl ? frEl.querySelector('.ur-name')?.textContent : ginvSelectedFriend;
+    el.textContent = `${GNAME[ginvSelectedGame]} → ${nm}`;
+  } else if (ginvSelectedGame) {
+    el.textContent = `${GNAME[ginvSelectedGame]} — выбери друга`;
+  } else {
+    el.textContent = 'Выбери игру и друга';
+  }
+}
+
+window.closeGinvSheet = () => {
+  document.getElementById('ginv-sheet').classList.remove('on');
+  document.getElementById('ginv-backdrop').classList.remove('on');
+};
+
+window.sendGameInvite = async () => {
+  if (!ginvSelectedGame) return toast('Выбери игру!');
+  if (!ginvSelectedFriend) return toast('Выбери друга!');
+  closeGinvSheet();
+  const invRef = await addDoc(collection(db, 'game_invites'), {
+    from: ME.uid, fromName: ME.username, fromAv: ME.av || '👤',
+    to: ginvSelectedFriend,
+    game: ginvSelectedGame,
+    status: 'pending',
+    ts: serverTimestamp()
+  });
+  await sendNotif(ginvSelectedFriend, 'game_invite',
+    `${ME.username} вызывает на игру!`,
+    `🎮 ${GNAME[ginvSelectedGame]}`,
+    ME.av || '💬', invRef.id
+  );
+  toast(`Вызов отправлен! 🎮`);
+  const gSel = ginvSelectedGame;
+  const unsubInv = onSnapshot(doc(db, 'game_invites', invRef.id), snap => {
+    if (!snap.exists()) return;
+    const d = snap.data();
+    if (d.status === 'accepted') { unsubInv(); toast('Друг принял! Запускаем игру...'); goTab('games'); startGame(gSel); }
+    else if (d.status === 'declined') { unsubInv(); toast('Друг отклонил вызов 😔'); }
+    else if (d.status === 'expired') { unsubInv(); }
+  });
+  setTimeout(() => { unsubInv(); updateDoc(doc(db, 'game_invites', invRef.id), { status: 'expired' }).catch(() => {}); }, 60000);
+  ginvSelectedGame = null;
+  ginvSelectedFriend = null;
+};
+
+function listenGameInvites() {
+  if (!ME) return;
+  if (ginvIncomingSub) { ginvIncomingSub(); ginvIncomingSub = null; }
+  const q2 = query(collection(db, 'game_invites'), where('to', '==', ME.uid), where('status', '==', 'pending'));
+  ginvIncomingSub = onSnapshot(q2, snap => {
+    if (snap.empty) { document.getElementById('ginv-incoming').classList.remove('on'); return; }
+    const d = snap.docs[0];
+    const inv = d.data();
+    ginvIncomingId = d.id;
+    document.getElementById('ginv-ic-av').textContent = inv.fromAv || '👤';
+    document.getElementById('ginv-ic-name').textContent = inv.fromName || '?';
+    document.getElementById('ginv-ic-game').textContent = `🎮 ${GNAME[inv.game] || inv.game} — вызов на игру!`;
+    document.getElementById('ginv-incoming').dataset.game = inv.game;
+    document.getElementById('ginv-incoming').classList.add('on');
+  });
+}
+
+window.acceptGameInvite = async () => {
+  document.getElementById('ginv-incoming').classList.remove('on');
+  if (!ginvIncomingId) return;
+  const game = document.getElementById('ginv-incoming').dataset.game;
+  await updateDoc(doc(db, 'game_invites', ginvIncomingId), { status: 'accepted' });
+  ginvIncomingId = null;
+  goTab('games');
+  startGame(game);
+};
+
+window.acceptGameInviteById = async invId => {
+  const snap = await getDoc(doc(db, 'game_invites', invId));
+  if (!snap.exists()) return toast('Приглашение устарело');
+  const inv = snap.data();
+  if (inv.status !== 'pending') return toast('Приглашение уже неактивно');
+  await updateDoc(doc(db, 'game_invites', invId), { status: 'accepted' });
+  goTab('games');
+  startGame(inv.game);
+};
+
+window.declineGameInvite = async () => {
+  document.getElementById('ginv-incoming').classList.remove('on');
+  if (ginvIncomingId) {
+    await updateDoc(doc(db, 'game_invites', ginvIncomingId), { status: 'declined' });
+    ginvIncomingId = null;
+  }
 };
 
 </script>
