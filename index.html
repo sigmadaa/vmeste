@@ -405,6 +405,7 @@ button,input,textarea{font-family:inherit;}
           <span class="srch-ico">🔍</span>
           <input class="srch" placeholder="Найти пользователя..." oninput="frSearch(this.value)"/>
         </div>
+        <button onclick="showAllUsers()" style="margin:.5rem 1rem;width:calc(100% - 2rem);padding:.6rem;border:1px dashed var(--brd2);border-radius:.75rem;background:transparent;color:var(--tx2);font-size:.9rem;cursor:pointer">👥 Показать всех пользователей</button>
       </div>
       <div id="fr-sr-res"></div>
       <div id="fr-reqs-sec"></div>
@@ -1090,6 +1091,16 @@ async function renderFrContacts() {
   if (!filtered.length) { el.innerHTML = ''; return; }
   el.innerHTML = '<div class="slbl">Люди из чатов</div>' + filtered.join('');
 }
+
+window.showAllUsers = async () => {
+  const res = document.getElementById('fr-sr-res');
+  res.innerHTML = '<div class="slbl">Загрузка...</div>';
+  const snap = await getDocs(query(collection(db,'users'), limit(50)));
+  const matches = snap.docs.filter(d => d.id !== ME.uid);
+  res.innerHTML = matches.length
+    ? '<div class="slbl">Все пользователи (' + matches.length + ')</div>' + matches.map(d => urRow(d.id, d.data())).join('')
+    : '<div class="empty" style="padding:1.5rem"><div class="ei">👥</div><div class="et">Никого нет</div></div>';
+};
 
 window.frSearch = async q => {
   q = q.trim();
