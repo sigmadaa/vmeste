@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.sigmadaa.twa",
+        "sha256_cert_fingerprints": ["C3:CE:96:7C:08:AA:89:D5:D1:1B:1A:02:BD:AB:D5:96:F8:BE:2A:F6:7B:F3:69:3D:1E:A9:CD:D1:90:69:53:7D"]
+      }
+    }]
