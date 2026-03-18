@@ -348,6 +348,23 @@ button,input,textarea{font-family:inherit;}
 .bbl-sender{font-size:.7rem;color:var(--pu);font-weight:700;margin-bottom:.15rem;}
 .att-btn{width:36px;height:36px;background:transparent;border:1px solid var(--brd2);border-radius:50%;color:var(--t2);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .att-btn:active{background:var(--brd2);}
+/* VOICE MESSAGES */
+.mic-btn{width:36px;height:36px;background:transparent;border:1px solid var(--brd2);border-radius:50%;color:var(--t2);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.mic-btn.recording{background:var(--rd);border-color:var(--rd);color:#fff;animation:pulse-rec .8s infinite;}
+@keyframes pulse-rec{0%,100%{box-shadow:0 0 0 0 #ef444460}50%{box-shadow:0 0 0 8px #ef444400}}
+#voice-bar{background:var(--bg3);border-top:1px solid var(--brd);padding:.5rem .75rem;display:none;align-items:center;gap:.75rem;}
+#voice-bar.on{display:flex;}
+.vb-timer{font-size:.95rem;font-weight:700;color:var(--rd);min-width:42px;font-variant-numeric:tabular-nums;}
+.vb-wave{flex:1;display:flex;align-items:center;gap:2px;height:28px;}
+.vb-bar{width:3px;border-radius:2px;background:var(--pu);opacity:.7;animation:vwave .6s ease-in-out infinite alternate;}
+.vb-bar:nth-child(2n){animation-delay:.15s;}
+.vb-bar:nth-child(3n){animation-delay:.3s;}
+@keyframes vwave{from{height:4px}to{height:22px}}
+.vb-cancel{background:transparent;border:none;color:var(--t3);font-size:.82rem;cursor:pointer;padding:.3rem .5rem;}
+.vb-send{width:36px;height:36px;background:var(--rd);border:none;border-radius:50%;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.bbl-voice{display:flex;align-items:center;gap:.6rem;padding:.1rem 0;}
+.bbl-voice audio{height:32px;max-width:200px;border-radius:20px;}
+audio::-webkit-media-controls-panel{background:rgba(255,255,255,.08);border-radius:20px;}
 @media(min-width:580px){.gg{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:520px){#game-ov{flex-direction:column;}.gop-chat{width:100%;height:190px;border-left:none;border-top:1px solid var(--brd);}.tc{width:78px;height:78px;}.qops{grid-template-columns:1fr;}}
 </style>
@@ -498,11 +515,20 @@ button,input,textarea{font-family:inherit;}
       <div class="rb-text"><b id="rb-who"></b><span id="rb-txt"></span></div>
       <button class="rb-cl" onclick="cancelReply()">✕</button>
     </div>
+    <div id="voice-bar">
+      <div class="vb-timer" id="vb-timer">0:00</div>
+      <div class="vb-wave">
+        <div class="vb-bar" style="height:8px"></div><div class="vb-bar" style="height:14px"></div><div class="vb-bar" style="height:18px"></div><div class="vb-bar" style="height:10px"></div><div class="vb-bar" style="height:20px"></div><div class="vb-bar" style="height:12px"></div><div class="vb-bar" style="height:16px"></div><div class="vb-bar" style="height:8px"></div>
+      </div>
+      <button class="vb-cancel" onclick="cancelVoice()">❌ Отмена</button>
+      <button class="vb-send" onclick="stopVoice(true)">➤</button>
+    </div>
     <div class="mbar">
       <button class="att-btn" onclick="document.getElementById('file-input').click()">📎</button>
       <input type="file" id="file-input" style="display:none" accept="image/*,.pdf,.doc,.docx,.txt,.zip,.mp4" onchange="handleFileAttach(this)"/>
       <textarea class="minp" id="msg-inp" placeholder="Сообщение..." rows="1" oninput="autoResize(this);onTyping()"></textarea>
-      <button class="snd" onclick="sendMsg()">➤</button>
+      <button class="mic-btn" id="mic-btn" onclick="toggleVoice()">🎤</button>
+      <button class="snd" id="snd-btn" onclick="sendMsg()">➤</button>
     </div>
   </div>
 </div>
@@ -1009,6 +1035,9 @@ function listenMessages(target) {
       if (m.type === 'image') {
         imgCache[mid] = m.url;
         content = `<img class="bbl-img" src="${m.url}" alt="фото" onclick="event.stopPropagation();viewImg('${mid}')"/>`;
+      } else if (m.type === 'voice') {
+        imgCache[mid] = m.url;
+        content = `<div class="bbl-voice"><audio controls src="${m.url}" preload="none" style="max-width:210px;height:36px"></audio></div>`;
       } else if (m.type === 'file') {
         content = `<a class="bbl-file" href="${m.url}" target="_blank">📎 ${esc(m.filename||'файл')}</a>`;
       } else {
@@ -1291,6 +1320,94 @@ function compressImage(file, maxPx, quality) {
     reader.readAsDataURL(file);
   });
 }
+
+// ══════════════════════════════
+// VOICE MESSAGES
+// ══════════════════════════════
+let mediaRecorder = null;
+let audioChunks = [];
+let voiceTimer = null;
+let voiceSeconds = 0;
+
+window.toggleVoice = async () => {
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    stopVoice(true);
+  } else {
+    await startVoice();
+  }
+};
+
+async function startVoice() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+      ? 'audio/webm;codecs=opus'
+      : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/ogg';
+    mediaRecorder = new MediaRecorder(stream, { mimeType });
+    audioChunks = [];
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.start(200);
+    voiceSeconds = 0;
+    document.getElementById('vb-timer').textContent = '0:00';
+    document.getElementById('voice-bar').classList.add('on');
+    document.getElementById('msg-inp').closest('.mbar').style.display = 'none';
+    document.getElementById('mic-btn').classList.add('recording');
+    voiceTimer = setInterval(() => {
+      voiceSeconds++;
+      const m = Math.floor(voiceSeconds / 60);
+      const s = voiceSeconds % 60;
+      document.getElementById('vb-timer').textContent = m + ':' + String(s).padStart(2,'0');
+      if (voiceSeconds >= 120) stopVoice(true); // max 2 min
+    }, 1000);
+  } catch(e) {
+    toast('Нет доступа к микрофону');
+  }
+}
+
+window.stopVoice = async (send) => {
+  if (!mediaRecorder) return;
+  clearInterval(voiceTimer);
+  const mr = mediaRecorder;
+  mediaRecorder = null;
+  mr.stream.getTracks().forEach(t => t.stop());
+  document.getElementById('voice-bar').classList.remove('on');
+  document.getElementById('msg-inp').closest('.mbar').style.display = '';
+  document.getElementById('mic-btn').classList.remove('recording');
+  if (!send || audioChunks.length === 0) { audioChunks = []; return; }
+  mr.stop();
+  await new Promise(r => mr.onstop = r);
+  const blob = new Blob(audioChunks, { type: mr.mimeType });
+  audioChunks = [];
+  if (blob.size > 900000) return toast('Голосовое слишком длинное (макс ~2 мин)');
+  const reader = new FileReader();
+  reader.onload = async e => {
+    const b64 = e.target.result;
+    const preview = '🎤 Голосовое';
+    const isGroup = chatMode === 'group';
+    const target = isGroup ? chatGroupId : chatWith;
+    if (!target) return;
+    const msgData = { from: ME.uid, text: preview, type: 'voice', url: b64, ts: serverTimestamp(), read: false };
+    if (isGroup) msgData.senderName = ME.username;
+    if (isGroup) {
+      await addDoc(collection(db,'groups',target,'messages'), msgData);
+      const gSnap = await getDoc(doc(db,'groups',target));
+      const members = gSnap.data()?.members || [];
+      const upd = { lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid };
+      members.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = (gSnap.data()?.['unread_'+u]||0)+1; });
+      await updateDoc(doc(db,'groups',target), upd);
+    } else {
+      const key = chatKey(ME.uid, target);
+      await addDoc(collection(db,'chats',key,'messages'), msgData);
+      await setDoc(doc(db,'chats',key), {
+        users: [ME.uid, target], lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid,
+        ['unread_'+target]: (await getDoc(doc(db,'chats',key)).then(s => (s.data()?.['unread_'+target]||0)+1).catch(()=>1))
+      }, { merge: true });
+    }
+  };
+  reader.readAsDataURL(blob);
+};
+
+window.cancelVoice = () => stopVoice(false);
 
 window.handleFileAttach = async input => {
   const file = input.files[0];
