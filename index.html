@@ -214,11 +214,13 @@ button,input,textarea{font-family:inherit;}
 /* GAMES */
 .g-head{padding:.85rem .85rem .2rem;font-size:1rem;font-weight:700;}
 .gg{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;padding:.6rem .75rem;}
-.gc{background:var(--bg4);border:1px solid var(--brd2);border-radius:16px;padding:1.2rem 1rem;cursor:pointer;text-align:center;transition:all .18s;}
+.gc{background:var(--bg4);border:1px solid var(--brd2);border-radius:16px;padding:1rem .85rem .75rem;cursor:pointer;text-align:center;transition:all .18s;position:relative;}
 .gc:active{transform:scale(.96);}
-.gc-ic{font-size:2.2rem;margin-bottom:.35rem;}
-.gc-n{font-size:.87rem;font-weight:700;}
-.gc-d{font-size:.7rem;color:var(--t3);margin-top:.1rem;}
+.gc-ic{font-size:2rem;margin-bottom:.25rem;}
+.gc-n{font-size:.85rem;font-weight:700;}
+.gc-d{font-size:.68rem;color:var(--t3);margin-top:.1rem;}
+.gc-inv{display:block;margin:.5rem auto 0;background:var(--pu)18;border:1px solid var(--pu)40;color:var(--pu);font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:50px;cursor:pointer;transition:background .15s;}
+.gc-inv:active{background:var(--pu)35;}
 
 /* GAME OVERLAY */
 #game-ov{z-index:150;flex-direction:row;}
@@ -677,19 +679,16 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <!-- GAMES -->
     <div class="tp" id="tp-games">
       <div class="g-head">Мини-игры 🎮</div>
-      <div style="padding:.3rem 1rem .6rem;font-size:.78rem;color:var(--t3)">Нажми — найдём соперника. Долгое нажатие — вызов другу.</div>
+      <div style="padding:.3rem 1rem .6rem;font-size:.78rem;color:var(--t3)">Нажми — найдём соперника случайно. Кнопка 👥 — вызов конкретного друга.</div>
       <div class="gg">
-        <div class="gc" onclick="startGame('ttt')" oncontextmenu="openGameInvite('ttt');return false"><div class="gc-ic">❌⭕</div><div class="gc-n">Крестики-нолики</div><div class="gc-d">Классика</div></div>
-        <div class="gc" onclick="startGame('reaction')" oncontextmenu="openGameInvite('reaction');return false"><div class="gc-ic">⚡</div><div class="gc-n">Реакция</div><div class="gc-d">Кто быстрее?</div></div>
-        <div class="gc" onclick="startGame('word')" oncontextmenu="openGameInvite('word');return false"><div class="gc-ic">💬</div><div class="gc-n">Угадай слово</div><div class="gc-d">Виселица</div></div>
-        <div class="gc" onclick="startGame('quiz')" oncontextmenu="openGameInvite('quiz');return false"><div class="gc-ic">🧠</div><div class="gc-n">Викторина</div><div class="gc-d">10 вопросов</div></div>
-        <div class="gc" onclick="startGame('memory')" oncontextmenu="openGameInvite('memory');return false"><div class="gc-ic">🃏</div><div class="gc-n">Мемори</div><div class="gc-d">Найди пары</div></div>
-        <div class="gc" onclick="startGame('rps')" oncontextmenu="openGameInvite('rps');return false"><div class="gc-ic">✊</div><div class="gc-n">КНБ</div><div class="gc-d">Камень-ножницы</div></div>
-        <div class="gc" onclick="startGame('clicker')" oncontextmenu="openGameInvite('clicker');return false"><div class="gc-ic">🏎️</div><div class="gc-n">Гоночный кликер</div><div class="gc-d">Жми быстрее!</div></div>
-        <div class="gc" onclick="startGame('sea')" oncontextmenu="openGameInvite('sea');return false"><div class="gc-ic">🚢</div><div class="gc-n">Морской бой</div><div class="gc-d">Классика</div></div>
-      </div>
-      <div style="padding:.5rem 1rem 1rem;text-align:center">
-        <button onclick="openGameInviteAll()" style="background:var(--pu)20;border:1px solid var(--pu)50;color:var(--pu);padding:.55rem 1.4rem;border-radius:50px;font-size:.82rem;font-weight:700;cursor:pointer">🎮 Вызвать друга на игру</button>
+        <div class="gc" onclick="startGame('ttt')"><div class="gc-ic">❌⭕</div><div class="gc-n">Крестики-нолики</div><div class="gc-d">Классика</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('ttt')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('reaction')"><div class="gc-ic">⚡</div><div class="gc-n">Реакция</div><div class="gc-d">Кто быстрее?</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('reaction')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('word')"><div class="gc-ic">💬</div><div class="gc-n">Угадай слово</div><div class="gc-d">Виселица</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('word')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('quiz')"><div class="gc-ic">🧠</div><div class="gc-n">Викторина</div><div class="gc-d">10 вопросов</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('quiz')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('memory')"><div class="gc-ic">🃏</div><div class="gc-n">Мемори</div><div class="gc-d">Найди пары</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('memory')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('rps')"><div class="gc-ic">✊</div><div class="gc-n">КНБ</div><div class="gc-d">Камень-ножницы</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('rps')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('clicker')"><div class="gc-ic">🏎️</div><div class="gc-n">Гоночный кликер</div><div class="gc-d">Жми быстрее!</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('clicker')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('sea')"><div class="gc-ic">🚢</div><div class="gc-n">Морской бой</div><div class="gc-d">Классика</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('sea')">👥 Вызвать друга</button></div>
       </div>
     </div>
   </div>
@@ -2913,9 +2912,29 @@ window.declineCall = async () => {
 async function initCallPeer(callId, role, video) {
   showCallOverlay(role === 'caller' ? 'Вызов...' : 'Подключение...', video);
   try {
-    callStreamLocal = await navigator.mediaDevices.getUserMedia({ audio: true, video: video });
+    if (video) {
+      try {
+        callStreamLocal = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      } catch(camErr) {
+        // Camera unavailable — fall back to audio only
+        toast('📷 Камера недоступна, продолжаем без видео');
+        video = false;
+        callStreamLocal = await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
+    } else {
+      callStreamLocal = await navigator.mediaDevices.getUserMedia({ audio: true });
+    }
   } catch(e) {
-    toast('Нет доступа к микрофону/камере');
+    let msg = 'Нет доступа к микрофону';
+    if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError')
+      msg = '🚫 Доступ к микрофону запрещён — разреши в настройках браузера';
+    else if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError')
+      msg = '🎤 Микрофон не найден — проверь подключение';
+    else if (e.name === 'NotReadableError' || e.name === 'TrackStartError')
+      msg = '🎤 Микрофон занят другим приложением';
+    else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia)
+      msg = '⚠️ Звонки работают только по HTTPS';
+    toast(msg);
     await updateDoc(doc(db,'calls',callId), { status: 'failed' }).catch(()=>{});
     hideCallOverlay();
     return;
@@ -3069,8 +3088,22 @@ function listenNotifications() {
     const newest = items[0];
     if (newest && !newest.read && newest.ts) {
       const age = Date.now() - newest.ts.toMillis();
-      if (age < 8000 && !document.getElementById('notif-ov').classList.contains('on')) {
-        showNotifBanner(newest);
+      if (age < 8000) {
+        if (!document.getElementById('notif-ov').classList.contains('on')) {
+          showNotifBanner(newest);
+        }
+        // Fire OS-level notification (works even when tab is in background)
+        if (Notification.permission === 'granted') {
+          try {
+            const n = new Notification(newest.title || 'Вместе', {
+              body: newest.body || '',
+              icon: './icon.svg',
+              badge: './icon.svg',
+              tag: newest.id
+            });
+            n.onclick = () => { window.focus(); handleNotifClick(newest.id, newest.type||'', newest.payload||''); };
+          } catch(e) {}
+        }
       }
     }
     // Update list if center is open
