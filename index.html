@@ -1046,6 +1046,12 @@ function listenMessages(target) {
       } else if (m.type === 'voice') {
         imgCache[mid] = m.url; // reuse imgCache for voice urls too
         const fmtDur = d => { const s=Math.round(d||0); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+        // check if browser can play this format
+        const mime = m.mimeType || 'audio/webm';
+        const baseMime = mime.split(';')[0];
+        const tmpA = document.createElement('audio');
+        const canPlay = tmpA.canPlayType(baseMime) !== '';
+        const warningHtml = !canPlay ? `<span style="font-size:.6rem;color:var(--rd);display:block">⚠️ Ваш браузер не поддерживает этот формат</span>` : '';
         content = `<div class="vp" data-mid="${mid}">
           <button class="vp-play" onclick="event.stopPropagation();vpToggle('${mid}')">▶️</button>
           <div class="vp-right">
@@ -1053,6 +1059,7 @@ function listenMessages(target) {
               <div class="vp-prog" id="vpp-${mid}"></div>
             </div>
             <span class="vp-dur" id="vpd-${mid}">🎤 ${fmtDur(m.duration)}</span>
+            ${warningHtml}
           </div>
         </div>`;
       } else if (m.type === 'file') {
@@ -1358,7 +1365,8 @@ window.toggleVoice = async () => {
 async function startVoice() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const types = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg','audio/mp4'];
+    // mp4/aac first for iOS Safari, then webm for Chrome/Firefox
+    const types = ['audio/mp4;codecs=mp4a.40.2','audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg'];
     const mimeType = types.find(t => MediaRecorder.isTypeSupported(t)) || '';
     mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
     audioChunks = [];
@@ -1401,7 +1409,7 @@ window.stopVoice = (send) => {
   mr.onstop = async () => {
     mr.stream.getTracks().forEach(t => t.stop());
     const blob = new Blob(chunks, { type: mr.mimeType || 'audio/webm' });
-    if (blob.size > 800000) return toast('Слишком длинное (макс 60 сек)');
+    if (blob.size > 700000) return toast('Слишком длинное (макс 60 сек)');
     toast('Отправляю... ⏳');
     const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = e => r(e.target.result); fr.readAsDataURL(blob); });
     const dur = voiceSeconds;
@@ -1409,7 +1417,7 @@ window.stopVoice = (send) => {
     const isGroup = chatMode === 'group';
     const target = isGroup ? chatGroupId : chatWith;
     if (!target) return;
-    const msgData = { from: ME.uid, text: preview, type: 'voice', url: b64, duration: dur, ts: serverTimestamp(), read: false };
+    const msgData = { from: ME.uid, text: preview, type: 'voice', url: b64, mimeType: mr.mimeType || 'audio/webm', duration: dur, ts: serverTimestamp(), read: false };
     if (isGroup) msgData.senderName = ME.username;
     try {
       if (isGroup) {
@@ -1438,18 +1446,24 @@ window.cancelVoice = () => stopVoice(false);
 // ── Custom voice player ──
 window.vpToggle = mid => {
   const url = imgCache[mid];
-  if (!url) return;
+  if (!url) { toast('Аудио ещё загружается...'); return; }
   // pause all others
   Object.entries(vpAudios).forEach(([id, a]) => {
     if (id !== mid && !a.paused) {
       a.pause();
-      const btn = document.querySelector(`[data-mid="${id}"] .vp-play`);
-      if (btn) btn.textContent = '▶️';
+      const b2 = document.querySelector(`[data-mid="${id}"] .vp-play`);
+      if (b2) b2.textContent = '▶️';
     }
   });
   if (!vpAudios[mid]) {
-    const a = new Audio(url);
-    vpAudios[mid] = a;
+    const a = new Audio();
+    a.preload = 'auto';
+    a.onerror = () => {
+      delete vpAudios[mid];
+      const b2 = document.querySelector(`[data-mid="${mid}"] .vp-play`);
+      if (b2) b2.textContent = '▶️';
+      toast('Формат не поддерживается браузером 🎤');
+    };
     a.ontimeupdate = () => {
       const prog = document.getElementById('vpp-'+mid);
       const dur = document.getElementById('vpd-'+mid);
@@ -1457,16 +1471,30 @@ window.vpToggle = mid => {
       if (dur) { const s=Math.round(a.currentTime); dur.textContent='🎤 '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
     };
     a.onended = () => {
-      const btn = document.querySelector(`[data-mid="${mid}"] .vp-play`);
-      if (btn) btn.textContent = '▶️';
+      const b2 = document.querySelector(`[data-mid="${mid}"] .vp-play`);
+      if (b2) b2.textContent = '▶️';
       const prog = document.getElementById('vpp-'+mid);
       if (prog) prog.style.width = '0%';
     };
+    a.src = url; // set src after attaching onerror
+    vpAudios[mid] = a;
   }
   const a = vpAudios[mid];
   const btn = document.querySelector(`[data-mid="${mid}"] .vp-play`);
-  if (a.paused) { a.play(); if (btn) btn.textContent = '⏸'; }
-  else { a.pause(); if (btn) btn.textContent = '▶️'; }
+  if (a.paused) {
+    if (btn) btn.textContent = '⏸';
+    const p = a.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(() => {
+        delete vpAudios[mid];
+        if (btn) btn.textContent = '▶️';
+        toast('Не удалось воспроизвести голосовое 🎤');
+      });
+    }
+  } else {
+    a.pause();
+    if (btn) btn.textContent = '▶️';
+  }
 };
 
 window.vpSeek = (e, mid) => {
