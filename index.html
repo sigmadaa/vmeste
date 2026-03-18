@@ -644,7 +644,7 @@ window.doReg = async () => {
     const cred = await createUserWithEmailAndPassword(auth, u, p);
     await updateProfile(cred.user, { displayName: n });
     await setDoc(doc(db, 'users', cred.user.uid), {
-      uid: cred.user.uid, username: n, email: u, av: '💬', bio: '',
+      uid: cred.user.uid, username: n, usernameLower: n.toLowerCase(), email: u, av: '💬', bio: '',
       stats: { played: 0, wins: 0 }, friends: [], sentReq: [], recvReq: []
     });
     e.textContent = '';
@@ -1040,11 +1040,20 @@ async function renderFriends() {
 }
 
 window.frSearch = async q => {
-  q = q.toLowerCase().trim();
+  q = q.trim();
   const res = document.getElementById('fr-sr-res');
   if (!q) { res.innerHTML=''; return; }
-  const snap = await getDocs(query(collection(db,'users'), where('username','>=',q), where('username','<=',q+'\uf8ff'), limit(10)));
-  const matches = snap.docs.filter(d => d.id !== ME.uid);
+  const ql = q.toLowerCase();
+  // Search by original username (case-sensitive prefix) AND by usernameLower (case-insensitive)
+  const [snap1, snap2] = await Promise.all([
+    getDocs(query(collection(db,'users'), where('username','>=',q), where('username','<=',q+'\uf8ff'), limit(10))),
+    getDocs(query(collection(db,'users'), where('usernameLower','>=',ql), where('usernameLower','<=',ql+'\uf8ff'), limit(10)))
+  ]);
+  const seen = new Set();
+  const matches = [];
+  for (const d of [...snap1.docs, ...snap2.docs]) {
+    if (d.id !== ME.uid && !seen.has(d.id)) { seen.add(d.id); matches.push(d); }
+  }
   res.innerHTML = matches.length
     ? '<div class="slbl">Поиск</div>' + matches.map(d => urRow(d.id, d.data())).join('')
     : '<div class="empty" style="padding:1.5rem"><div class="ei">🔍</div><div class="et">Никого не найдено</div></div>';
