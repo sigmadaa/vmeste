@@ -2842,7 +2842,7 @@ let pwPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();pwPrompt=e;document.getElementById('pwa-bar').classList.add('on');});
 window.pwInstall=()=>{if(pwPrompt){pwPrompt.prompt();pwPrompt.userChoice.then(()=>{document.getElementById('pwa-bar').classList.remove('on');pwPrompt=null;});}};
 function checkPWA(){if(window.matchMedia('(display-mode:standalone)').matches||window.navigator.standalone)document.getElementById('pwa-bar').classList.remove('on');}
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
 
 // ══════════════════════════════
 // THEME TOGGLE
