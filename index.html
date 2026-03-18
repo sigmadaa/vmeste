@@ -408,6 +408,7 @@ button,input,textarea{font-family:inherit;}
       </div>
       <div id="fr-sr-res"></div>
       <div id="fr-reqs-sec"></div>
+      <div id="fr-contacts-sec"></div>
       <div id="fr-list-sec"></div>
     </div>
     <!-- PROFILE -->
@@ -581,6 +582,11 @@ onAuthStateChanged(auth, async user => {
     const snap = await getDoc(doc(db, 'users', user.uid));
     if (snap.exists()) {
       ME = { uid: user.uid, ...snap.data() };
+      // backfill usernameLower for old accounts
+      if (!ME.usernameLower && ME.username) {
+        updateDoc(doc(db,'users',user.uid), { usernameLower: ME.username.toLowerCase() }).catch(()=>{});
+        ME.usernameLower = ME.username.toLowerCase();
+      }
     } else {
       // First time — create profile
       ME = { uid: user.uid, username: user.displayName || 'user', av: '💬', bio: '', stats: { played: 0, wins: 0 }, friends: [], sentReq: [], recvReq: [] };
@@ -778,6 +784,28 @@ window.openChat = async uid => {
   const p = snap.data();
   document.getElementById('cd-av').textContent = p.av||'👤';
   document.getElementById('cd-name').textContent = p.username;
+  // show add-friend button if not yet friends
+  const isFr = (ME.friends||[]).includes(uid);
+  const sent = (ME.sentReq||[]).includes(uid);
+  let addBtn = document.getElementById('cd-add-fr');
+  if (!addBtn) {
+    addBtn = document.createElement('button');
+    addBtn.id = 'cd-add-fr';
+    addBtn.style.cssText = 'margin-left:auto;padding:.3rem .7rem;border:none;border-radius:1rem;background:var(--ac);color:#fff;font-size:.85rem;cursor:pointer;flex-shrink:0';
+    document.querySelector('.ov-head').appendChild(addBtn);
+  }
+  if (isFr) {
+    addBtn.style.display = 'none';
+  } else if (sent) {
+    addBtn.style.display = '';
+    addBtn.textContent = '✓ Отправлено';
+    addBtn.disabled = true;
+  } else {
+    addBtn.style.display = '';
+    addBtn.textContent = '+ Друг';
+    addBtn.disabled = false;
+    addBtn.onclick = () => sendFr(uid).then(() => { addBtn.textContent = '✓ Отправлено'; addBtn.disabled = true; });
+  }
   chatWith = uid;
   cancelReply();
   openOv('chat-detail');
@@ -1036,7 +1064,31 @@ window.publishPost = async () => {
 async function renderFriends() {
   document.getElementById('fr-sr-res').innerHTML = '';
   await renderFrReqs();
+  await renderFrContacts();
   await renderFrList();
+}
+
+// People you've chatted with but aren't friends with yet
+async function renderFrContacts() {
+  const el = document.getElementById('fr-contacts-sec');
+  // get all chat uids
+  const snap = await getDocs(query(collection(db,'chats'), where('users','array-contains',ME.uid)));
+  const chatUids = [];
+  snap.docs.forEach(d => {
+    const uid = (d.data().users||[]).find(u => u !== ME.uid);
+    if (uid) chatUids.push(uid);
+  });
+  const friends = ME.friends || [];
+  const notFriends = chatUids.filter(u => !friends.includes(u));
+  if (!notFriends.length) { el.innerHTML = ''; return; }
+  const rows = await Promise.all(notFriends.map(async uid => {
+    const s = await getDoc(doc(db,'users',uid));
+    if (!s.exists()) return '';
+    return urRow(uid, s.data());
+  }));
+  const filtered = rows.filter(Boolean);
+  if (!filtered.length) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="slbl">Люди из чатов</div>' + filtered.join('');
 }
 
 window.frSearch = async q => {
