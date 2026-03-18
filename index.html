@@ -296,7 +296,10 @@ button,input,textarea{font-family:inherit;}
 #av-modal.on,#bio-modal.on{display:flex;}
 #bio-modal{align-items:center;}
 .avsh{background:var(--bg4);border-radius:20px 20px 0 0;padding:1.25rem;width:100%;max-width:480px;}
-.avsh-tit{font-weight:700;text-align:center;margin-bottom:1rem;font-size:.92rem;}
+.avsh-tit{font-weight:700;text-align:center;margin-bottom:.75rem;font-size:.92rem;}
+.av-photo-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:.55rem;background:var(--pu)18;border:1.5px dashed var(--pu)60;color:var(--pu);border-radius:14px;padding:.7rem;font-size:.88rem;font-weight:700;cursor:pointer;margin-bottom:.85rem;transition:background .15s;}
+.av-photo-btn:active{background:var(--pu)30;}
+.av-photo-preview{width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid var(--pu);display:none;margin:0 auto .65rem;}
 .av-grd{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;}
 .av-it{width:48px;height:48px;background:var(--bg);border:2px solid var(--brd2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;cursor:pointer;}
 .av-it.sel{border-color:var(--pu);background:var(--pu)20;}
@@ -809,6 +812,13 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 <div id="av-modal" onclick="if(event.target===this)closeAvModal()">
   <div class="avsh">
     <div class="avsh-tit">Выбери аватар</div>
+    <!-- Photo upload -->
+    <label class="av-photo-btn">
+      🖼️ Загрузить фото из галереи
+      <input type="file" accept="image/*" id="av-file-input" style="display:none" onchange="handleAvPhoto(event)"/>
+    </label>
+    <img id="av-photo-preview" class="av-photo-preview" alt="preview"/>
+    <!-- Emoji grid -->
     <div class="av-grd" id="av-grd"></div>
     <button class="av-cl" onclick="closeAvModal()">Закрыть</button>
   </div>
@@ -1073,7 +1083,9 @@ window.doLogout = async () => {
   if (feedUnsub) feedUnsub();
   if (chatsUnsub) chatsUnsub();
   if (frUnsub) frUnsub();
-  if (ME) await setDoc(doc(db,'presence',ME.uid), { online: false, last: serverTimestamp() }, { merge: true }).catch(()=>{});
+  if (notifUnsub) { notifUnsub(); notifUnsub = null; }
+  if (ginvIncomingSub) { ginvIncomingSub(); ginvIncomingSub = null; }
+  await setOffline().catch(()=>{});
   await signOut(auth);
 };
 
@@ -1114,7 +1126,7 @@ window.goTab = t => {
   document.getElementById('tb-ic').textContent = TAB_IC[t];
   document.getElementById('tb-add').style.display = t==='feed' ? 'flex' : 'none';
   if (t==='chats') listenChats();
-  if (t==='feed') { listenFeed(); document.getElementById('feed-av').textContent = ME?.av||'💬'; }
+  if (t==='feed') { listenFeed(); setAvEl(document.getElementById('feed-av'), ME?.av); }
   if (t==='friends') renderFriends();
   if (t==='profile') renderProfile();
 };
@@ -1184,7 +1196,7 @@ function listenChats() {
         const tStr = item.lastTs ? fmtTime(item.lastTs.toDate()) : '';
         const bdg = item.unread > 0 ? `<span class="ci-bdg">${item.unread}</span>` : '';
         return `<div class="ci" onclick="openGroup('${item.id}')">
-          <div class="ci-av" style="position:relative">${item.av||'👥'}<span style="position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;background:var(--pu);border-radius:50%;font-size:.55rem;display:flex;align-items:center;justify-content:center;color:#fff;border:1.5px solid var(--bg)">👥</span></div>
+          <div class="ci-av" style="position:relative;${avPhoto(item.av)}">${avText(item.av,'👥')}<span style="position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;background:var(--pu);border-radius:50%;font-size:.55rem;display:flex;align-items:center;justify-content:center;color:#fff;border:1.5px solid var(--bg)">👥</span></div>
           <div class="ci-body">
             <div class="ci-r1"><span class="ci-name">${esc(item.name)}</span><span class="ci-time">${tStr}</span></div>
             <div class="ci-r2"><span class="ci-last${item.unread?' ci-name':''}">${esc(lastTxt)}</span>${bdg}</div>
@@ -1196,7 +1208,7 @@ function listenChats() {
         const tStr = lastTs ? fmtTime(lastTs.toDate()) : '';
         const bdg = unread > 0 ? `<span class="ci-bdg">${unread}</span>` : '';
         return `<div class="ci" onclick="openChat('${uid}')">
-          <div class="ci-av">${p.av||'👤'}</div>
+          <div class="ci-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div>
           <div class="ci-body">
             <div class="ci-r1"><span class="ci-name">${esc(p.username)}</span><span class="ci-time">${tStr}</span></div>
             <div class="ci-r2"><span class="ci-last${unread?' ci-name':''} ">${esc(lastTxt)}</span>${bdg}</div>
@@ -1229,7 +1241,7 @@ window.openChat = async uid => {
   const snap = await getDoc(doc(db, 'users', uid));
   if (!snap.exists()) return;
   const p = snap.data();
-  document.getElementById('cd-av').textContent = p.av||'👤';
+  setAvEl(document.getElementById('cd-av'), p.av||'👤');
   document.getElementById('cd-name').textContent = p.username;
   document.getElementById('cd-st').innerHTML = '<span class="ov-offline" id="cd-dot"></span>не в сети';
   // show add-friend button if not yet friends
@@ -1258,7 +1270,7 @@ window.openGroup = async gid => {
   const snap = await getDoc(doc(db, 'groups', gid));
   if (!snap.exists()) return;
   const g = snap.data();
-  document.getElementById('cd-av').textContent = g.av||'👥';
+  setAvEl(document.getElementById('cd-av'), g.av||'👥');
   document.getElementById('cd-name').textContent = g.name;
   document.getElementById('cd-st').textContent = `👥 ${(g.members||[]).length} участников`;
   const addBtn = document.getElementById('cd-add-fr');
@@ -1284,8 +1296,27 @@ window.closeChatOv = () => {
 // ━━━━ PRESENCE ━━━━
 async function updatePresence() {
   if (!ME) return;
+  if (document.visibilityState === 'hidden') return; // don't mark online when tab hidden
   await setDoc(doc(db,'presence',ME.uid), { online: true, last: serverTimestamp() }, { merge: true }).catch(()=>{});
 }
+
+async function setOffline() {
+  if (!ME) return;
+  await setDoc(doc(db,'presence',ME.uid), { online: false, last: serverTimestamp() }, { merge: true }).catch(()=>{});
+}
+
+// Mark offline when tab is hidden or window is closed
+document.addEventListener('visibilitychange', () => {
+  if (!ME) return;
+  if (document.visibilityState === 'hidden') {
+    setOffline();
+  } else {
+    updatePresence();
+  }
+});
+window.addEventListener('beforeunload', () => { if (ME) setOffline(); });
+// iOS Safari fires pagehide instead of beforeunload reliably
+window.addEventListener('pagehide', () => { if (ME) setOffline(); });
 
 function listenPresence(uid) {
   if (presenceUnsub) presenceUnsub();
@@ -1294,7 +1325,11 @@ function listenPresence(uid) {
       const el = document.getElementById('cd-st');
       if (!el) return;
       const d = snap.data();
-      if (d?.online) {
+      // Consider online only if flag is true AND last heartbeat < 5 minutes ago
+      const lastMs = d?.last?.toMillis?.() || 0;
+      const freshEnough = (Date.now() - lastMs) < 5 * 60 * 1000;
+      const isOnline = d?.online === true && freshEnough;
+      if (isOnline) {
         el.innerHTML = '<span class="ov-online" id="cd-dot"></span>онлайн';
       } else if (d?.last) {
         const ago = fmtAgo(d.last.toDate());
@@ -1549,7 +1584,7 @@ function listenFeed() {
       const p = d.data(); const pid = d.id;
       const liked = (p.likes||[]).includes(ME.uid);
       return `<div class="pcard">
-        <div class="pc-head"><div class="pc-av">${p.av||'💬'}</div><div><div class="pc-name">${esc(p.username)}</div><div class="pc-time">${p.ts?fmtAgo(p.ts.toDate()):''}</div></div></div>
+        <div class="pc-head"><div class="pc-av" ${avHtml(p.av,'💬')}>${avText(p.av,'💬')}</div><div><div class="pc-name">${esc(p.username)}</div><div class="pc-time">${p.ts?fmtAgo(p.ts.toDate()):''}</div></div></div>
         <div class="pc-text">${esc(p.text)}</div>
         <div class="pc-acts">
           <button class="pabtn${liked?' liked':''}" onclick="toggleLike('${pid}',${liked})">❤️ ${(p.likes||[]).length}</button>
@@ -1635,7 +1670,7 @@ window.openCreateGroup = async () => {
       const s = await getDoc(doc(db,'users',uid)); if (!s.exists()) return '';
       const p = s.data();
       return `<div class="cg-member" onclick="toggleCgMember('${uid}')">
-        <div class="cg-m-av">${p.av||'👤'}</div>
+        <div class="cg-m-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div>
         <div class="cg-m-name">${esc(p.username)}</div>
         <div class="cg-chk" id="cgchk-${uid}"></div>
       </div>`;
@@ -1917,7 +1952,7 @@ function urRow(uid, p) {
     : got ? `<button class="sb sb-acc" onclick="acceptFr('${uid}')">Принять</button><button class="sb sb-dec" onclick="declineFr('${uid}')">✕</button>`
     : sent ? `<button class="sb sb-sent">Отправлено ✓</button>`
     : `<button class="sb sb-add" onclick="sendFr('${uid}')">+ Добавить</button>`;
-  return `<div class="urow"><div class="ur-av">${p.av||'👤'}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns">${btns}</div></div>`;
+  return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns">${btns}</div></div>`;
 }
 
 async function renderFrReqs() {
@@ -1927,7 +1962,7 @@ async function renderFrReqs() {
   const rows = await Promise.all(reqs.map(async uid => {
     const s = await getDoc(doc(db,'users',uid)); if(!s.exists()) return '';
     const p = s.data();
-    return `<div class="urow"><div class="ur-av">${p.av||'👤'}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns"><button class="sb sb-acc" onclick="acceptFr('${uid}')">Принять</button><button class="sb sb-dec" onclick="declineFr('${uid}')">✕</button></div></div>`;
+    return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns"><button class="sb sb-acc" onclick="acceptFr('${uid}')">Принять</button><button class="sb sb-dec" onclick="declineFr('${uid}')">✕</button></div></div>`;
   }));
   el.innerHTML = '<div class="slbl">Запросы ('+reqs.length+')</div>' + rows.join('');
   // badges
@@ -1940,7 +1975,7 @@ async function renderFrList() {
   const rows = await Promise.all(friends.map(async uid => {
     const s = await getDoc(doc(db,'users',uid)); if(!s.exists()) return '';
     const p = s.data();
-    return `<div class="urow"><div class="ur-av">${p.av||'👤'}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio||'Нет описания')}</div></div><div class="ur-btns"><button class="sb sb-msg" onclick="openChat('${uid}')">💬</button><button class="sb sb-rem" onclick="removeFr('${uid}')">Удалить</button></div></div>`;
+    return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio||'Нет описания')}</div></div><div class="ur-btns"><button class="sb sb-msg" onclick="openChat('${uid}')">💬</button><button class="sb sb-rem" onclick="removeFr('${uid}')">Удалить</button></div></div>`;
   }));
   el.innerHTML = '<div class="slbl">Друзья ('+friends.length+')</div>' + (rows.length ? rows.join('') : '<div class="empty"><div class="ei">👥</div><div class="et">Пока нет друзей.<br>Найди по имени выше!</div></div>');
 }
@@ -1971,8 +2006,46 @@ window.removeFr = async uid => {
 // ══════════════════════════════
 // PROFILE
 // ══════════════════════════════
+// Helper: returns inline style string + inner text for avatar template literals
+// Usage: <div class="av" ${avHtml(av,'👤')}>${avText(av,'👤')}</div>
+// For elements with existing style: <div style="position:relative;${avPhoto(av)}" ...>
+function avHtml(av, fallback) {
+  const f = fallback || '👤';
+  if (av && av.startsWith('data:')) {
+    return `style="background-image:url(${av});background-size:cover;background-position:center"`;
+  }
+  return '';
+}
+// Helper: returns CSS photo props for merging into existing style attribute (empty string if emoji)
+function avPhoto(av) {
+  if (av && av.startsWith('data:')) {
+    return `background-image:url(${av});background-size:cover;background-position:center;`;
+  }
+  return '';
+}
+// Helper: returns the text content for non-photo avatars (empty string for photos)
+function avText(av, fallback) {
+  const f = fallback || '👤';
+  if (av && av.startsWith('data:')) return '';
+  return av || f;
+}
+
+// Helper: set an avatar element (works for both emoji and photo base64)
+function setAvEl(el, av) {
+  if (!el) return;
+  if (av && av.startsWith('data:')) {
+    el.textContent = '';
+    el.style.backgroundImage = `url(${av})`;
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  } else {
+    el.style.backgroundImage = '';
+    el.textContent = av || '💬';
+  }
+}
+
 function renderProfile() {
-  document.getElementById('pr-av').textContent = ME.av||'💬';
+  setAvEl(document.getElementById('pr-av'), ME.av);
   document.getElementById('pr-name').textContent = ME.username;
   document.getElementById('pr-bio').textContent = ME.bio||'Нет описания';
   document.getElementById('ps-g').textContent = ME.stats?.played||0;
@@ -1982,14 +2055,68 @@ function renderProfile() {
 }
 
 window.openAvModal = () => {
+  // Reset photo preview
+  const prev = document.getElementById('av-photo-preview');
+  prev.style.display = 'none'; prev.src = '';
+  document.getElementById('av-file-input').value = '';
   document.getElementById('av-grd').innerHTML = AVATARS.map(a => `<div class="av-it${ME.av===a?' sel':''}" onclick="setAv('${a}')">${a}</div>`).join('');
+  // Show current photo avatar as preview if set
+  if (ME.av && ME.av.startsWith('data:')) {
+    prev.src = ME.av; prev.style.display = 'block';
+  }
   document.getElementById('av-modal').classList.add('on');
 };
 window.closeAvModal = () => document.getElementById('av-modal').classList.remove('on');
+
+// Resize & crop photo to 96x96 circle, return base64
+window.handleAvPhoto = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) return toast('Файл слишком большой (макс 10МБ)');
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const SIZE = 96;
+      const canvas = document.createElement('canvas');
+      canvas.width = SIZE; canvas.height = SIZE;
+      const ctx = canvas.getContext('2d');
+      // Crop to square from center
+      const side = Math.min(img.width, img.height);
+      const sx = (img.width - side) / 2;
+      const sy = (img.height - side) / 2;
+      // Clip to circle
+      ctx.beginPath();
+      ctx.arc(SIZE/2, SIZE/2, SIZE/2, 0, Math.PI*2);
+      ctx.clip();
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, SIZE, SIZE);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      // Show preview
+      const prev = document.getElementById('av-photo-preview');
+      prev.src = dataUrl; prev.style.display = 'block';
+      // Deselect emoji
+      document.querySelectorAll('.av-it').forEach(el => el.classList.remove('sel'));
+      // Save immediately
+      savePhotoAv(dataUrl);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+async function savePhotoAv(dataUrl) {
+  await updateDoc(doc(db,'users',ME.uid), { av: dataUrl });
+  ME.av = dataUrl;
+  setAvEl(document.getElementById('pr-av'), dataUrl);
+  setAvEl(document.getElementById('feed-av'), dataUrl);
+  closeAvModal();
+  toast('Фото установлено! 👍');
+}
+
 window.setAv = async a => {
   await updateDoc(doc(db,'users',ME.uid), { av: a });
   ME.av = a; closeAvModal(); renderProfile(); toast('Аватар обновлён!');
-  document.getElementById('feed-av').textContent = a;
+  setAvEl(document.getElementById('feed-av'), a);
 };
 window.openBioModal = () => { document.getElementById('bio-ta').value=ME.bio||''; document.getElementById('bio-modal').classList.add('on'); };
 window.closeBioModal = () => document.getElementById('bio-modal').classList.remove('on');
@@ -2834,7 +2961,23 @@ window.cancelVideoCircle = () => stopVideoCircle(false);
 // ══════════════════════════════
 const ICE_SERVERS = { iceServers: [
   { urls: 'stun:stun.l.google.com:19302' },
-  { urls: 'stun:stun1.l.google.com:19302' }
+  { urls: 'stun:stun1.l.google.com:19302' },
+  { urls: 'stun:stun.relay.metered.ca:80' },
+  {
+    urls: 'turn:global.relay.metered.ca:80',
+    username: 'openrelayproject',
+    credential: 'openrelayproject'
+  },
+  {
+    urls: 'turn:global.relay.metered.ca:443',
+    username: 'openrelayproject',
+    credential: 'openrelayproject'
+  },
+  {
+    urls: 'turn:global.relay.metered.ca:443?transport=tcp',
+    username: 'openrelayproject',
+    credential: 'openrelayproject'
+  }
 ]};
 
 let callPc = null;
@@ -2949,54 +3092,90 @@ async function initCallPeer(callId, role, video) {
   }
   callPc = new RTCPeerConnection(ICE_SERVERS);
   callStreamLocal.getTracks().forEach(t => callPc.addTrack(t, callStreamLocal));
+
   callPc.ontrack = e => {
     const rv = document.getElementById('call-remote-vid');
-    if (rv.srcObject !== e.streams[0]) { rv.srcObject = e.streams[0]; rv.play().catch(()=>{}); }
+    if (!document.getElementById('call-vid-wrap').classList.contains('on') && e.streams[0].getVideoTracks().length) {
+      document.getElementById('call-vid-wrap').classList.add('on');
+    }
+    if (rv.srcObject !== e.streams[0]) {
+      rv.srcObject = e.streams[0];
+      rv.play().catch(()=>{});
+    }
     document.getElementById('call-status').textContent = 'В звонке';
     startCallTimer();
   };
+
+  callPc.onconnectionstatechange = () => {
+    const s = callPc?.connectionState;
+    if (s === 'failed') { toast('Не удалось установить связь'); endCall(); }
+    if (s === 'disconnected') document.getElementById('call-status').textContent = 'Подбираем связь...';
+  };
+
+  // Trickle ICE — send each candidate as it appears
   callPc.onicecandidate = async ev => {
     if (ev.candidate) {
       await addDoc(collection(db,'calls',callId, role+'Cands'), ev.candidate.toJSON()).catch(()=>{});
     }
   };
+
+  // Helper: wait for ICE gathering to complete (max 3s)
+  function waitForIce(pc) {
+    return new Promise(resolve => {
+      if (pc.iceGatheringState === 'complete') { resolve(); return; }
+      const t = setTimeout(resolve, 3000);
+      pc.onicegatheringstatechange = () => { if (pc.iceGatheringState === 'complete') { clearTimeout(t); resolve(); } };
+    });
+  }
+
   const callRef = doc(db,'calls',callId);
+
   if (role === 'caller') {
-    const offer = await callPc.createOffer();
+    const offer = await callPc.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: video });
     await callPc.setLocalDescription(offer);
-    await updateDoc(callRef, { offer: { sdp: offer.sdp, type: offer.type } }).catch(()=>{});
-    // Listen for answer + callee ICE
+    await waitForIce(callPc);
+    await updateDoc(callRef, { offer: { sdp: callPc.localDescription.sdp, type: callPc.localDescription.type } }).catch(()=>{});
+
     callUnsub = onSnapshot(callRef, async snap => {
       if (!snap.exists()) { endCall(); return; }
       const d = snap.data();
-      if (d.answer && !callPc.currentRemoteDescription) {
+      if (d.answer && callPc && !callPc.currentRemoteDescription) {
         await callPc.setRemoteDescription(new RTCSessionDescription(d.answer)).catch(()=>{});
       }
       if (d.status === 'declined') { toast('📵 Звонок отклонён'); endCall(); }
       if (d.status === 'ended') endCall();
+      if (d.status === 'failed') { toast('Не удалось соединиться'); endCall(); }
     });
+    // Also pick up callee ICE candidates after remote is set
     callIceSub = onSnapshot(collection(db,'calls',callId,'calleeCands'), snap => {
       snap.docChanges().forEach(async ch => {
-        if (ch.type === 'added' && callPc) await callPc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{});
+        if (ch.type === 'added' && callPc && callPc.remoteDescription)
+          await callPc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{});
       });
     });
   } else {
-    // callee
-    const snap = await getDoc(callRef);
-    const d = snap.data();
-    if (!d?.offer) { toast('Звонок уже завершён'); hideCallOverlay(); return; }
-    await callPc.setRemoteDescription(new RTCSessionDescription(d.offer));
+    // callee: get offer from Firestore (retry a couple times in case of slow write)
+    let offerData = null;
+    for (let i = 0; i < 5; i++) {
+      const snap = await getDoc(callRef);
+      offerData = snap.data()?.offer;
+      if (offerData) break;
+      await new Promise(r => setTimeout(r, 600));
+    }
+    if (!offerData) { toast('Звонок уже завершён'); hideCallOverlay(); return; }
+    await callPc.setRemoteDescription(new RTCSessionDescription(offerData));
     const answer = await callPc.createAnswer();
     await callPc.setLocalDescription(answer);
-    await updateDoc(callRef, { answer: { sdp: answer.sdp, type: answer.type }, status: 'answered' }).catch(()=>{});
+    await waitForIce(callPc);
+    await updateDoc(callRef, { answer: { sdp: callPc.localDescription.sdp, type: callPc.localDescription.type }, status: 'answered' }).catch(()=>{});
     callUnsub = onSnapshot(callRef, snap => {
       if (!snap.exists()) { endCall(); return; }
-      const d2 = snap.data();
-      if (d2.status === 'ended') endCall();
+      if (snap.data()?.status === 'ended') endCall();
     });
     callIceSub = onSnapshot(collection(db,'calls',callId,'callerCands'), snap => {
       snap.docChanges().forEach(async ch => {
-        if (ch.type === 'added' && callPc) await callPc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{});
+        if (ch.type === 'added' && callPc)
+          await callPc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{});
       });
     });
   }
@@ -3006,7 +3185,7 @@ function showCallOverlay(status, video) {
   if (callRemoteUid) {
     getDoc(doc(db,'users',callRemoteUid)).then(snap => {
       if (snap.exists()) {
-        document.getElementById('call-remote-av').textContent = snap.data().av || '👤';
+        setAvEl(document.getElementById('call-remote-av'), snap.data().av || '👤');
         document.getElementById('call-remote-name').textContent = snap.data().username;
       }
     });
@@ -3230,7 +3409,7 @@ function renderGrpAddList(users) {
   }
   el.innerHTML = users.map(p =>
     `<div class="urow" style="padding:.6rem 0;border-bottom:1px solid var(--brd)">
-      <div class="ur-av">${p.av || '👤'}</div>
+      <div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div>
       <div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio || '')}</div></div>
       <div class="ur-btns"><button class="sb sb-acc" onclick="grpAddConfirm('${p.uid}')">Добавить</button></div>
     </div>`
@@ -3324,7 +3503,7 @@ async function renderGinvFriends() {
     if (!s.exists()) return '';
     const p = s.data();
     return `<div class="urow" style="padding:.5rem 0;border-bottom:1px solid var(--brd);cursor:pointer" onclick="ginvSelectFriend('${uid}','${esc(p.username)}')">
-      <div class="ur-av" style="width:38px;height:38px;font-size:1.2rem">${p.av || '👤'}</div>
+      <div class="ur-av" style="width:38px;height:38px;font-size:1.2rem;${avPhoto(p.av)}">${avText(p.av,'👤')}</div>
       <div class="ur-info"><div class="ur-name">${esc(p.username)}</div></div>
       <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0" id="ginv-chk-${uid}"></div>
     </div>`;
