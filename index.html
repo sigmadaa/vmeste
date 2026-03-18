@@ -361,10 +361,18 @@ button,input,textarea{font-family:inherit;}
 .vb-bar:nth-child(3n){animation-delay:.3s;}
 @keyframes vwave{from{height:4px}to{height:22px}}
 .vb-cancel{background:transparent;border:none;color:var(--t3);font-size:.82rem;cursor:pointer;padding:.3rem .5rem;}
-.vb-send{width:36px;height:36px;background:var(--rd);border:none;border-radius:50%;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.bbl-voice{display:flex;align-items:center;gap:.6rem;padding:.1rem 0;}
-.bbl-voice audio{height:32px;max-width:200px;border-radius:20px;}
-audio::-webkit-media-controls-panel{background:rgba(255,255,255,.08);border-radius:20px;}
+.vb-send{width:36px;height:36px;background:var(--gn);border:none;border-radius:50%;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+/* Custom voice player */
+.vp{display:flex;align-items:center;gap:.6rem;padding:.25rem .1rem;min-width:180px;max-width:240px;}
+.vp-play{width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.bbl.in .vp-play{background:var(--pu);}
+.vp-play:active{opacity:.8;}
+.vp-right{flex:1;min-width:0;}
+.vp-prog-wrap{height:4px;background:rgba(255,255,255,.2);border-radius:2px;cursor:pointer;position:relative;margin-bottom:3px;}
+.bbl.in .vp-prog-wrap{background:var(--brd2);}
+.vp-prog{height:100%;background:#fff;border-radius:2px;width:0%;transition:width .1s linear;pointer-events:none;}
+.bbl.in .vp-prog{background:var(--pu);}
+.vp-dur{font-size:.68rem;opacity:.7;}
 @media(min-width:580px){.gg{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:520px){#game-ov{flex-direction:column;}.gop-chat{width:100%;height:190px;border-left:none;border-top:1px solid var(--brd);}.tc{width:78px;height:78px;}.qops{grid-template-columns:1fr;}}
 </style>
@@ -1036,8 +1044,17 @@ function listenMessages(target) {
         imgCache[mid] = m.url;
         content = `<img class="bbl-img" src="${m.url}" alt="фото" onclick="event.stopPropagation();viewImg('${mid}')"/>`;
       } else if (m.type === 'voice') {
-        imgCache[mid] = m.url;
-        content = `<div class="bbl-voice"><audio controls src="${m.url}" preload="none" style="max-width:210px;height:36px"></audio></div>`;
+        imgCache[mid] = m.url; // reuse imgCache for voice urls too
+        const fmtDur = d => { const s=Math.round(d||0); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+        content = `<div class="vp" data-mid="${mid}">
+          <button class="vp-play" onclick="event.stopPropagation();vpToggle('${mid}')">▶️</button>
+          <div class="vp-right">
+            <div class="vp-prog-wrap" onclick="event.stopPropagation();vpSeek(event,'${mid}')">
+              <div class="vp-prog" id="vpp-${mid}"></div>
+            </div>
+            <span class="vp-dur" id="vpd-${mid}">🎤 ${fmtDur(m.duration)}</span>
+          </div>
+        </div>`;
       } else if (m.type === 'file') {
         content = `<a class="bbl-file" href="${m.url}" target="_blank">📎 ${esc(m.filename||'файл')}</a>`;
       } else {
@@ -1328,6 +1345,7 @@ let mediaRecorder = null;
 let audioChunks = [];
 let voiceTimer = null;
 let voiceSeconds = 0;
+const vpAudios = {}; // mid -> Audio object
 
 window.toggleVoice = async () => {
   if (mediaRecorder && mediaRecorder.state === 'recording') {
@@ -1340,74 +1358,123 @@ window.toggleVoice = async () => {
 async function startVoice() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-      ? 'audio/webm;codecs=opus'
-      : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/ogg';
-    mediaRecorder = new MediaRecorder(stream, { mimeType });
+    const types = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg','audio/mp4'];
+    const mimeType = types.find(t => MediaRecorder.isTypeSupported(t)) || '';
+    mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
     audioChunks = [];
-    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.start(200);
+    mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.start(100);
     voiceSeconds = 0;
     document.getElementById('vb-timer').textContent = '0:00';
     document.getElementById('voice-bar').classList.add('on');
-    document.getElementById('msg-inp').closest('.mbar').style.display = 'none';
+    document.querySelector('.mbar').style.display = 'none';
     document.getElementById('mic-btn').classList.add('recording');
     voiceTimer = setInterval(() => {
       voiceSeconds++;
-      const m = Math.floor(voiceSeconds / 60);
-      const s = voiceSeconds % 60;
-      document.getElementById('vb-timer').textContent = m + ':' + String(s).padStart(2,'0');
-      if (voiceSeconds >= 120) stopVoice(true); // max 2 min
+      const m = Math.floor(voiceSeconds / 60), s = voiceSeconds % 60;
+      document.getElementById('vb-timer').textContent = m + ':' + String(s).padStart(2, '0');
+      if (voiceSeconds >= 60) stopVoice(true); // max 60 sec
     }, 1000);
   } catch(e) {
     toast('Нет доступа к микрофону');
   }
 }
 
-window.stopVoice = async (send) => {
+window.stopVoice = (send) => {
   if (!mediaRecorder) return;
   clearInterval(voiceTimer);
   const mr = mediaRecorder;
+  const chunks = audioChunks; // snapshot — contains all chunks so far
   mediaRecorder = null;
-  mr.stream.getTracks().forEach(t => t.stop());
-  document.getElementById('voice-bar').classList.remove('on');
-  document.getElementById('msg-inp').closest('.mbar').style.display = '';
-  document.getElementById('mic-btn').classList.remove('recording');
-  if (!send || audioChunks.length === 0) { audioChunks = []; return; }
-  mr.stop();
-  await new Promise(r => mr.onstop = r);
-  const blob = new Blob(audioChunks, { type: mr.mimeType });
   audioChunks = [];
-  if (blob.size > 900000) return toast('Голосовое слишком длинное (макс ~2 мин)');
-  const reader = new FileReader();
-  reader.onload = async e => {
-    const b64 = e.target.result;
+  // Redirect final ondataavailable chunk into our snapshot array
+  mr.ondataavailable = e => { if (e.data && e.data.size > 0) chunks.push(e.data); };
+  document.getElementById('voice-bar').classList.remove('on');
+  document.querySelector('.mbar').style.display = '';
+  document.getElementById('mic-btn').classList.remove('recording');
+  if (!send || chunks.length === 0) {
+    mr.stream.getTracks().forEach(t => t.stop());
+    try { mr.stop(); } catch(e) {}
+    return;
+  }
+  // Set onstop BEFORE calling stop()
+  mr.onstop = async () => {
+    mr.stream.getTracks().forEach(t => t.stop());
+    const blob = new Blob(chunks, { type: mr.mimeType || 'audio/webm' });
+    if (blob.size > 800000) return toast('Слишком длинное (макс 60 сек)');
+    toast('Отправляю... ⏳');
+    const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = e => r(e.target.result); fr.readAsDataURL(blob); });
+    const dur = voiceSeconds;
     const preview = '🎤 Голосовое';
     const isGroup = chatMode === 'group';
     const target = isGroup ? chatGroupId : chatWith;
     if (!target) return;
-    const msgData = { from: ME.uid, text: preview, type: 'voice', url: b64, ts: serverTimestamp(), read: false };
+    const msgData = { from: ME.uid, text: preview, type: 'voice', url: b64, duration: dur, ts: serverTimestamp(), read: false };
     if (isGroup) msgData.senderName = ME.username;
-    if (isGroup) {
-      await addDoc(collection(db,'groups',target,'messages'), msgData);
-      const gSnap = await getDoc(doc(db,'groups',target));
-      const members = gSnap.data()?.members || [];
-      const upd = { lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid };
-      members.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = (gSnap.data()?.['unread_'+u]||0)+1; });
-      await updateDoc(doc(db,'groups',target), upd);
-    } else {
-      const key = chatKey(ME.uid, target);
-      await addDoc(collection(db,'chats',key,'messages'), msgData);
-      await setDoc(doc(db,'chats',key), {
-        users: [ME.uid, target], lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid,
-        ['unread_'+target]: (await getDoc(doc(db,'chats',key)).then(s => (s.data()?.['unread_'+target]||0)+1).catch(()=>1))
-      }, { merge: true });
-    }
+    try {
+      if (isGroup) {
+        await addDoc(collection(db,'groups',target,'messages'), msgData);
+        const gSnap = await getDoc(doc(db,'groups',target));
+        const members = gSnap.data()?.members || [];
+        const upd = { lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid };
+        members.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = (gSnap.data()?.['unread_'+u]||0)+1; });
+        await updateDoc(doc(db,'groups',target), upd);
+      } else {
+        const key = chatKey(ME.uid, target);
+        await addDoc(collection(db,'chats',key,'messages'), msgData);
+        await setDoc(doc(db,'chats',key), {
+          users: [ME.uid, target], lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid,
+          ['unread_'+target]: (await getDoc(doc(db,'chats',key)).then(s => (s.data()?.['unread_'+target]||0)+1).catch(()=>1))
+        }, { merge: true });
+      }
+      toast('Голосовое отправлено 🎤');
+    } catch(e) { toast('Ошибка отправки'); console.error(e); }
   };
-  reader.readAsDataURL(blob);
+  mr.stop();
 };
 
 window.cancelVoice = () => stopVoice(false);
+
+// ── Custom voice player ──
+window.vpToggle = mid => {
+  const url = imgCache[mid];
+  if (!url) return;
+  // pause all others
+  Object.entries(vpAudios).forEach(([id, a]) => {
+    if (id !== mid && !a.paused) {
+      a.pause();
+      const btn = document.querySelector(`[data-mid="${id}"] .vp-play`);
+      if (btn) btn.textContent = '▶️';
+    }
+  });
+  if (!vpAudios[mid]) {
+    const a = new Audio(url);
+    vpAudios[mid] = a;
+    a.ontimeupdate = () => {
+      const prog = document.getElementById('vpp-'+mid);
+      const dur = document.getElementById('vpd-'+mid);
+      if (prog && a.duration) prog.style.width = (a.currentTime/a.duration*100)+'%';
+      if (dur) { const s=Math.round(a.currentTime); dur.textContent='🎤 '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+    };
+    a.onended = () => {
+      const btn = document.querySelector(`[data-mid="${mid}"] .vp-play`);
+      if (btn) btn.textContent = '▶️';
+      const prog = document.getElementById('vpp-'+mid);
+      if (prog) prog.style.width = '0%';
+    };
+  }
+  const a = vpAudios[mid];
+  const btn = document.querySelector(`[data-mid="${mid}"] .vp-play`);
+  if (a.paused) { a.play(); if (btn) btn.textContent = '⏸'; }
+  else { a.pause(); if (btn) btn.textContent = '▶️'; }
+};
+
+window.vpSeek = (e, mid) => {
+  const a = vpAudios[mid];
+  if (!a || !a.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  a.currentTime = ((e.clientX - rect.left) / rect.width) * a.duration;
+};
 
 window.handleFileAttach = async input => {
   const file = input.files[0];
