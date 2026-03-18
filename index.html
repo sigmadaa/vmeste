@@ -592,6 +592,19 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
       <input class="af" id="li-p" type="password" placeholder="Пароль"/>
       <div class="aerr" id="li-e"></div>
       <button class="abtn" id="li-btn" onclick="doLogin()">Войти →</button>
+      <div style="text-align:center;margin-top:.6rem">
+        <button onclick="openForgotPass()" style="background:none;border:none;color:var(--pu);font-size:.85rem;cursor:pointer;text-decoration:underline">Забыл пароль?</button>
+      </div>
+    </div>
+    <div id="af-fp" style="display:none">
+      <div style="font-size:.85rem;color:var(--t2);margin-bottom:.8rem">Введи своё <b>имя пользователя</b> или <b>email</b> — пришлём письмо для сброса пароля.</div>
+      <input class="af" id="fp-u" placeholder="Имя пользователя или Email"/>
+      <div class="aerr" id="fp-e"></div>
+      <div class="aerr" id="fp-ok" style="color:#22c55e"></div>
+      <button class="abtn" id="fp-btn" onclick="doResetPass()">Отправить письмо 📧</button>
+      <div style="text-align:center;margin-top:.6rem">
+        <button onclick="backToLogin()" style="background:none;border:none;color:var(--t3);font-size:.84rem;cursor:pointer">← Назад ко входу</button>
+      </div>
     </div>
     <div id="af-up" style="display:none">
       <input class="af" id="re-n" placeholder="Имя пользователя (без пробелов)"/>
@@ -945,7 +958,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, limit, onSnapshot, addDoc, serverTimestamp, getDocs, arrayUnion, arrayRemove, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -1023,6 +1036,55 @@ window.aSwitch = t => {
   document.querySelectorAll('.atab').forEach((el,i) => el.classList.toggle('on', i===(t==='in'?0:1)));
   document.getElementById('af-in').style.display = t==='in' ? '' : 'none';
   document.getElementById('af-up').style.display = t==='up' ? '' : 'none';
+  document.getElementById('af-fp').style.display = 'none';
+  document.querySelector('.atabs').style.display = '';
+};
+
+window.openForgotPass = () => {
+  document.getElementById('af-in').style.display = 'none';
+  document.getElementById('af-up').style.display = 'none';
+  document.getElementById('af-fp').style.display = '';
+  document.querySelector('.atabs').style.display = 'none';
+  document.getElementById('fp-u').value = '';
+  document.getElementById('fp-e').textContent = '';
+  document.getElementById('fp-ok').textContent = '';
+};
+
+window.backToLogin = () => {
+  document.getElementById('af-fp').style.display = 'none';
+  document.getElementById('af-in').style.display = '';
+  document.querySelector('.atabs').style.display = '';
+  document.querySelectorAll('.atab').forEach((el,i) => el.classList.toggle('on', i===0));
+};
+
+window.doResetPass = async () => {
+  const val = document.getElementById('fp-u').value.trim();
+  const eEl = document.getElementById('fp-e');
+  const okEl = document.getElementById('fp-ok');
+  const btn = document.getElementById('fp-btn');
+  eEl.textContent = ''; okEl.textContent = '';
+  if (!val) return eEl.textContent = 'Введи имя пользователя или email';
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Отправляю...';
+  try {
+    let email = val;
+    if (!val.includes('@')) {
+      // lookup email by username
+      const q2 = query(collection(db,'users'), where('username','==',val), limit(1));
+      const snap = await getDocs(q2);
+      if (snap.empty) { eEl.textContent = 'Пользователь не найден'; return; }
+      email = snap.docs[0].data().email;
+    }
+    await sendPasswordResetEmail(auth, email);
+    okEl.textContent = '✅ Письмо отправлено! Проверь почту (и папку «Спам»).';
+  } catch(err) {
+    if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-email') {
+      eEl.textContent = 'Email не найден';
+    } else {
+      eEl.textContent = 'Ошибка: ' + err.message;
+    }
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Отправить письмо 📧';
+  }
 };
 
 window.doLogin = async () => {
