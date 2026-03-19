@@ -1748,7 +1748,7 @@ window.doLogout = async () => {
 // ══════════════════════════════
 // APP
 // ══════════════════════════════
-const TABS = ['chats','feed','friends','games','draw','profile'];
+const TABS = ['chats','feed','friends','games','profile'];
 const TAB_T = {chats:'Вместе',feed:'Лента',friends:'Друзья',games:'Игры',draw:'Рисуй',profile:'Профиль'};
 const TAB_IC = {chats:'💬',feed:'🏠',friends:'👥',games:'🎮',draw:'🎨',profile:'👤'};
 
@@ -5271,9 +5271,12 @@ let drawCurrentWord = null;
 // ─── LOBBY ───
 window.goTab = t => {
   TABS.forEach(id => {
-    document.getElementById('tp-'+id).classList.toggle('on', id===t);
-    document.getElementById('nb-'+id).classList.toggle('on', id===t);
+    document.getElementById('tp-'+id)?.classList.toggle('on', id===t);
+    document.getElementById('nb-'+id)?.classList.toggle('on', id===t);
   });
+  // tp-draw still exists even though nb-draw was removed from nav
+  const tpDraw = document.getElementById('tp-draw');
+  if (tpDraw) tpDraw.classList.toggle('on', t==='draw');
   document.getElementById('tb-tit').textContent = TAB_T[t];
   document.getElementById('tb-ic').textContent = TAB_IC[t];
   document.getElementById('tb-add').style.display = t==='feed' ? 'flex' : 'none';
