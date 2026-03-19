@@ -526,7 +526,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 #incoming-call{position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateY(-130%);background:var(--bg4);border:1px solid var(--pu)50;border-radius:18px;padding:1rem 1.25rem;z-index:450;width:calc(100% - 2rem);max-width:380px;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 30px #0007;}
 #incoming-call.on{transform:translateX(-50%) translateY(0);}
 .ic-row{display:flex;align-items:center;gap:.75rem;}
-.ic-av{font-size:2.2rem;}
+.ic-av{font-size:2.2rem;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center;overflow:hidden;}
 .ic-info{flex:1;}
 .ic-name{font-weight:700;}
 .ic-sub{font-size:.75rem;color:var(--t3);}
@@ -535,6 +535,217 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 .ic-btn.acc-c{background:var(--gn);}
 .ic-btn.dec-c{background:var(--rd);}
 
+/* ══════════════ INCOMING GROUP CALL ══════════════ */
+#incoming-gcall{position:fixed;top:5rem;left:50%;transform:translateX(-50%) translateY(-200%);background:var(--bg4);border:1px solid #22c55e40;border-radius:18px;padding:1rem 1.25rem;z-index:451;width:calc(100% - 2rem);max-width:380px;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 30px #0007;}
+#incoming-gcall.on{transform:translateX(-50%) translateY(0);}
+
+/* ══════════════ GROUP SETTINGS ══════════════ */
+.grp-member-row{display:flex;align-items:center;gap:.65rem;padding:.55rem 0;border-bottom:1px solid var(--brd);}
+.grp-member-row:last-child{border-bottom:none;}
+.grp-m-av{width:40px;height:40px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;background-size:cover;background-position:center;overflow:hidden;}
+
+/* ══════════════ GROUP CALL ══════════════ */
+#grp-call-ov{position:fixed;inset:0;z-index:401;background:linear-gradient(160deg,#0a1a2e,#0d1018);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;gap:0;}
+#grp-call-ov.on{display:flex;}
+#grp-call-participants{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;flex:1;align-items:center;max-height:60vh;overflow-y:auto;}
+.gcall-part{display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:76px;}
+.gcall-av{width:68px;height:68px;border-radius:50%;background:var(--bg3);border:2px solid #ffffff25;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;background-size:cover;background-position:center;overflow:hidden;}
+.gcall-av.speaking{border-color:#22c55e;box-shadow:0 0 0 3px #22c55e40;}
+.gcall-name{color:#fff;font-size:.72rem;text-align:center;max-width:76px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.gcall-mic{font-size:.8rem;text-align:center;opacity:.7;}
+.gcall-actions{display:flex;gap:1rem;margin-top:1.5rem;flex-shrink:0;}
+.gcall-btn{width:58px;height:58px;border-radius:50%;border:none;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* ══════════════ STORIES ══════════════ */
+.stories-row{display:flex;gap:.65rem;padding:.75rem .75rem .5rem;overflow-x:auto;scrollbar-width:none;flex-shrink:0;border-bottom:1px solid var(--brd);}
+.stories-row::-webkit-scrollbar{display:none;}
+.story-item{display:flex;flex-direction:column;align-items:center;gap:.3rem;cursor:pointer;flex-shrink:0;}
+.story-av{width:58px;height:58px;border-radius:50%;border:3px solid var(--pu);display:flex;align-items:center;justify-content:center;font-size:1.7rem;background:var(--bg3);background-size:cover;background-position:center;overflow:hidden;position:relative;}
+.story-av.unseen{border-color:var(--pu);}
+.story-av.seen{border-color:var(--brd2);}
+.story-av.mine{border-color:#22c55e;}
+.story-add-icon{position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;background:var(--pu);border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;}
+.story-name{font-size:.62rem;color:var(--t3);max-width:62px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;}
+#story-view-ov{position:fixed;inset:0;z-index:600;background:#000;display:none;flex-direction:column;}
+#story-view-ov.on{display:flex;}
+.sv-header{position:absolute;top:0;left:0;right:0;z-index:2;padding:env(safe-area-inset-top,12px) 1rem .5rem;display:flex;align-items:center;gap:.6rem;}
+.sv-progress{position:absolute;top:0;left:0;right:0;height:3px;background:#fff3;z-index:3;}
+.sv-progress-bar{height:100%;background:#fff;transition:none;}
+.sv-bg{position:absolute;inset:0;background-size:cover;background-position:center;}
+.sv-text-content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:2rem;text-align:center;font-size:1.4rem;font-weight:700;color:#fff;text-shadow:0 2px 12px #0009;word-break:break-word;}
+.sv-actions{position:absolute;bottom:2rem;left:0;right:0;display:flex;justify-content:center;gap:1rem;}
+.sv-actions button{background:#fff2;border:1px solid #fff3;color:#fff;border-radius:12px;padding:.5rem 1.2rem;font-size:.85rem;cursor:pointer;}
+
+/* ══════════════ PINNED + FAVORITES + POLL + SEARCH + WALLPAPER ══════════════ */
+.pin-bar{background:var(--bg3);border-bottom:1px solid var(--brd);padding:.45rem .85rem;display:none;align-items:center;gap:.6rem;cursor:pointer;}
+.pin-bar.on{display:flex;}
+.pin-bar-ico{font-size:.9rem;}
+.pin-bar-txt{flex:1;font-size:.78rem;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pin-bar-close{font-size:.85rem;color:var(--t3);cursor:pointer;padding:.1rem .3rem;}
+.msg-ctx-menu{position:fixed;z-index:600;background:var(--bg4);border:1px solid var(--brd2);border-radius:14px;padding:.35rem 0;min-width:170px;box-shadow:0 8px 32px #0008;}
+.msg-ctx-item{display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem;font-size:.85rem;cursor:pointer;color:var(--t1);}
+.msg-ctx-item:active{background:var(--bg3);}
+.msg-ctx-item.danger{color:var(--rd);}
+.chat-search-bar{display:none;align-items:center;gap:.5rem;padding:.4rem .75rem;background:var(--bg3);border-bottom:1px solid var(--brd);}
+.chat-search-bar.on{display:flex;}
+.chat-srch-inp{flex:1;background:var(--bg);border:1px solid var(--brd);border-radius:10px;padding:.4rem .75rem;color:var(--t1);font-size:.85rem;outline:none;}
+.chat-srch-inp:focus{border-color:var(--pu);}
+.srch-match{background:var(--pu)30;border-radius:4px;}
+.poll-msg{background:var(--bg3);border-radius:12px;padding:.7rem .85rem;min-width:180px;max-width:280px;}
+.poll-q{font-size:.88rem;font-weight:700;margin-bottom:.5rem;color:var(--t1);}
+.poll-opt{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;cursor:pointer;}
+.poll-bar-wrap{flex:1;background:var(--brd2);border-radius:6px;height:8px;overflow:hidden;}
+.poll-bar-fill{height:100%;background:var(--pu);border-radius:6px;transition:width .3s;}
+.poll-pct{font-size:.72rem;color:var(--t3);min-width:32px;text-align:right;}
+.poll-voted{font-size:.7rem;color:var(--t3);margin-top:.3rem;text-align:right;}
+.wall-opt{width:48px;height:48px;border-radius:10px;cursor:pointer;border:3px solid transparent;display:inline-block;margin:.2rem;}
+.wall-opt.sel{border-color:var(--pu);}
+.archive-sep{padding:.5rem 1rem .25rem;font-size:.72rem;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:.5rem;cursor:pointer;}
+.arc-badge{font-size:.65rem;background:var(--brd2);color:var(--t3);border-radius:6px;padding:.1rem .4rem;}
+
+/* ══════════════ CHESS ══════════════ */
+.chess-board{display:grid;grid-template-columns:repeat(8,1fr);width:min(340px,92vw);margin:.5rem auto;border:2px solid var(--brd2);border-radius:4px;overflow:hidden;}
+.ch-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:clamp(1.3rem,5vw,1.9rem);cursor:pointer;position:relative;transition:filter .15s;}
+.ch-cell.light{background:#f0d9b5;}
+.ch-cell.dark{background:#b58863;}
+.ch-cell.sel{outline:3px solid #aef;outline-offset:-3px;}
+.ch-cell.hint::after{content:'';position:absolute;width:32%;height:32%;border-radius:50%;background:#0005;pointer-events:none;}
+.ch-cell:active{filter:brightness(1.2);}
+
+/* ══════════════ CROC ══════════════ */
+.croc-guess-row{display:flex;gap:.4rem;padding:.4rem 0;}
+
+/* ══════════════ DOWNLOAD PAGE ══════════════ */
+#download-ov{z-index:300;background:var(--bg);display:flex;flex-direction:column;}
+.dl-hero{background:linear-gradient(145deg,var(--pu),#3b82f6);padding:2.5rem 1.5rem 2rem;text-align:center;color:#fff;flex-shrink:0;}
+.dl-hero-ic{font-size:3.5rem;margin-bottom:.5rem;}
+.dl-hero-app{font-size:1.5rem;font-weight:900;}
+.dl-hero-sub{font-size:.85rem;opacity:.85;margin-top:.3rem;}
+.dl-cards{display:flex;flex-direction:column;gap:.75rem;padding:1.25rem 1rem;overflow-y:auto;flex:1;}
+.dl-card{background:var(--bg3);border-radius:18px;padding:1.1rem 1.15rem;border:1px solid var(--brd);display:flex;align-items:center;gap:1rem;cursor:pointer;transition:transform .12s;text-decoration:none;color:inherit;}
+.dl-card:active{transform:scale(.98);}
+.dl-card-ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;}
+.dl-card-body{flex:1;min-width:0;}
+.dl-card-title{font-size:.95rem;font-weight:700;margin-bottom:.2rem;}
+.dl-card-sub{font-size:.75rem;color:var(--t3);}
+.dl-card-ar{font-size:1.1rem;color:var(--t3);}
+.dl-pwa-btn{width:100%;padding:1rem;border-radius:16px;background:linear-gradient(135deg,var(--pu),#3b82f6);color:#fff;border:none;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.dl-pwa-btn:active{opacity:.88}
+.dl-close-row{padding:.75rem 1rem 1.5rem;}
+.dl-close-btn{width:100%;padding:.75rem;background:var(--bg3);border:1px solid var(--brd);border-radius:14px;color:var(--t2);font-size:.9rem;cursor:pointer;}
+
+/* ══════════════ ADMIN PANEL ══════════════ */
+.adm-tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--brd);background:var(--bg3);flex-shrink:0;scrollbar-width:none;}
+.adm-tabs::-webkit-scrollbar{display:none}
+.adm-tab{flex:0 0 auto;padding:.55rem .8rem;font-size:.75rem;font-weight:600;color:var(--t3);border:none;background:transparent;border-bottom:2.5px solid transparent;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;}
+.adm-tab.on{color:var(--pu);border-bottom-color:var(--pu);}
+#adm-content{flex:1;overflow-y:auto;padding:.75rem 1rem;}
+.adm-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem;}
+.adm-stat{background:var(--bg3);border-radius:14px;padding:.85rem;border:1px solid var(--brd);}
+.adm-stat-val{font-size:1.55rem;font-weight:900;color:var(--pu);}
+.adm-stat-lbl{font-size:.7rem;color:var(--t3);margin-top:.15rem;}
+.adm-urow{display:flex;align-items:flex-start;gap:.6rem;padding:.65rem 0;border-bottom:1px solid var(--brd);}
+.adm-urow-av{width:42px;height:42px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;border:1px solid var(--brd2);background-size:cover;background-position:center;overflow:hidden;}
+.adm-urow-info{flex:1;min-width:0;}
+.adm-urow-name{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap;}
+.adm-urow-sub{font-size:.72rem;color:var(--t3);margin:.1rem 0 .3rem;}
+.adm-urow-acts{display:flex;gap:.3rem;flex-wrap:wrap;}
+.adm-btn{font-size:.7rem;padding:.22rem .55rem;border-radius:7px;border:1px solid var(--brd);background:var(--bg3);color:var(--t2);cursor:pointer;white-space:nowrap;transition:opacity .1s;}
+.adm-btn:active{opacity:.7}
+.adm-btn.danger{border-color:#ef4444;color:#ef4444;}
+.adm-btn.success{border-color:#10b981;color:#10b981;}
+.adm-btn.primary{border-color:var(--pu);color:var(--pu);}
+.adm-section-hd{font-size:.7rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.5rem 0 .35rem;margin-bottom:.4rem;border-bottom:1px solid var(--brd);}
+.adm-broadcast-box{background:var(--bg3);border:1px solid var(--brd2);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.65rem;}
+.adm-search{width:100%;background:var(--bg3);border:1px solid var(--brd2);border-radius:12px;padding:.5rem .75rem;color:var(--t1);font-size:.85rem;outline:none;box-sizing:border-box;}
+
+/* ══════════════ VERIFICATION ══════════════ */
+.vbadge{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;background:#1d9bf0;border-radius:50%;color:#fff;font-size:.55rem;font-weight:900;margin-left:3px;vertical-align:middle;flex-shrink:0;line-height:1;}
+.vbadge::after{content:'✔';}
+.vbadge-lg{width:20px;height:20px;font-size:.75rem;margin-left:5px;}
+.verify-req-item{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem;background:var(--bg3);border-radius:12px;margin-bottom:.5rem;}
+.verify-req-av{width:42px;height:42px;border-radius:50%;background:var(--pu);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.vrq-name{font-size:.9rem;font-weight:700;}
+.vrq-reason{font-size:.78rem;color:var(--t3);margin:.2rem 0;line-height:1.4;}
+.vrq-btns{display:flex;gap:.5rem;margin-top:.5rem;}
+.vrq-approve{background:#1d9bf0;color:#fff;border:none;border-radius:8px;padding:.3rem .9rem;cursor:pointer;font-size:.82rem;font-weight:600;}
+.vrq-reject{background:var(--bg);border:1px solid var(--brd);border-radius:8px;padding:.3rem .9rem;cursor:pointer;font-size:.82rem;color:var(--t2);}
+.verify-status-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .75rem;border-radius:20px;font-size:.78rem;font-weight:600;margin-top:.5rem;}
+.vsc-pending{background:#f59e0b20;color:#f59e0b;border:1px solid #f59e0b60;}
+.vsc-approved{background:#1d9bf020;color:#1d9bf0;border:1px solid #1d9bf060;}
+.vsc-rejected{background:#ef444420;color:#ef4444;border:1px solid #ef444460;}
+
+/* ══════════════ CHANNELS ══════════════ */
+.ch-sep{padding:.5rem 1rem .25rem;font-size:.72rem;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:.5rem;}
+.ch-sep-btn{margin-left:auto;font-size:.7rem;background:var(--pu);color:#fff;border:none;border-radius:8px;padding:.2rem .55rem;cursor:pointer;}
+#channel-list{padding-bottom:.5rem;}
+.chi{display:flex;align-items:center;gap:.75rem;padding:.6rem 1rem;border-bottom:1px solid var(--brd);cursor:pointer;}
+.chi:active{background:var(--bg3);}
+.chi-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--pu),#3b82f6);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;border:1px solid var(--brd2);background-size:cover;background-position:center;overflow:hidden;}
+.chi-body{flex:1;min-width:0;}
+.chi-r1{display:flex;align-items:center;justify-content:space-between;gap:.4rem;}
+.chi-name{font-size:.9rem;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chi-badge{font-size:.65rem;background:var(--pu);color:#fff;border-radius:8px;padding:.1rem .4rem;flex-shrink:0;}
+.chi-last{font-size:.78rem;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:.12rem;}
+.chi-subs{font-size:.68rem;color:var(--t3);}
+/* Channel overlay */
+#channel-ov{z-index:201;flex-direction:column;background:var(--bg);}
+#channel-ov.on{display:flex;}
+.chan-head{height:var(--top-h);background:var(--bg3);border-bottom:1px solid var(--brd);display:flex;align-items:center;padding:0 .5rem;gap:.5rem;flex-shrink:0;}
+.chan-body{flex:1;overflow-y:auto;padding:.5rem;}
+.chan-post{background:var(--bg3);border:1px solid var(--brd);border-radius:16px;padding:.85rem;margin-bottom:.75rem;}
+.chan-post-meta{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;}
+.chan-post-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pu),#3b82f6);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;background-size:cover;background-position:center;overflow:hidden;}
+.chan-post-name{font-size:.82rem;font-weight:700;color:var(--t1);}
+.chan-post-time{font-size:.7rem;color:var(--t3);margin-left:auto;}
+.chan-post-text{font-size:.9rem;color:var(--t1);line-height:1.45;white-space:pre-wrap;word-break:break-word;}
+.chan-post-img{width:100%;border-radius:10px;margin-top:.5rem;max-height:320px;object-fit:cover;cursor:pointer;}
+.chan-post-acts{display:flex;align-items:center;gap:.5rem;margin-top:.65rem;padding-top:.55rem;border-top:1px solid var(--brd);}
+.chan-react-btn{display:flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--t3);background:var(--bg4);border:1px solid var(--brd);border-radius:20px;padding:.25rem .6rem;cursor:pointer;}
+.chan-react-btn.mine{background:var(--pu)20;border-color:var(--pu)70;color:var(--pu);}
+.chan-views{font-size:.72rem;color:var(--t3);margin-left:auto;display:flex;align-items:center;gap:.2rem;}
+/* Admin post composer */
+.chan-composer{background:var(--bg3);border-top:1px solid var(--brd);padding:.6rem .75rem;flex-shrink:0;}
+.chan-comp-inp{width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:12px;padding:.55rem .85rem;color:var(--t1);font-size:.88rem;resize:none;outline:none;min-height:44px;max-height:140px;box-sizing:border-box;}
+.chan-comp-inp:focus{border-color:var(--pu);}
+.chan-comp-row{display:flex;gap:.4rem;margin-top:.4rem;align-items:center;}
+/* Create channel / settings */
+.chan-field{width:100%;background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:.6rem .85rem;color:var(--t1);font-size:.9rem;outline:none;box-sizing:border-box;}
+.chan-field:focus{border-color:var(--pu);}
+/* Channel discovery */
+.chan-disc-item{display:flex;align-items:center;gap:.75rem;padding:.65rem 0;border-bottom:1px solid var(--brd);}
+.chan-disc-item:last-child{border-bottom:none;}
+
+/* ══════════════ DRAW GAME ══════════════ */
+.draw-lobby-card{background:var(--bg4);border:1px solid var(--brd2);border-radius:16px;padding:1rem;margin-bottom:.8rem;}
+.draw-room-row{display:flex;align-items:center;gap:.7rem;padding:.55rem 0;border-bottom:1px solid var(--brd);}
+.draw-room-row:last-child{border-bottom:none;}
+.draw-code{font-size:1.6rem;font-weight:900;letter-spacing:.15em;color:var(--pu);text-align:center;margin:.4rem 0;}
+#draw-ov{z-index:300;flex-direction:column;overflow:hidden;}
+#draw-ov.on{display:flex;}
+.draw-header{display:flex;align-items:center;gap:.5rem;padding:.6rem .75rem;background:var(--bg4);border-bottom:1px solid var(--brd2);flex-shrink:0;}
+.draw-word-display{flex:1;text-align:center;font-weight:700;font-size:1rem;letter-spacing:.12em;}
+.draw-timer{width:36px;height:36px;border-radius:50%;background:var(--rd);color:#fff;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.draw-canvas-wrap{flex:1;position:relative;background:#fff;overflow:hidden;touch-action:none;}
+#draw-canvas{width:100%;height:100%;display:block;cursor:crosshair;}
+.draw-tools{display:flex;align-items:center;gap:.4rem;padding:.5rem .75rem;background:var(--bg4);border-top:1px solid var(--brd2);flex-shrink:0;overflow-x:auto;}
+.draw-color{width:28px;height:28px;border-radius:50%;border:3px solid transparent;cursor:pointer;flex-shrink:0;}
+.draw-color.active{border-color:var(--t1);}
+.draw-size-btn{background:var(--bg);border:1px solid var(--brd2);border-radius:8px;padding:.2rem .5rem;font-size:.78rem;cursor:pointer;color:var(--t2);}
+.draw-size-btn.active{border-color:var(--pu);background:var(--pu)20;color:var(--pu);}
+.draw-eraser{background:var(--bg);border:1px solid var(--brd2);border-radius:8px;padding:.2rem .5rem;font-size:.9rem;cursor:pointer;}
+.draw-eraser.active{border-color:var(--rd);background:var(--rd)20;}
+.draw-chat-wrap{height:130px;display:flex;flex-direction:column;background:var(--bg3);flex-shrink:0;}
+.draw-msgs{flex:1;overflow-y:auto;padding:.4rem .75rem;font-size:.8rem;}
+.draw-msg{padding:.15rem 0;line-height:1.3;}
+.draw-msg.correct{color:#22c55e;font-weight:700;}
+.draw-msg.system{color:var(--t3);font-style:italic;}
+.draw-guess-wrap{display:flex;gap:.4rem;padding:.4rem .75rem;border-top:1px solid var(--brd2);}
+.draw-guess-inp{flex:1;background:var(--bg);border:1px solid var(--brd2);border-radius:20px;padding:.4rem .85rem;color:var(--t1);font-size:.85rem;outline:none;}
+.draw-guess-btn{background:var(--pu);border:none;border-radius:20px;padding:.4rem .9rem;color:#fff;font-size:.85rem;cursor:pointer;}
+.draw-score-row{display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--brd);}
+.draw-score-row:last-child{border-bottom:none;}
+.draw-spectate{background:var(--bg3);border-radius:12px;padding:.75rem;text-align:center;font-size:.85rem;color:var(--t3);}
 /* ══════════════ VIDEO CIRCLE ══════════════ */
 .vc-wrap{display:flex;justify-content:center;align-items:flex-start;margin:.3rem 0;}
 .vc-outer{width:180px;height:180px;border-radius:50%;overflow:hidden;position:relative;cursor:pointer;background:#000;border:3px solid var(--pu)50;flex-shrink:0;transition:border-color .2s;}
@@ -647,6 +858,10 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
         <button onclick="openCreateGroup()" style="margin-top:.45rem;width:100%;padding:.5rem;border:1px dashed var(--brd2);border-radius:.75rem;background:transparent;color:var(--t2);font-size:.82rem;cursor:pointer;">👥 Создать группу</button>
       </div>
       <div id="chat-list"></div>
+      <div id="archive-section"></div>
+      <!-- CHANNELS SECTION inside chats tab -->
+      <div class="ch-sep">📢 Каналы<button class="ch-sep-btn" onclick="openChannelDiscover()">Найти</button></div>
+      <div id="channel-list"><div class="empty" style="padding:1.5rem 0"><div class="ei">📢</div><div class="et">Нет каналов<br><small style="font-size:.75rem;color:var(--t3)">Найди или создай</small></div></div></div>
     </div>
     <!-- FEED -->
     <div class="tp" id="tp-feed">
@@ -654,6 +869,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
         <div class="cav" id="feed-av">💬</div>
         <button class="cprompt" onclick="openWritePost()">Что нового?</button>
       </div>
+      <div class="stories-row" id="stories-row"></div>
       <div id="feed-list"></div>
     </div>
     <!-- FRIENDS -->
@@ -689,6 +905,9 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
         <div class="pmi" onclick="openBioModal()"><span class="pmi-ic">✏️</span><span class="pmi-tx">Изменить описание</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openAvModal()"><span class="pmi-ic">😊</span><span class="pmi-tx">Сменить аватар</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="goTab('friends')"><span class="pmi-ic">👥</span><span class="pmi-tx">Мои друзья</span><span class="pmi-ar">›</span></div>
+        <div class="pmi" onclick="openVerifyPanel()"><span class="pmi-ic">✔️</span><span class="pmi-tx" id="verify-menu-tx">Запросить верификацию</span><span class="pmi-ar" id="verify-menu-badge">›</span></div>
+        <div class="pmi" id="admin-panel-btn" style="display:none" onclick="openAdminPanel()"><span class="pmi-ic">🛡️</span><span class="pmi-tx">Панель администратора</span><span class="pmi-ar" id="adm-menu-badge">›</span></div>
+        <div class="pmi" onclick="openOv('download-ov')"><span class="pmi-ic">📲</span><span class="pmi-tx">Скачать приложение</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="toggleTheme()"><span class="pmi-ic" id="theme-ic">🌙</span><span class="pmi-tx" id="theme-tx">Светлая тема</span><span class="pmi-ar">›</span></div>
       </div>
       <div id="pr-act"></div>
@@ -709,7 +928,15 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
         <div class="gc" onclick="startGame('rps')"><div class="gc-ic">✊</div><div class="gc-n">КНБ</div><div class="gc-d">Камень-ножницы</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('rps')">👥 Вызвать друга</button></div>
         <div class="gc" onclick="startGame('clicker')"><div class="gc-ic">🏎️</div><div class="gc-n">Гоночный кликер</div><div class="gc-d">Жми быстрее!</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('clicker')">👥 Вызвать друга</button></div>
         <div class="gc" onclick="startGame('sea')"><div class="gc-ic">🚢</div><div class="gc-n">Морской бой</div><div class="gc-d">Классика</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('sea')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('chess')"><div class="gc-ic">♟️</div><div class="gc-n">Шахматы</div><div class="gc-d">Классика</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('chess')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="startGame('croc')"><div class="gc-ic">🐊</div><div class="gc-n">Крокодил</div><div class="gc-d">Объясни слово</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('croc')">👥 Вызвать друга</button></div>
       </div>
+    </div>
+    <!-- DRAW GAME TAB -->
+    <div class="tp" id="tp-draw">
+      <div class="g-head">🎨 Рисуй и угадывай</div>
+      <div style="padding:.3rem 1rem .6rem;font-size:.78rem;color:var(--t3)">Создай комнату или присоединись по коду. Один рисует, остальные угадывают!</div>
+      <div id="draw-lobby-area" style="padding:0 1rem 1rem"></div>
     </div>
   </div>
   <nav id="nav">
@@ -717,6 +944,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <button class="nb" id="nb-feed" onclick="goTab('feed')"><span class="ni">🏠</span><span class="nl">Лента</span></button>
     <button class="nb" id="nb-friends" onclick="goTab('friends')"><span class="ni">👥</span><span class="nl">Друзья</span><span class="nbadge" id="nbd-fr"></span></button>
     <button class="nb" id="nb-games" onclick="goTab('games')"><span class="ni">🎮</span><span class="nl">Игры</span></button>
+    <button class="nb" id="nb-draw" onclick="goTab('draw')"><span class="ni">🎨</span><span class="nl">Рисуй</span></button>
     <button class="nb" id="nb-profile" onclick="goTab('profile')"><span class="ni">👤</span><span class="nl">Профиль</span></button>
   </nav>
 </div>
@@ -731,7 +959,14 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <button class="ibtn" id="cd-vcall-btn" onclick="callUser(true)" style="display:none" title="Видеозвонок">📹</button>
     <button class="ibtn" id="cd-atg-btn" onclick="openAddToGroup()" style="display:none" title="Добавить в группу">👥</button>
     <button class="ibtn" id="cd-grp-add-btn" onclick="openGrpAddMember()" style="display:none" title="Добавить участника">👤➕</button>
+    <button class="ibtn" id="cd-grp-call-btn" onclick="startGroupCall()" style="display:none" title="Групповой звонок">📞</button>
+    <button class="ibtn" id="cd-grp-settings-btn" onclick="openGrpSettings()" style="display:none" title="Настройки группы">⚙️</button>
+    <button class="ibtn" id="cd-search-btn" onclick="toggleMsgSearch()" style="display:none" title="Поиск в чате">🔍</button>
+    <button class="ibtn" id="cd-wallpaper-btn" onclick="openWallpaperPicker()" style="display:none" title="Обои">🎨</button>
+    <button class="ibtn" id="cd-favs-btn" onclick="openFavorites()" style="display:none" title="Избранное">⭐</button>
   </div>
+  <div id="pinned-bar" class="pin-bar"><span class="pin-bar-ico">📌</span><span class="pin-bar-txt" id="pinned-txt"></span><span class="pin-bar-close" onclick="unpinMessage()">✕</span></div>
+  <div id="chat-search-bar" class="chat-search-bar"><button class="ibtn" onclick="toggleMsgSearch()">←</button><input class="chat-srch-inp" id="chat-srch-inp" placeholder="Поиск..." oninput="searchMessages(this.value)"/><span id="srch-count" style="font-size:.75rem;color:var(--t3)"></span></div>
   <div class="chat-inner">
     <div class="mlist" id="msg-list"></div>
     <div id="reply-bar">
@@ -760,6 +995,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
       <textarea class="minp" id="msg-inp" placeholder="Сообщение..." rows="1" oninput="autoResize(this);onTyping()"></textarea>
       <button class="mic-btn" id="mic-btn" onclick="toggleVoice()">🎤</button>
       <button class="vidc-btn" id="vidc-btn" onclick="toggleVideoCircle()" title="Видеокружок">⏺️</button>
+      <button class="poll-btn" id="poll-btn" onclick="openPollCreator()" style="display:none;background:none;border:none;font-size:1.25rem;cursor:pointer;padding:0 .2rem;">📊</button>
       <button class="snd" id="snd-btn" onclick="sendMsg()">➤</button>
     </div>
   </div>
@@ -959,11 +1195,343 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
   <div id="grp-add-list"></div>
 </div>
 
+<!-- GROUP SETTINGS OVERLAY -->
+<div class="ov" id="grp-settings-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('grp-settings-ov')">←</button>
+    <div class="ov-info"><div class="ov-name">Настройки группы</div></div>
+  </div>
+  <div style="overflow-y:auto;flex:1" id="grp-settings-content"></div>
+</div>
+
+<!-- GROUP CALL OVERLAY -->
+<div id="grp-call-ov">
+  <div style="color:#ffffff80;font-size:.8rem;margin-bottom:.5rem" id="grp-call-name">Групповой звонок</div>
+  <div id="grp-call-participants"></div>
+  <div class="gcall-actions">
+    <button class="gcall-btn" id="gc-mute-btn" onclick="toggleGcMute()" style="background:#ffffff20;color:#fff">🎤</button>
+    <button class="gcall-btn" onclick="leaveGroupCall()" style="background:#ef4444;color:#fff">📵</button>
+  </div>
+</div>
+
+<!-- INCOMING GROUP CALL BANNER -->
+<div id="incoming-gcall">
+  <div class="ic-row">
+    <div class="ic-av" id="igc-av">👥</div>
+    <div class="ic-info">
+      <div class="ic-name" id="igc-name">—</div>
+      <div class="ic-sub" id="igc-sub">📞 Групповой звонок</div>
+    </div>
+    <div class="ic-btns">
+      <button class="ic-btn dec-c" onclick="declineGroupCall()">📵</button>
+      <button class="ic-btn acc-c" onclick="acceptGroupCall()">📞</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANNEL OVERLAY -->
+<div class="ov" id="channel-ov">
+  <div class="chan-head">
+    <button class="ibtn" onclick="closeChannelOv()">←</button>
+    <div class="chan-post-av" id="ch-ov-av">📢</div>
+    <div style="flex:1;min-width:0">
+      <div class="ov-name" id="ch-ov-name">—</div>
+      <div id="ch-ov-subs" style="font-size:.72rem;color:var(--t3)"></div>
+    </div>
+    <button class="ibtn" id="ch-ov-settings-btn" onclick="openChannelSettings()" style="display:none" title="Настройки">⚙️</button>
+    <button class="ibtn" id="ch-ov-subscribe-btn" onclick="toggleChannelSubscribe()">Подписаться</button>
+  </div>
+  <div class="chan-body" id="ch-ov-posts">
+    <div class="empty"><div class="ei">📢</div><div class="et">Загрузка...</div></div>
+  </div>
+  <div class="chan-composer" id="ch-ov-composer" style="display:none">
+    <div id="ch-comp-img-preview" style="display:none;position:relative;margin-bottom:.4rem"><img id="ch-comp-img" style="max-height:100px;border-radius:8px;max-width:100%"/><button onclick="chCancelImg()" style="position:absolute;top:2px;right:2px;background:#0008;color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:.8rem">✕</button></div>
+    <textarea class="chan-comp-inp" id="ch-post-inp" placeholder="Написать пост..." rows="2" oninput="autoResize(this)"></textarea>
+    <div class="chan-comp-row">
+      <button class="ibtn" onclick="document.getElementById('ch-img-inp').click()">📷</button>
+      <input type="file" id="ch-img-inp" accept="image/*" style="display:none" onchange="chPickImg(this)"/>
+      <div style="flex:1"></div>
+      <button class="snd" style="padding:.4rem .9rem;border-radius:10px;font-size:.85rem" onclick="publishChannelPost()">Опубликовать</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANNEL CREATE OVERLAY -->
+<div class="ov" id="channel-create-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('channel-create-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">📢 Новый канал</div>
+  </div>
+  <div style="padding:1rem;display:flex;flex-direction:column;gap:.75rem;overflow-y:auto">
+    <label style="font-size:.8rem;color:var(--t3)">Название канала</label>
+    <input id="chan-create-name" class="chan-field" placeholder="Например: Новости, Шутки..."/>
+    <label style="font-size:.8rem;color:var(--t3)">Описание (необязательно)</label>
+    <textarea id="chan-create-desc" class="chan-field" placeholder="О чём этот канал..." style="min-height:72px;resize:none"></textarea>
+    <label style="font-size:.8rem;color:var(--t3)">Аватар (выбери эмодзи)</label>
+    <div style="display:flex;flex-wrap:wrap;gap:.4rem" id="chan-emoji-grid"></div>
+    <label style="font-size:.8rem;color:var(--t3)">Тип канала</label>
+    <div style="display:flex;gap:.5rem">
+      <button id="chan-type-pub" onclick="chanSetType('public')" style="flex:1;padding:.5rem;border:1px solid var(--pu);border-radius:10px;background:var(--pu);color:#fff;cursor:pointer;font-size:.85rem">🌍 Публичный</button>
+      <button id="chan-type-prv" onclick="chanSetType('private')" style="flex:1;padding:.5rem;border:1px solid var(--brd);border-radius:10px;background:var(--bg3);color:var(--t1);cursor:pointer;font-size:.85rem">🔒 Приватный</button>
+    </div>
+    <button class="snd" style="width:100%;padding:.75rem;border-radius:12px" onclick="submitCreateChannel()">Создать канал</button>
+  </div>
+</div>
+
+<!-- CHANNEL SETTINGS OVERLAY -->
+<div class="ov" id="channel-settings-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('channel-settings-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">⚙️ Настройки канала</div>
+  </div>
+  <div id="channel-settings-content" style="padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:.75rem"></div>
+</div>
+
+<!-- CHANNEL DISCOVER OVERLAY -->
+<div class="ov" id="channel-discover-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('channel-discover-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">🔍 Найти каналы</div>
+  </div>
+  <div style="padding:.75rem 1rem 0">
+    <input id="chan-disc-inp" class="chan-field" placeholder="Поиск по каналам..." oninput="searchChannels(this.value)"/>
+  </div>
+  <div id="chan-disc-list" style="overflow-y:auto;flex:1;padding:.5rem 1rem"></div>
+</div>
+
+<!-- VERIFICATION REQUEST OVERLAY -->
+<div class="ov" id="verify-req-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('verify-req-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">✔️ Верификация</div>
+  </div>
+  <div style="padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:.75rem">
+    <div style="background:linear-gradient(135deg,#1d9bf020,#1d9bf008);border:1px solid #1d9bf040;border-radius:14px;padding:1rem;text-align:center">
+      <div style="font-size:2rem;margin-bottom:.4rem">✔️</div>
+      <div style="font-size:.95rem;font-weight:700;margin-bottom:.3rem">Значок верификации</div>
+      <div style="font-size:.78rem;color:var(--t3);line-height:1.5">Синяя галочка появится рядом с твоим именем во всех чатах, профиле и списках</div>
+    </div>
+    <div id="verify-status-block"></div>
+    <div id="verify-form-block">
+      <label style="font-size:.8rem;color:var(--t3)">Почему ты хочешь верификацию?</label>
+      <textarea id="verify-reason-inp" style="width:100%;min-height:96px;background:var(--bg3);border:1px solid var(--brd2);border-radius:12px;color:var(--t1);font-size:.87rem;padding:.6rem .8rem;resize:none;margin-top:.3rem;outline:none;font-family:inherit" placeholder="Расскажи о себе: кто ты, почему нужна верификация..."></textarea>
+      <button class="snd" style="width:100%;padding:.75rem;border-radius:12px;margin-top:.3rem" onclick="submitVerifyRequest()">Отправить заявку</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOWNLOAD OVERLAY -->
+<div class="ov" id="download-ov" style="z-index:300">
+  <div class="dl-hero">
+    <div class="dl-hero-ic">📱</div>
+    <div class="dl-hero-app">Вместе</div>
+    <div class="dl-hero-sub">Установи приложение для лучшего опыта</div>
+  </div>
+  <div class="dl-cards">
+    <button class="dl-pwa-btn" id="dl-pwa-btn" onclick="dlInstallPWA()" style="display:none">
+      ⭐ Установить на этот экран
+    </button>
+    <a class="dl-card" href="https://sigmadaa.github.io/vmeste/app.apk" download>
+      <div class="dl-card-ic" style="background:#3ddc8420">🤖</div>
+      <div class="dl-card-body">
+        <div class="dl-card-title">Android — APK</div>
+        <div class="dl-card-sub">Скачай .apk файл и установи на телефон</div>
+      </div>
+      <span class="dl-card-ar">↓</span>
+    </a>
+    <a class="dl-card" href="https://sigmadaa.github.io/vmeste/vmeste.msix.zip" download>
+      <div class="dl-card-ic" style="background:#0078d420">🪟</div>
+      <div class="dl-card-body">
+        <div class="dl-card-title">Windows — MSIX</div>
+        <div class="dl-card-sub">Установи на компьютер через Пакет приложений</div>
+      </div>
+      <span class="dl-card-ar">↓</span>
+    </a>
+    <div class="dl-card" onclick="dlShare()">
+      <div class="dl-card-ic" style="background:#8b5cf620">🔗</div>
+      <div class="dl-card-body">
+        <div class="dl-card-title">Поделиться</div>
+        <div class="dl-card-sub">Отправь ссылку другу</div>
+      </div>
+      <span class="dl-card-ar">›</span>
+    </div>
+    <div style="background:var(--bg3);border-radius:14px;padding:1rem;border:1px solid var(--brd);font-size:.8rem;color:var(--t3);line-height:1.8">
+      🌐 <b style="color:var(--t1)">Web-версия</b> доступна всегда из браузера<br>
+      📱 На iOS: <b style="color:var(--t1)">Добавить на экран</b> в Safari<br>
+      📲 На Android: скачай APK выше
+    </div>
+  </div>
+  <div class="dl-close-row">
+    <button class="dl-close-btn" onclick="dlClose()">Продолжить в приложении →</button>
+  </div>
+</div>
+
+<!-- ADMIN VERIFICATION PANEL OVERLAY (kept for legacy, replaced by admin-panel-ov) -->
+<div class="ov" id="admin-verify-ov" style="display:none!important"></div>
+
+<!-- ADMIN PANEL OVERLAY -->
+<div class="ov" id="admin-panel-ov" style="z-index:202">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('admin-panel-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">🛡️ Панель администратора</div>
+    <span id="adm-pending-badge" style="background:#ef4444;color:#fff;border-radius:20px;padding:.1rem .6rem;font-size:.72rem;font-weight:700;display:none"></span>
+  </div>
+  <div class="adm-tabs">
+    <button class="adm-tab on" data-tab="stats"    onclick="adminTab('stats')">📊 Статы</button>
+    <button class="adm-tab"    data-tab="users"    onclick="adminTab('users')">👥 Юзеры</button>
+    <button class="adm-tab"    data-tab="verify"   onclick="adminTab('verify')">✔️ Верификация</button>
+    <button class="adm-tab"    data-tab="channels" onclick="adminTab('channels')">📢 Каналы</button>
+    <button class="adm-tab"    data-tab="broadcast" onclick="adminTab('broadcast')">📣 Рассылка</button>
+  </div>
+  <div id="adm-content"></div>
+</div>
+
+<!-- STORY VIEW OVERLAY -->
+<div class="ov" id="story-view-ov">
+  <div class="sv-progress"><div id="sv-pbar" class="sv-progress-bar" style="width:0%"></div></div>
+  <div class="sv-header" style="z-index:2;position:absolute;top:0;left:0;right:0;padding:env(safe-area-inset-top,12px) 1rem .5rem;display:flex;align-items:center;gap:.6rem;background:linear-gradient(to bottom,#0009,transparent)">
+    <div id="sv-av" style="width:38px;height:38px;border-radius:50%;border:2px solid #fff;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:1.2rem;background-size:cover;background-position:center;flex-shrink:0"></div>
+    <div><div id="sv-name" style="font-size:.9rem;color:#fff;font-weight:600"></div><div id="sv-time" style="font-size:.72rem;color:#fffb"></div></div>
+    <div style="flex:1"></div>
+    <button class="ibtn" onclick="closeOv('story-view-ov')" style="color:#fff;font-size:1.2rem;">✕</button>
+  </div>
+  <div id="sv-bg" class="sv-bg"></div>
+  <div id="sv-text" class="sv-text-content"></div>
+  <div class="sv-actions">
+    <button onclick="svPrev()">‹ Назад</button>
+    <button onclick="svNext()">Вперёд ›</button>
+  </div>
+</div>
+
+<!-- STORY CREATE OVERLAY -->
+<div class="ov" id="story-create-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('story-create-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">📖 Новый статус</div>
+  </div>
+  <div style="padding:1rem;display:flex;flex-direction:column;gap:.85rem;overflow-y:auto">
+    <label style="font-size:.8rem;color:var(--t3)">Тип</label>
+    <div style="display:flex;gap:.6rem">
+      <button class="ibtn" id="sc-type-text" onclick="scSetType('text')" style="flex:1;background:var(--pu);color:#fff;border-radius:10px;padding:.5rem">Текст</button>
+      <button class="ibtn" id="sc-type-photo" onclick="scSetType('photo')" style="flex:1;background:var(--bg3);border-radius:10px;padding:.5rem">Фото</button>
+    </div>
+    <div id="sc-text-area">
+      <textarea id="sc-text" placeholder="Напиши что-нибудь..." style="width:100%;min-height:120px;border:1px solid var(--brd);border-radius:10px;padding:.65rem;background:var(--bg3);color:var(--t1);font-size:.95rem;resize:none;outline:none;box-sizing:border-box"></textarea>
+      <label style="font-size:.8rem;color:var(--t3)">Цвет фона</label>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.3rem">
+        <div style="width:36px;height:36px;border-radius:8px;background:#7c3aed;cursor:pointer" onclick="scSetBg('#7c3aed')"></div>
+        <div style="width:36px;height:36px;border-radius:8px;background:#2563eb;cursor:pointer" onclick="scSetBg('#2563eb')"></div>
+        <div style="width:36px;height:36px;border-radius:8px;background:#16a34a;cursor:pointer" onclick="scSetBg('#16a34a')"></div>
+        <div style="width:36px;height:36px;border-radius:8px;background:#dc2626;cursor:pointer" onclick="scSetBg('#dc2626')"></div>
+        <div style="width:36px;height:36px;border-radius:8px;background:#d97706;cursor:pointer" onclick="scSetBg('#d97706')"></div>
+        <div style="width:36px;height:36px;border-radius:8px;background:#0f172a;cursor:pointer" onclick="scSetBg('#0f172a')"></div>
+        <div style="width:36px;height:36px;border-radius:8px;background:#334155;cursor:pointer" onclick="scSetBg('#334155')"></div>
+      </div>
+    </div>
+    <div id="sc-photo-area" style="display:none">
+      <div id="sc-photo-preview" style="width:100%;min-height:160px;border:2px dashed var(--brd2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--t3);cursor:pointer;background-size:cover;background-position:center" onclick="document.getElementById('sc-photo-inp').click()">Нажми, чтобы выбрать фото</div>
+      <input type="file" id="sc-photo-inp" accept="image/*" style="display:none" onchange="scPickPhoto(this)"/>
+    </div>
+    <button class="snd" style="width:100%;padding:.75rem;border-radius:12px" onclick="submitStory()">Опубликовать статус</button>
+  </div>
+</div>
+
+<!-- MESSAGE CONTEXT MENU -->
+<div id="msg-ctx-menu" class="msg-ctx-menu" style="display:none" onclick="hideMsgCtxMenu()">
+  <div class="msg-ctx-item" onclick="ctxReply()">↩️ Ответить</div>
+  <div class="msg-ctx-item" onclick="ctxPin()">📌 Закрепить</div>
+  <div class="msg-ctx-item" onclick="ctxFavorite()">⭐ Избранное</div>
+  <div class="msg-ctx-item" onclick="ctxCopy()">📋 Копировать</div>
+  <div class="msg-ctx-item danger" onclick="ctxDelete()">🗑️ Удалить</div>
+</div>
+
+<!-- POLL CREATOR OVERLAY -->
+<div class="ov" id="poll-creator-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('poll-creator-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">📊 Новый опрос</div>
+  </div>
+  <div style="padding:1rem;display:flex;flex-direction:column;gap:.75rem;overflow-y:auto">
+    <input id="poll-q-inp" placeholder="Вопрос..." style="border:1px solid var(--brd);border-radius:10px;padding:.6rem .8rem;background:var(--bg3);color:var(--t1);font-size:.92rem;outline:none"/>
+    <div id="poll-opts-list" style="display:flex;flex-direction:column;gap:.5rem"></div>
+    <button onclick="addPollOption()" style="background:transparent;border:1px dashed var(--brd2);border-radius:10px;padding:.5rem;color:var(--t2);cursor:pointer;font-size:.85rem">+ Добавить вариант</button>
+    <button class="snd" style="width:100%;padding:.75rem;border-radius:12px" onclick="submitPoll()">Отправить опрос</button>
+  </div>
+</div>
+
+<!-- FAVORITES OVERLAY -->
+<div class="ov" id="favorites-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('favorites-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">⭐ Избранное</div>
+  </div>
+  <div class="mlist" id="fav-list" style="flex:1;overflow-y:auto;padding:.5rem"></div>
+</div>
+
+<!-- WALLPAPER PICKER OVERLAY -->
+<div class="ov" id="wallpaper-picker-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('wallpaper-picker-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">🎨 Обои чата</div>
+  </div>
+  <div style="padding:1rem">
+    <div style="font-size:.8rem;color:var(--t3);margin-bottom:.6rem">Выбери фон</div>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+      <div class="wall-opt" style="background:none;border:1px solid var(--brd2)" data-w="" onclick="selectWallpaper(this)"><div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:.65rem;color:var(--t3)">Нет</div></div>
+      <div class="wall-opt" style="background:linear-gradient(135deg,#667eea,#764ba2)" data-w="linear-gradient(135deg,#667eea,#764ba2)" onclick="selectWallpaper(this)"></div>
+      <div class="wall-opt" style="background:linear-gradient(135deg,#f093fb,#f5576c)" data-w="linear-gradient(135deg,#f093fb,#f5576c)" onclick="selectWallpaper(this)"></div>
+      <div class="wall-opt" style="background:linear-gradient(135deg,#4facfe,#00f2fe)" data-w="linear-gradient(135deg,#4facfe,#00f2fe)" onclick="selectWallpaper(this)"></div>
+      <div class="wall-opt" style="background:linear-gradient(135deg,#43e97b,#38f9d7)" data-w="linear-gradient(135deg,#43e97b,#38f9d7)" onclick="selectWallpaper(this)"></div>
+      <div class="wall-opt" style="background:linear-gradient(135deg,#fa709a,#fee140)" data-w="linear-gradient(135deg,#fa709a,#fee140)" onclick="selectWallpaper(this)"></div>
+      <div class="wall-opt" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e)" data-w="linear-gradient(135deg,#0f0c29,#302b63,#24243e)" onclick="selectWallpaper(this)"></div>
+      <div class="wall-opt" style="background:repeating-linear-gradient(45deg,#1e293b 0,#1e293b 2px,transparent 0,transparent 50%) 0/8px 8px,#0f172a" data-w="repeating-linear-gradient(45deg,#1e293b 0,#1e293b 2px,transparent 0,transparent 50%) 0/8px 8px,#0f172a" onclick="selectWallpaper(this)"></div>
+      <div class="wall-opt" style="background:radial-gradient(circle at 20% 50%,#6366f180,transparent 50%),radial-gradient(circle at 80% 20%,#8b5cf680,transparent 50%),#0f172a" data-w="radial-gradient(circle at 20% 50%,#6366f180,transparent 50%),radial-gradient(circle at 80% 20%,#8b5cf680,transparent 50%),#0f172a" onclick="selectWallpaper(this)"></div>
+    </div>
+    <button class="snd" style="width:100%;margin-top:1rem;padding:.75rem;border-radius:12px" onclick="applyWallpaperSel()">Применить</button>
+  </div>
+</div>
+
+<!-- DRAW GAME OVERLAY -->
+<div class="ov" id="draw-ov">
+  <div class="draw-header">
+    <button class="ibtn" onclick="leaveDrawGame()">←</button>
+    <div class="draw-word-display" id="draw-word-display">⏳</div>
+    <div class="draw-timer" id="draw-timer">60</div>
+    <div id="draw-round-info" style="font-size:.72rem;color:var(--t3);white-space:nowrap"></div>
+  </div>
+  <div class="draw-canvas-wrap" id="draw-canvas-wrap">
+    <canvas id="draw-canvas"></canvas>
+    <div id="draw-spectate-msg" class="draw-spectate" style="display:none">Ты угадываешь — не рисуй!</div>
+  </div>
+  <div class="draw-tools" id="draw-tools">
+    <div class="draw-color active" style="background:#000" onclick="drawSetColor('#000',this)"></div>
+    <div class="draw-color" style="background:#ef4444" onclick="drawSetColor('#ef4444',this)"></div>
+    <div class="draw-color" style="background:#f97316" onclick="drawSetColor('#f97316',this)"></div>
+    <div class="draw-color" style="background:#eab308" onclick="drawSetColor('#eab308',this)"></div>
+    <div class="draw-color" style="background:#22c55e" onclick="drawSetColor('#22c55e',this)"></div>
+    <div class="draw-color" style="background:#3b82f6" onclick="drawSetColor('#3b82f6',this)"></div>
+    <div class="draw-color" style="background:#a855f7" onclick="drawSetColor('#a855f7',this)"></div>
+    <div class="draw-color" style="background:#fff;border:2px solid #ccc" onclick="drawSetColor('#fff',this)"></div>
+    <button class="draw-size-btn active" onclick="drawSetSize(4,this)">S</button>
+    <button class="draw-size-btn" onclick="drawSetSize(10,this)">M</button>
+    <button class="draw-size-btn" onclick="drawSetSize(20,this)">L</button>
+    <button class="draw-eraser" id="draw-eraser-btn" onclick="drawToggleEraser()">🧹</button>
+    <button class="draw-size-btn" onclick="drawClear()" style="margin-left:auto">🗑️ Очистить</button>
+  </div>
+  <div class="draw-chat-wrap">
+    <div class="draw-msgs" id="draw-msgs"></div>
+    <div class="draw-guess-wrap" id="draw-guess-wrap">
+      <input class="draw-guess-inp" id="draw-guess-inp" placeholder="Угадай слово..." onkeydown="if(event.key==='Enter')sendDrawGuess()"/>
+      <button class="draw-guess-btn" onclick="sendDrawGuess()">➤</button>
+    </div>
+  </div>
+</div>
+
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, limit, onSnapshot, addDoc, serverTimestamp, getDocs, arrayUnion, arrayRemove, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, limit, onSnapshot, addDoc, serverTimestamp, getDocs, arrayUnion, arrayRemove, deleteDoc, deleteField, increment } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwDwvEmDyrXoR3DAGesHmxpJsflWV6Wng",
@@ -1024,6 +1592,17 @@ onAuthStateChanged(auth, async user => {
       // First time — create profile
       ME = { uid: user.uid, username: user.displayName || 'user', av: '💬', bio: '', stats: { played: 0, wins: 0 }, friends: [], sentReq: [], recvReq: [] };
       await setDoc(doc(db, 'users', user.uid), ME);
+    }
+    // Ban check
+    if (ME.banned) {
+      await auth.signOut().catch(()=>{});
+      ME = null;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('auth').classList.add('on');
+      const eEl = document.getElementById('ai-e') || document.querySelector('.aerr');
+      if (eEl) eEl.textContent = '🚫 Ваш аккаунт заблокирован администратором.';
+      else alert('🚫 Ваш аккаунт заблокирован администратором.');
+      return;
     }
     launchApp();
   } else {
@@ -1158,9 +1737,9 @@ window.doLogout = async () => {
 // ══════════════════════════════
 // APP
 // ══════════════════════════════
-const TABS = ['chats','feed','friends','games','profile'];
-const TAB_T = {chats:'Вместе',feed:'Лента',friends:'Друзья',games:'Игры',profile:'Профиль'};
-const TAB_IC = {chats:'💬',feed:'🏠',friends:'👥',games:'🎮',profile:'👤'};
+const TABS = ['chats','feed','friends','games','draw','profile'];
+const TAB_T = {chats:'Вместе',feed:'Лента',friends:'Друзья',games:'Игры',draw:'Рисуй',profile:'Профиль'};
+const TAB_IC = {chats:'💬',feed:'🏠',friends:'👥',games:'🎮',draw:'🎨',profile:'👤'};
 
 function launchApp() {
   document.getElementById('auth').classList.remove('on');
@@ -1181,21 +1760,37 @@ function launchApp() {
   listenIncomingCalls();
   listenNotifications();
   listenGameInvites();
+  loadArchivedChats().then(() => renderArchiveSection());
+  listenBroadcasts();
+  // Show download screen once on first login
+  if (!localStorage.getItem('dlShown')) {
+    setTimeout(() => openOv('download-ov'), 900);
+  }
 }
 
-window.goTab = t => {
-  TABS.forEach(id => {
-    document.getElementById('tp-'+id).classList.toggle('on', id===t);
-    document.getElementById('nb-'+id).classList.toggle('on', id===t);
-  });
-  document.getElementById('tb-tit').textContent = TAB_T[t];
-  document.getElementById('tb-ic').textContent = TAB_IC[t];
-  document.getElementById('tb-add').style.display = t==='feed' ? 'flex' : 'none';
-  if (t==='chats') listenChats();
-  if (t==='feed') { listenFeed(); setAvEl(document.getElementById('feed-av'), ME?.av); }
-  if (t==='friends') renderFriends();
-  if (t==='profile') renderProfile();
-};
+// ── Broadcast receiver ──────────────────────────────────────────────────────
+function listenBroadcasts() {
+  // Show any broadcast newer than last seen
+  const lastSeen = parseInt(localStorage.getItem('lastBroadcastTs')||'0');
+  const q = query(collection(db,'broadcasts'), orderBy('ts','desc'), limit(5));
+  getDocs(q).then(snap => {
+    const unseen = snap.docs.filter(d => {
+      const ts = d.data().ts?.toMillis?.() || 0;
+      return ts > lastSeen;
+    });
+    if (!unseen.length) return;
+    // Show the newest one
+    const b = unseen[0].data();
+    const latestTs = b.ts?.toMillis?.() || 0;
+    localStorage.setItem('lastBroadcastTs', latestTs);
+    // Show as in-app notification banner
+    setTimeout(() => {
+      const title = b.title || '📣 Сообщение от администратора';
+      const text = b.text || '';
+      showNotifBanner && showNotifBanner(title + (text ? ': ' + text.substring(0,60) : ''), 6000);
+    }, 2000);
+  }).catch(()=>{});
+}
 
 window.openOv = id => document.getElementById(id).classList.add('on');
 window.closeOv = id => {
@@ -1247,21 +1842,28 @@ function listenChats() {
     });
     items.sort((a,b) => (b.lastTs?.seconds||0) - (a.lastTs?.seconds||0));
 
-    let filtered = items;
-    if (chatFilter) filtered = items.filter(i => {
-      const n = i._t==='group' ? i.name : (i.p?.username||'');
-      return n.toLowerCase().includes(chatFilter);
+    let filtered = items.filter(i => {
+      const chatId = i._t==='group' ? i.id : chatKey(ME.uid, i.uid||'');
+      return !archivedChats.includes(chatId);
     });
+    let archFiltered = items.filter(i => {
+      const chatId = i._t==='group' ? i.id : chatKey(ME.uid, i.uid||'');
+      return archivedChats.includes(chatId);
+    });
+    if (chatFilter) {
+      filtered = filtered.filter(i => { const n = i._t==='group' ? i.name : (i.p?.username||''); return n.toLowerCase().includes(chatFilter); });
+      archFiltered = [];
+    }
     if (!filtered.length) {
       el.innerHTML = '<div class="empty"><div class="ei">💬</div><div class="et">Добавь друзей чтобы начать общаться</div></div>';
-      return;
-    }
-    el.innerHTML = filtered.map(item => {
+      // still render archive section if needed
+    } else {
+      el.innerHTML = filtered.map(item => {
       if (item._t === 'group') {
         const lastTxt = item.lastMsg ? (item.lastFrom===ME.uid?'Ты: ':'')+item.lastMsg : 'Нажми чтобы написать';
         const tStr = item.lastTs ? fmtTime(item.lastTs.toDate()) : '';
         const bdg = item.unread > 0 ? `<span class="ci-bdg">${item.unread}</span>` : '';
-        return `<div class="ci" onclick="openGroup('${item.id}')">
+        return `<div class="ci" onclick="openGroup('${item.id}')" oncontextmenu="chatCtxMenu(event,'group','${item.id}');return false;">
           <div class="ci-av" style="position:relative;${avPhoto(item.av)}">${avText(item.av,'👥')}<span style="position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;background:var(--pu);border-radius:50%;font-size:.55rem;display:flex;align-items:center;justify-content:center;color:#fff;border:1.5px solid var(--bg)">👥</span></div>
           <div class="ci-body">
             <div class="ci-r1"><span class="ci-name">${esc(item.name)}</span><span class="ci-time">${tStr}</span></div>
@@ -1273,7 +1875,7 @@ function listenChats() {
         const lastTxt = lastMsg ? (lastFrom===ME.uid?'Ты: ':'')+lastMsg : 'Нажми чтобы написать';
         const tStr = lastTs ? fmtTime(lastTs.toDate()) : '';
         const bdg = unread > 0 ? `<span class="ci-bdg">${unread}</span>` : '';
-        return `<div class="ci" onclick="openChat('${uid}')">
+        return `<div class="ci" onclick="openChat('${uid}')" oncontextmenu="chatCtxMenu(event,'dm','${uid}');return false;">
           <div class="ci-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div>
           <div class="ci-body">
             <div class="ci-r1"><span class="ci-name">${esc(p.username)}</span><span class="ci-time">${tStr}</span></div>
@@ -1282,8 +1884,25 @@ function listenChats() {
         </div>`;
       }
     }).join('');
-    const totalUnread = filtered.reduce((a,i)=>a+i.unread,0);
-    setBadge('nbd-chats', totalUnread);
+      const totalUnread = filtered.reduce((a,i)=>a+i.unread,0);
+      setBadge('nbd-chats', totalUnread);
+    } // end else filtered.length
+    // Render archive section
+    const arcSec = document.getElementById('archive-section');
+    if (arcSec) {
+      if (!archFiltered.length) { arcSec.innerHTML=''; return; }
+      let ah = `<div class="archive-sep" onclick="toggleArchiveSection()">📦 Архив <span class="arc-badge">${archFiltered.length}</span> <span style="margin-left:auto">${showArchivedSection?'▲':'▼'}</span></div>`;
+      if (showArchivedSection) {
+        ah += archFiltered.map(item => {
+          if (item._t === 'group') {
+            return `<div class="ci" onclick="openGroup('${item.id}')" style="opacity:.75"><div class="ci-av" style="${avPhoto(item.av)}">${avText(item.av,'👥')}</div><div class="ci-body"><div class="ci-r1"><span class="ci-name">${esc(item.name)}</span><button onclick="event.stopPropagation();unarchiveChat('${item.id}')" style="font-size:.65rem;background:var(--bg3);border:none;border-radius:6px;padding:.1rem .4rem;cursor:pointer;color:var(--t3)">Разарх.</button></div></div></div>`;
+          } else {
+            return `<div class="ci" onclick="openChat('${item.uid}')" style="opacity:.75"><div class="ci-av" ${avHtml(item.p.av,'👤')}>${avText(item.p.av,'👤')}</div><div class="ci-body"><div class="ci-r1"><span class="ci-name">${esc(item.p.username)}</span><button onclick="event.stopPropagation();unarchiveChat('${chatKey(ME.uid,item.uid)}')" style="font-size:.65rem;background:var(--bg3);border:none;border-radius:6px;padding:.1rem .4rem;cursor:pointer;color:var(--t3)">Разарх.</button></div></div></div>`;
+          }
+        }).join('');
+      }
+      arcSec.innerHTML = ah;
+    }
   };
 
   const qDm = query(collection(db,'chats'), where('users','array-contains',ME.uid));
@@ -1329,7 +1948,15 @@ window.openChat = async uid => {
   document.getElementById('cd-vcall-btn').style.display = '';
   document.getElementById('cd-atg-btn').style.display = '';
   document.getElementById('cd-grp-add-btn').style.display = 'none';
+  document.getElementById('cd-grp-call-btn').style.display = 'none';
+  document.getElementById('cd-grp-settings-btn').style.display = 'none';
+  document.getElementById('cd-search-btn').style.display = '';
+  document.getElementById('cd-wallpaper-btn').style.display = '';
+  document.getElementById('cd-favs-btn').style.display = '';
+  document.getElementById('poll-btn').style.display = 'none';
+  const ck = chatKey(uid, ME.uid); applyWallpaper(ck);
   listenMessages(uid); listenPresence(uid); markRead(uid);
+  loadPinnedMsg();
 };
 
 window.openGroup = async gid => {
@@ -1345,10 +1972,18 @@ window.openGroup = async gid => {
   document.getElementById('cd-vcall-btn').style.display = 'none';
   document.getElementById('cd-atg-btn').style.display = 'none';
   document.getElementById('cd-grp-add-btn').style.display = '';
+  document.getElementById('cd-grp-call-btn').style.display = '';
+  document.getElementById('cd-grp-settings-btn').style.display = '';
+  document.getElementById('cd-search-btn').style.display = '';
+  document.getElementById('cd-wallpaper-btn').style.display = '';
+  document.getElementById('cd-favs-btn').style.display = '';
+  document.getElementById('poll-btn').style.display = '';
   chatMode = 'group'; chatGroupId = gid; chatWith = null;
   cancelReply(); openOv('chat-detail');
+  applyWallpaper(gid);
   listenMessages(gid);
   markGroupRead(gid);
+  loadPinnedMsg();
 };
 
 window.closeChatOv = () => {
@@ -1356,7 +1991,16 @@ window.closeChatOv = () => {
   if (typingUnsub) { typingUnsub(); typingUnsub = null; }
   if (presenceUnsub) { presenceUnsub(); presenceUnsub = null; }
   if (chatMode === 'dm' && chatWith) setTyping(false);
+  document.getElementById('cd-grp-call-btn').style.display = 'none';
+  document.getElementById('cd-grp-settings-btn').style.display = 'none';
+  document.getElementById('cd-search-btn').style.display = 'none';
+  document.getElementById('cd-wallpaper-btn').style.display = 'none';
+  document.getElementById('cd-favs-btn').style.display = 'none';
   chatMode = 'dm'; chatGroupId = null; chatWith = null;
+  const pb = document.getElementById('pinned-bar'); if(pb) pb.classList.remove('on');
+  const csb = document.getElementById('chat-search-bar'); if(csb) csb.classList.remove('on');
+  const mi = document.querySelector('.mlist'); if(mi) mi.removeAttribute('style');
+  const ci = document.querySelector('#chat-detail .chat-inner'); if(ci) ci.style.background='';
 };
 
 // ━━━━ PRESENCE ━━━━
@@ -1514,6 +2158,20 @@ function listenMessages(target) {
         content = `<a class="bbl-file" href="${m.url}" target="_blank">📎 ${esc(m.filename||'файл')}</a>`;
       } else if (m.type === 'system') {
         return `${dd}<div style="text-align:center;font-size:.72rem;color:var(--t3);margin:.4rem 0;padding:.2rem .7rem">${esc(m.text||'')}</div>`;
+      } else if (m.type === 'poll') {
+        const totalVotes = Object.values(m.votes||{}).length;
+        const myVote = (m.votes||{})[ME.uid];
+        const optsHtml = (m.options||[]).map((opt,i) => {
+          const cnt = Object.values(m.votes||{}).filter(v=>v===i).length;
+          const pct = totalVotes ? Math.round(cnt/totalVotes*100) : 0;
+          const isMine = myVote===i;
+          return `<div class="poll-opt" onclick="votePoll('${mid}',${i})">
+            <div class="poll-bar-wrap"><div class="poll-bar-fill" style="width:${pct}%"></div></div>
+            <span style="flex:0 0 auto;font-size:.81rem;${isMine?'color:var(--pu);font-weight:700':''}">${esc(opt)}</span>
+            <span class="poll-pct">${pct}%</span>
+          </div>`;
+        }).join('');
+        content = `<div class="poll-msg"><div class="poll-q">${esc(m.question||'Опрос')}</div>${optsHtml}<div class="poll-voted">${totalVotes} ${totalVotes===1?'голос':'голосов'}</div></div>`;
       } else {
         content = esc(m.text||'');
       }
@@ -1527,7 +2185,7 @@ function listenMessages(target) {
         ).join('') + '</div>';
       }
       return `${dd}<div class="bbl-wrap ${isMe?'out':'in'}" data-mid="${mid}">
-        <div class="bbl ${isMe?'out':'in'}" onclick="openReactPicker('${mid}')" oncontextmenu="replyMsg('${mid}','${esc(m.text||m.filename||'').replace(/'/g,'&#39;')}');return false;">${senderHtml}${replyHtml}${content}<div class="bbl-t">${ts} ${checks}</div></div>
+        <div class="bbl ${isMe?'out':'in'}" onclick="openReactPicker('${mid}')" oncontextmenu="showMsgCtxMenu(event,'${mid}','${esc(m.text||m.filename||'').replace(/'/g,'&#39;')}',${isMe});return false;">${senderHtml}${replyHtml}${content}<div class="bbl-t">${ts} ${checks}</div></div>
         ${reactHtml}
       </div>`;
     }).join('');
@@ -1641,6 +2299,7 @@ window.pickReactMsg = async (mid, emoji) => {
 // FEED
 // ══════════════════════════════
 function listenFeed() {
+  listenStories();
   if (feedUnsub) feedUnsub();
   const q2 = query(collection(db,'posts'), orderBy('ts','desc'), limit(30));
   feedUnsub = onSnapshot(q2, snap => {
@@ -2018,7 +2677,7 @@ function urRow(uid, p) {
     : got ? `<button class="sb sb-acc" onclick="acceptFr('${uid}')">Принять</button><button class="sb sb-dec" onclick="declineFr('${uid}')">✕</button>`
     : sent ? `<button class="sb sb-sent">Отправлено ✓</button>`
     : `<button class="sb sb-add" onclick="sendFr('${uid}')">+ Добавить</button>`;
-  return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns">${btns}</div></div>`;
+  return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}${vBadge(p.verified)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns">${btns}</div></div>`;
 }
 
 async function renderFrReqs() {
@@ -2028,7 +2687,7 @@ async function renderFrReqs() {
   const rows = await Promise.all(reqs.map(async uid => {
     const s = await getDoc(doc(db,'users',uid)); if(!s.exists()) return '';
     const p = s.data();
-    return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns"><button class="sb sb-acc" onclick="acceptFr('${uid}')">Принять</button><button class="sb sb-dec" onclick="declineFr('${uid}')">✕</button></div></div>`;
+    return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}${vBadge(p.verified)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns"><button class="sb sb-acc" onclick="acceptFr('${uid}')">Принять</button><button class="sb sb-dec" onclick="declineFr('${uid}')">✕</button></div></div>`;
   }));
   el.innerHTML = '<div class="slbl">Запросы ('+reqs.length+')</div>' + rows.join('');
   // badges
@@ -2112,12 +2771,16 @@ function setAvEl(el, av) {
 
 function renderProfile() {
   setAvEl(document.getElementById('pr-av'), ME.av);
-  document.getElementById('pr-name').textContent = ME.username;
+  document.getElementById('pr-name').innerHTML = esc(ME.username) + vBadge(ME.verified, true);
   document.getElementById('pr-bio').textContent = ME.bio||'Нет описания';
   document.getElementById('ps-g').textContent = ME.stats?.played||0;
   document.getElementById('ps-w').textContent = ME.stats?.wins||0;
   document.getElementById('ps-f').textContent = (ME.friends||[]).length;
   document.getElementById('pr-act').innerHTML = '';
+  // Verification menu label
+  const vmtx = document.getElementById('verify-menu-tx');
+  if (vmtx) vmtx.textContent = ME.verified ? 'Верифицирован ✔' : 'Запросить верификацию';
+  loadAdminVerifyBadge();
 }
 
 window.openAvModal = () => {
@@ -2196,7 +2859,7 @@ window.saveBio = async () => {
 // GAMES — MULTIPLAYER (Firebase)
 // ══════════════════════════════
 let rTimer;
-const GNAME={ttt:'Крестики-нолики',reaction:'Реакция',word:'Угадай слово',quiz:'Викторина',memory:'Мемори',rps:'КНБ',clicker:'Гоночный кликер',sea:'Морской бой'};
+const GNAME={ttt:'Крестики-нолики',reaction:'Реакция',word:'Угадай слово',quiz:'Викторина',memory:'Мемори',rps:'КНБ',clicker:'Гоночный кликер',sea:'Морской бой',chess:'Шахматы',croc:'Крокодил'};
 
 let currentGame = null;
 let gameUnsub = null;
@@ -2298,6 +2961,18 @@ function buildInitState(type, lobbyData) {
       hostShots: [], guestShots: [],
       turn: 'host', turnStartAt: null, winner: null };
   }
+  if (type === 'chess') {
+    return { ...base, board: buildInitChessBoard(), turn: 'host', winner: null,
+      hostColor: 'white', guestColor: 'black',
+      enPassant: null, castled: {wK:false,wR0:false,wR7:false,bK:false,bR0:false,bR7:false} };
+  }
+  if (type === 'croc') {
+    const words = ['слон','трамвай','солнце','зима','птица','гора','река','книга','компьютер','дерево',
+      'телефон','кухня','музыка','самолёт','машина','лодка','рыба','кот','собака','дом',
+      'школа','врач','спорт','город','дорога','небо','облако','снег','огонь','вода'];
+    const word = words[~~(Math.random()*words.length)];
+    return { ...base, phase: 'describe', word, describer: 'host', guesses: [], guessedBy: null, roundScore: {host:0,guest:0} };
+  }
   return base;
 }
 
@@ -2310,6 +2985,8 @@ function renderGameState(state, type, role, lobbyId) {
   else if (type === 'memory') renderMemory(state, role, lobbyId);
   else if (type === 'clicker') renderClicker(state, role, lobbyId);
   else if (type === 'sea') renderSea(state, role, lobbyId);
+  else if (type === 'chess') renderChess(state, role, lobbyId);
+  else if (type === 'croc') renderCroc(state, role, lobbyId);
 }
 
 window.leaveGame = async () => {
@@ -2361,7 +3038,7 @@ window.tttMove=async i=>{if(!currentGame)return;const gameRef=doc(db,'games',cur
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const RPI=[{e:'✊'},{e:'✌️'},{e:'🖐️'}];
 function renderRPS(state,role,lobbyId){const area=document.getElementById('game-area');const myPick=role==='host'?state.hostPick:state.guestPick;const opPick=role==='host'?state.guestPick:state.hostPick;const myScore=role==='host'?state.hostScore:state.guestScore;const opScore=role==='host'?state.guestScore:state.hostScore;const opName=role==='host'?esc(state.guestName||'Гость'):esc(state.hostName||'Хост');const done=state.round>state.maxRounds;let resultHtml='';if(state.roundResult&&state.hostPick!==null&&state.guestPick!==null){const won=state.roundResult===role;const isDraw=state.roundResult==='draw';const myE=RPI[myPick]?.e||'?';const opE=RPI[opPick]?.e||'?';const bdg=isDraw?'<div class="rbdg draw">Ничья</div>':won?'<div class="rbdg win">Твой раунд!</div>':'<div class="rbdg lose">Раунд соперника</div>';resultHtml='<div class="rvsrow"><div class="rside"><div class="rbig">'+myE+'</div><div class="rlbl">Ты</div></div><div class="rvs">VS</div><div class="rside"><div class="rbig">'+(opPick!==null?opE:'❓')+'</div><div class="rlbl">'+opName+'</div></div></div>'+bdg;}else if(myPick!==null)resultHtml='<div style="font-size:.85rem;color:var(--t3)">Ты выбрал '+RPI[myPick].e+' — ждём соперника...</div>';else resultHtml='<div style="color:var(--t3)">Выбери!</div>';const btns=RPI.map((it,i)=>'<button class="rpb"'+(myPick!==null||done?' disabled':'')+' onclick="rpsPick('+i+')">'+it.e+'</button>').join('');const finHtml=done?'<div style="font-size:1.2rem;font-weight:700;margin:.7rem 0">'+(myScore>opScore?'🏆 Ты выиграл!':myScore<opScore?'😢 Соперник выиграл':'🤝 Ничья')+'</div><button class="gbtn" onclick="startGame(\'rps\')">Ещё раз</button>':'';area.innerHTML='<button class="gback" onclick="leaveGame()">← Назад</button><div class="gtit">✊ КНБ</div><div class="srow"><div class="si"><div class="sv">'+myScore+'</div><div class="sl">Ты</div></div><div class="si"><div class="sv">'+Math.min(state.round,state.maxRounds)+'/'+state.maxRounds+'</div><div class="sl">Раунд</div></div><div class="si"><div class="sv">'+opScore+'</div><div class="sl">'+opName+'</div></div></div><div id="rps-r" style="min-height:115px;display:flex;flex-direction:column;align-items:center;justify-content:center">'+resultHtml+'</div>'+(!done?'<div class="rpch">'+btns+'</div>':finHtml);if(done&&!area.dataset.ended){area.dataset.ended='1';gameEnd(myScore>opScore,'КНБ',myScore+':'+opScore,lobbyId);}}
-window.rpsPick=async i=>{if(!currentGame)return;const gameRef=doc(db,'games',currentGame.lobbyId);const snap=await getDoc(gameRef);if(!snap.exists())return;const state=snap.data();if(state.round>state.maxRounds)return;if(currentGame.role==='host'&&state.hostPick!==null)return;if(currentGame.role==='guest'&&state.guestPick!==null)return;const pickField=currentGame.role==='host'?'hostPick':'guestPick';await updateDoc(gameRef,{[pickField]:i});const snap2=await getDoc(gameRef);const s2=snap2.data();if(s2.hostPick!==null&&s2.guestPick!==null){const h=s2.hostPick,g=s2.guestPick;let result;if(h===g)result='draw';else if((h===0&&g===2)||(h===1&&g===0)||(h===2&&g===1))result='host';else result='guest';const hScore=s2.hostScore+(result==='host'?1:0);const gScore=s2.guestScore+(result==='guest'?1:0);const nextRound=s2.round+1;await updateDoc(gameRef,{roundResult:result,hostScore:hScore,guestScore:gScore,round:nextRound});setTimeout(async()=>{const cur=await getDoc(gameRef);if(cur.exists()&&cur.data().round===nextRound)await updateDoc(gameRef,{hostPick:null,guestPick:null,roundResult:null});},1500);}};
+window.rpsPick=async i=>{if(!currentGame)return;const gameRef=doc(db,'games',currentGame.lobbyId);const snap=await getDoc(gameRef);if(!snap.exists())return;const state=snap.data();if(state.round>state.maxRounds)return;if(currentGame.role==='host'&&state.hostPick!==null)return;if(currentGame.role==='guest'&&state.guestPick!==null)return;const pickField=currentGame.role==='host'?'hostPick':'guestPick';await updateDoc(gameRef,{[pickField]:i});const snap2=await getDoc(gameRef);const s2=snap2.data();if(s2.hostPick!==null&&s2.guestPick!==null){const h=s2.hostPick,g=s2.guestPick;let result;if(h===g)result='draw';else if((h===0&&g===1)||(h===1&&g===2)||(h===2&&g===0))result='host';else result='guest';const hScore=s2.hostScore+(result==='host'?1:0);const gScore=s2.guestScore+(result==='guest'?1:0);const nextRound=s2.round+1;await updateDoc(gameRef,{roundResult:result,hostScore:hScore,guestScore:gScore,round:nextRound});setTimeout(async()=>{const cur=await getDoc(gameRef);if(cur.exists()&&cur.data().round===nextRound)await updateDoc(gameRef,{hostPick:null,guestPick:null,roundResult:null});},1500);}};
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // REACTION — Реакция
@@ -2549,6 +3226,23 @@ function seaGridHtml(board, shots, isOwn, canShoot, role) {
   return html;
 }
 
+function seaCountPlaced(board) {
+  const counts = {};
+  const visited = new Set();
+  for (let i = 0; i < 100; i++) {
+    if (board[i] > 0 && !visited.has(i)) {
+      const row = Math.floor(i/10), col = i%10;
+      let len = 1; visited.add(i);
+      let c = col+1;
+      while(c < 10 && board[row*10+c] > 0) { len++; visited.add(row*10+c); c++; }
+      let r = row+1;
+      while(r < 10 && board[r*10+col] > 0) { len++; visited.add(r*10+col); r++; }
+      counts[len] = (counts[len]||0) + 1;
+    }
+  }
+  return counts;
+}
+
 function seaSunkCheck(board, shots) {
   // Find sunk ships (all cells of a connected ship group are hit)
   const sunk = [];
@@ -2583,8 +3277,16 @@ function renderSea(state, role, lobbyId) {
   // ── PLACE phase ──
   if (state.phase === 'place') {
     if (!seaPlaceShips) {
+      const placedCounts = seaCountPlaced(myBoard);
+      const remaining = [];
+      for (const sh of SEA_SHIPS) {
+        for (let i = 0; i < sh.n; i++) {
+          if ((placedCounts[sh.len] || 0) > 0) placedCounts[sh.len]--;
+          else remaining.push(sh.len);
+        }
+      }
       seaPlaceShips = {
-        remainingShips: SEA_SHIPS.flatMap(s => Array(s.n).fill(s.len)),
+        remainingShips: remaining,
         orientation: 'h',
         selectedLen: null,
         board: [...myBoard]
@@ -2594,7 +3296,7 @@ function renderSea(state, role, lobbyId) {
       area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button>
         <div class="gtit">🚢 Морской бой</div>
         <div class="sea-phase">✅ Готов! Ждём ${opName}...</div>
-        ${seaGridHtml(seaPlaceShips.board, [], true, false, role)}`;
+        ${seaGridHtml(myBoard, [], true, false, role)}`;
       return;
     }
     const remaining = seaPlaceShips.remainingShips;
@@ -2841,6 +3543,2118 @@ function setBadge(id,n){const el=document.getElementById(id);if(!el)return;el.te
 let toastT;
 window.toast=msg=>{const e=document.getElementById('toast');e.textContent=msg;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2800);};
 
+// ══════════════════════════════
+// STORIES / СТАТУСЫ
+// ══════════════════════════════
+let storiesUnsub = null;
+let storyList = [];
+let storyIdx = 0;
+let svTimer = null;
+let scBgColor = '#7c3aed', scType = 'text';
+
+function listenStories() {
+  const row = document.getElementById('stories-row');
+  if (!row) return;
+  const cutoff = Date.now() - 86400000;
+  const q2 = query(collection(db,'stories'), orderBy('createdAt','desc'), limit(60));
+  if (storiesUnsub) storiesUnsub();
+  storiesUnsub = onSnapshot(q2, snap => {
+    const all = snap.docs.map(d=>({id:d.id,...d.data()}))
+      .filter(s => s.createdAt && s.createdAt.toMillis() > cutoff);
+    storyList = all;
+    const seen = JSON.parse(localStorage.getItem('seenStories')||'{}');
+    // group by user, mine first
+    const byUser = {};
+    all.forEach(s => {
+      if (!byUser[s.uid]) byUser[s.uid] = [];
+      byUser[s.uid].push(s);
+    });
+    const uids = Object.keys(byUser).sort(a => a === ME.uid ? -1 : 1);
+    let html = `<div class="story-item" onclick="openStoryCreate()">
+      <div class="story-av mine" id="my-story-av" ${avHtml(ME.av,'💬')}>${avText(ME.av,'💬')}<div class="story-add-icon">+</div></div>
+      <div class="story-name">Мой статус</div>
+    </div>`;
+    uids.forEach(uid => {
+      if (uid === ME.uid) return;
+      const stories = byUser[uid];
+      const isUnseen = stories.some(s => !seen[s.id]);
+      const s0 = stories[0];
+      html += `<div class="story-item" onclick="openStoryView('${uid}')">
+        <div class="story-av ${isUnseen?'unseen':'seen'}" ${avHtml(s0.av,'👤')}>${avText(s0.av,'👤')}</div>
+        <div class="story-name">${esc(s0.username||'')}</div>
+      </div>`;
+    });
+    row.innerHTML = html;
+    const myEl = document.getElementById('my-story-av');
+    if (myEl) setAvEl(myEl, ME.av||'💬');
+  });
+}
+
+window.openStoryCreate = () => {
+  scType = 'text'; scBgColor = '#7c3aed';
+  document.getElementById('sc-text').value = '';
+  document.getElementById('sc-photo-inp').value = '';
+  document.getElementById('sc-photo-preview').style.backgroundImage = '';
+  document.getElementById('sc-photo-preview').textContent = 'Нажми, чтобы выбрать фото';
+  scSetType('text');
+  openOv('story-create-ov');
+};
+
+window.scSetType = t => {
+  scType = t;
+  document.getElementById('sc-text-area').style.display = t==='text'?'':'none';
+  document.getElementById('sc-photo-area').style.display = t==='photo'?'':'none';
+  document.getElementById('sc-type-text').style.background = t==='text'?'var(--pu)':'var(--bg3)';
+  document.getElementById('sc-type-photo').style.background = t==='photo'?'var(--pu)':'var(--bg3)';
+  document.getElementById('sc-type-text').style.color = t==='text'?'#fff':'var(--t1)';
+  document.getElementById('sc-type-photo').style.color = t==='photo'?'#fff':'var(--t1)';
+};
+window.scSetBg = c => { scBgColor = c; };
+
+window.scPickPhoto = inp => {
+  const file = inp.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('sc-photo-preview').style.backgroundImage = `url(${e.target.result})`;
+    document.getElementById('sc-photo-preview').textContent = '';
+    document.getElementById('sc-photo-preview')._b64 = e.target.result;
+  };
+  r.readAsDataURL(file);
+};
+
+window.submitStory = async () => {
+  if (scType === 'text') {
+    const txt = document.getElementById('sc-text').value.trim();
+    if (!txt) return toast('Напиши текст!');
+    await addDoc(collection(db,'stories'), { uid:ME.uid, username:ME.username, av:ME.av||'💬', type:'text', text:txt, bg:scBgColor, createdAt:serverTimestamp() });
+  } else {
+    const prev = document.getElementById('sc-photo-preview');
+    if (!prev._b64) return toast('Выбери фото!');
+    await addDoc(collection(db,'stories'), { uid:ME.uid, username:ME.username, av:ME.av||'💬', type:'photo', url:prev._b64, createdAt:serverTimestamp() });
+  }
+  closeOv('story-create-ov');
+  toast('Статус опубликован!');
+};
+
+window.openStoryView = uid => {
+  const stories = storyList.filter(s=>s.uid===uid);
+  if (!stories.length) return;
+  storyIdx = 0;
+  showStory(stories, 0);
+  openOv('story-view-ov');
+};
+
+function showStory(stories, idx) {
+  if (svTimer) clearInterval(svTimer);
+  const s = stories[idx];
+  if (!s) { closeOv('story-view-ov'); return; }
+  const seen = JSON.parse(localStorage.getItem('seenStories')||'{}');
+  seen[s.id] = 1;
+  localStorage.setItem('seenStories', JSON.stringify(seen));
+  const bg = document.getElementById('sv-bg');
+  const txt = document.getElementById('sv-text');
+  if (s.type === 'photo') {
+    bg.style.backgroundImage = `url(${s.url})`;
+    txt.textContent = '';
+  } else {
+    bg.style.backgroundImage = 'none';
+    bg.style.background = s.bg||'#7c3aed';
+    txt.textContent = s.text||'';
+  }
+  const avEl = document.getElementById('sv-av');
+  setAvEl(avEl, s.av||'👤');
+  document.getElementById('sv-name').textContent = s.username||'';
+  const ago = s.createdAt ? fmtAgo(s.createdAt.toDate()) : '';
+  document.getElementById('sv-time').textContent = ago;
+  const pct = ((idx+1)/stories.length*100);
+  const startPct = (idx/stories.length*100);
+  const bar = document.getElementById('sv-pbar');
+  bar.style.transition = 'none'; bar.style.width = startPct+'%';
+  setTimeout(() => { bar.style.transition = `width 5s linear`; bar.style.width = pct+'%'; }, 50);
+  svTimer = setTimeout(() => svNext(stories), 5000);
+}
+window.svNext = (stories) => {
+  stories = stories || storyList.filter(s=>s.uid===(storyList[storyIdx]?.uid));
+  storyIdx++;
+  if (storyIdx >= stories.length) { closeOv('story-view-ov'); return; }
+  showStory(stories, storyIdx);
+};
+window.svPrev = () => {
+  const curUid = storyList[storyIdx]?.uid || storyList[0]?.uid;
+  const stories = storyList.filter(s=>s.uid===curUid);
+  storyIdx = Math.max(0, storyIdx-1);
+  showStory(stories, storyIdx);
+};
+
+// ══════════════════════════════
+// PINNED MESSAGES
+// ══════════════════════════════
+let pinnedMsgData = null;
+
+async function loadPinnedMsg() {
+  const pb = document.getElementById('pinned-bar');
+  if (!pb) return;
+  pb.classList.remove('on');
+  pinnedMsgData = null;
+  let ref;
+  if (chatMode === 'group' && chatGroupId) ref = doc(db,'groups',chatGroupId);
+  else if (chatMode === 'dm' && chatWith) ref = doc(db,'chats',chatKey(ME.uid,chatWith));
+  else return;
+  try {
+    const snap = await getDoc(ref);
+    if (!snap.exists()) return;
+    const pin = snap.data().pinnedMsg;
+    if (!pin) return;
+    pinnedMsgData = pin;
+    document.getElementById('pinned-txt').textContent = pin.text||'';
+    pb.classList.add('on');
+  } catch(e) {}
+}
+
+window.unpinMessage = async () => {
+  let ref;
+  if (chatMode === 'group' && chatGroupId) ref = doc(db,'groups',chatGroupId);
+  else if (chatMode === 'dm' && chatWith) ref = doc(db,'chats',chatKey(ME.uid,chatWith));
+  else return;
+  await updateDoc(ref, { pinnedMsg: deleteField() }).catch(()=>{});
+  const pb = document.getElementById('pinned-bar');
+  if (pb) pb.classList.remove('on');
+};
+
+async function pinMsg(mid, text) {
+  let ref;
+  if (chatMode === 'group' && chatGroupId) ref = doc(db,'groups',chatGroupId);
+  else if (chatMode === 'dm' && chatWith) ref = doc(db,'chats',chatKey(ME.uid,chatWith));
+  else return;
+  await updateDoc(ref, { pinnedMsg: { id: mid, text: (text||'').substring(0,120) } });
+  loadPinnedMsg();
+  toast('Сообщение закреплено! 📌');
+}
+
+// ══════════════════════════════
+// MESSAGE CONTEXT MENU
+// ══════════════════════════════
+let ctxMid = null, ctxText = null, ctxIsMe = false;
+window.showMsgCtxMenu = (e, mid, text, isMe) => {
+  e.preventDefault();
+  ctxMid = mid; ctxText = text; ctxIsMe = isMe;
+  const menu = document.getElementById('msg-ctx-menu');
+  menu.style.display = 'block';
+  const x = Math.min(e.clientX, window.innerWidth - 180);
+  const y = Math.min(e.clientY, window.innerHeight - 220);
+  menu.style.left = x+'px'; menu.style.top = y+'px';
+  setTimeout(() => document.addEventListener('click', hideMsgCtxMenu, {once:true}), 10);
+};
+window.hideMsgCtxMenu = () => { document.getElementById('msg-ctx-menu').style.display='none'; };
+window.ctxReply = () => { if(ctxMid) replyMsg(ctxMid, ctxText||''); };
+window.ctxPin = () => { if(ctxMid) pinMsg(ctxMid, ctxText||''); };
+window.ctxFavorite = () => { if(ctxMid) saveToFavorites(ctxMid, ctxText||''); };
+window.ctxCopy = () => { if(ctxText) navigator.clipboard?.writeText(ctxText).then(()=>toast('Скопировано!')); };
+window.ctxDelete = async () => {
+  if (!ctxMid || !ctxIsMe) return toast('Можно удалять только свои сообщения');
+  let col;
+  if (chatMode==='group'&&chatGroupId) col = collection(db,'groups',chatGroupId,'messages');
+  else if (chatMode==='dm'&&chatWith) col = collection(db,'chats',chatKey(ME.uid,chatWith),'messages');
+  else return;
+  await deleteDoc(doc(col,ctxMid)).catch(()=>toast('Ошибка удаления'));
+};
+
+// ══════════════════════════════
+// FAVORITES / ИЗБРАННОЕ
+// ══════════════════════════════
+window.saveToFavorites = async (mid, text) => {
+  const favRef = collection(db,'users',ME.uid,'favorites');
+  await addDoc(favRef, { mid, text, savedAt: serverTimestamp(), chatWith, chatGroupId, chatMode });
+  toast('Добавлено в избранное ⭐');
+};
+
+window.openFavorites = async () => {
+  const favRef = collection(db,'users',ME.uid,'favorites');
+  const q2 = query(favRef, orderBy('savedAt','desc'), limit(50));
+  const snap = await getDocs(q2);
+  const el = document.getElementById('fav-list');
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty"><div class="ei">⭐</div><div class="et">Нет сохранённых сообщений</div></div>';
+  } else {
+    el.innerHTML = snap.docs.map(d => {
+      const f = d.data();
+      return `<div class="bbl-wrap out"><div class="bbl out" style="cursor:default">${esc(f.text||'')}<div class="bbl-t">${f.savedAt?fmtAgo(f.savedAt.toDate()):''}</div></div></div>`;
+    }).join('');
+  }
+  openOv('favorites-ov');
+};
+
+// ══════════════════════════════
+// ARCHIVE / АРХИВ
+// ══════════════════════════════
+let archivedChats = [];
+let showArchivedSection = false;
+
+async function loadArchivedChats() {
+  archivedChats = ME.archivedChats || [];
+}
+
+window.archiveChat = async (id) => {
+  const newArr = [...new Set([...(ME.archivedChats||[]), id])];
+  await updateDoc(doc(db,'users',ME.uid), { archivedChats: newArr });
+  ME.archivedChats = newArr;
+  archivedChats = newArr;
+  toast('Чат архивирован');
+};
+
+window.unarchiveChat = async (id) => {
+  const newArr = (ME.archivedChats||[]).filter(x=>x!==id);
+  await updateDoc(doc(db,'users',ME.uid), { archivedChats: newArr });
+  ME.archivedChats = newArr;
+  archivedChats = newArr;
+  toast('Чат разархивирован');
+};
+
+window.toggleArchiveSection = () => {
+  showArchivedSection = !showArchivedSection;
+  renderArchiveSection();
+};
+
+function renderArchiveSection() {
+  // Handled inside listenChats render() - just trigger re-render
+  listenChats();
+}
+
+window.chatCtxMenu = (e, type, id) => {
+  e.preventDefault();
+  const chatId = type==='group' ? id : chatKey(ME.uid, id);
+  const isArc = archivedChats.includes(chatId);
+  const label = isArc ? 'Разархивировать' : '📦 Архивировать';
+  const action = isArc ? `unarchiveChat('${chatId}')` : `archiveChat('${chatId}')`;
+  // Reuse msg-ctx-menu as chat context menu
+  const menu = document.getElementById('msg-ctx-menu');
+  menu.innerHTML = `<div class="msg-ctx-item" onclick="${action};hideMsgCtxMenu()">${label}</div>`;
+  menu.style.display = 'block';
+  const x = Math.min(e.clientX, window.innerWidth-180);
+  const y = Math.min(e.clientY, window.innerHeight-80);
+  menu.style.left = x+'px'; menu.style.top = y+'px';
+  setTimeout(() => document.addEventListener('click', () => {
+    hideMsgCtxMenu();
+    // restore original menu items
+    menu.innerHTML = `<div class="msg-ctx-item" onclick="ctxReply()">↩️ Ответить</div><div class="msg-ctx-item" onclick="ctxPin()">📌 Закрепить</div><div class="msg-ctx-item" onclick="ctxFavorite()">⭐ Избранное</div><div class="msg-ctx-item" onclick="ctxCopy()">📋 Копировать</div><div class="msg-ctx-item danger" onclick="ctxDelete()">🗑️ Удалить</div>`;
+  }, {once:true}), 10);
+};
+
+// ══════════════════════════════
+// MESSAGE SEARCH
+// ══════════════════════════════
+let searchActive = false;
+
+window.toggleMsgSearch = () => {
+  searchActive = !searchActive;
+  const bar = document.getElementById('chat-search-bar');
+  if (bar) {
+    bar.classList.toggle('on', searchActive);
+    if (searchActive) { document.getElementById('chat-srch-inp').focus(); }
+    else { document.getElementById('chat-srch-inp').value=''; searchMessages(''); }
+  }
+};
+
+window.searchMessages = q => {
+  const bubbles = document.querySelectorAll('#msg-list .bbl-wrap');
+  let count = 0;
+  const term = q.trim().toLowerCase();
+  bubbles.forEach(bw => {
+    if (!term) { bw.style.display=''; bw.querySelectorAll('.srch-match').forEach(m=>{const p=m.parentNode;p.replaceChild(document.createTextNode(m.textContent),m);}); return; }
+    const bbls = bw.querySelector('.bbl');
+    const txt = bbls?.textContent?.toLowerCase()||'';
+    if (txt.includes(term)) { bw.style.display=''; count++; } else bw.style.display='none';
+  });
+  const cnt = document.getElementById('srch-count');
+  if (cnt) cnt.textContent = q.trim() ? count+' совп.' : '';
+};
+
+// ══════════════════════════════
+// POLLS / ОПРОСЫ
+// ══════════════════════════════
+let pollOptions = ['',''];
+
+window.openPollCreator = () => {
+  pollOptions = ['',''];
+  document.getElementById('poll-q-inp').value = '';
+  renderPollOptions();
+  openOv('poll-creator-ov');
+};
+
+function renderPollOptions() {
+  const el = document.getElementById('poll-opts-list');
+  el.innerHTML = pollOptions.map((o,i) =>
+    `<div style="display:flex;gap:.4rem"><input value="${esc(o)}" placeholder="Вариант ${i+1}" style="flex:1;border:1px solid var(--brd);border-radius:8px;padding:.5rem .7rem;background:var(--bg3);color:var(--t1);font-size:.85rem;outline:none" oninput="pollOptions[${i}]=this.value"/><button onclick="removePollOption(${i})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:1.1rem;">✕</button></div>`
+  ).join('');
+}
+
+window.addPollOption = () => {
+  if (pollOptions.length >= 8) return toast('Максимум 8 вариантов');
+  pollOptions.push('');
+  renderPollOptions();
+};
+window.removePollOption = i => {
+  if (pollOptions.length <= 2) return toast('Минимум 2 варианта');
+  pollOptions.splice(i,1);
+  renderPollOptions();
+};
+
+window.submitPoll = async () => {
+  const q = document.getElementById('poll-q-inp').value.trim();
+  if (!q) return toast('Введи вопрос!');
+  const opts = pollOptions.map(o=>o.trim()).filter(Boolean);
+  if (opts.length < 2) return toast('Нужно минимум 2 варианта!');
+  const msgData = { type:'poll', question:q, options:opts, votes:{}, from:ME.uid, senderName:ME.username, ts:serverTimestamp() };
+  let col;
+  if (chatMode==='group'&&chatGroupId) col = collection(db,'groups',chatGroupId,'messages');
+  else if (chatMode==='dm'&&chatWith) col = collection(db,'chats',chatKey(ME.uid,chatWith),'messages');
+  else return;
+  await addDoc(col, msgData);
+  closeOv('poll-creator-ov');
+  toast('Опрос отправлен!');
+};
+
+window.votePoll = async (mid, optIdx) => {
+  let col;
+  if (chatMode==='group'&&chatGroupId) col = collection(db,'groups',chatGroupId,'messages');
+  else if (chatMode==='dm'&&chatWith) col = collection(db,'chats',chatKey(ME.uid,chatWith),'messages');
+  else return;
+  await updateDoc(doc(col,mid), { [`votes.${ME.uid}`]: optIdx });
+};
+
+// ══════════════════════════════
+// CHAT WALLPAPER / ОБОИ
+// ══════════════════════════════
+let wallPaperSel = '';
+function getChatId() { return chatMode==='group'?chatGroupId:chatKey(ME.uid,chatWith||''); }
+
+window.applyWallpaper = chatId => {
+  const ci = document.querySelector('#chat-detail .chat-inner');
+  if (!ci) return;
+  const val = localStorage.getItem('wall_'+chatId)||'';
+  ci.style.background = val||'';
+};
+
+window.openWallpaperPicker = () => {
+  const cur = localStorage.getItem('wall_'+getChatId())||'';
+  wallPaperSel = cur;
+  document.querySelectorAll('.wall-opt').forEach(el=>el.classList.toggle('sel', el.dataset.w===cur));
+  openOv('wallpaper-picker-ov');
+};
+window.selectWallpaper = el => {
+  wallPaperSel = el.dataset.w;
+  document.querySelectorAll('.wall-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+};
+window.applyWallpaperSel = () => {
+  const id = getChatId();
+  if (wallPaperSel) localStorage.setItem('wall_'+id, wallPaperSel);
+  else localStorage.removeItem('wall_'+id);
+  applyWallpaper(id);
+  closeOv('wallpaper-picker-ov');
+  toast('Обои применены!');
+};
+
+// ══════════════════════════════
+// CHESS / ШАХМАТЫ
+// ══════════════════════════════
+const CHESS_PIECES = {
+  wK:'♔',wQ:'♕',wR:'♖',wB:'♗',wN:'♘',wP:'♙',
+  bK:'♚',bQ:'♛',bR:'♜',bB:'♝',bN:'♞',bP:'♟'
+};
+function buildInitChessBoard() {
+  const b = Array(64).fill(null);
+  const back = ['R','N','B','Q','K','B','N','R'];
+  back.forEach((p,i)=>{ b[i]='b'+p; b[56+i]='w'+p; });
+  for(let i=0;i<8;i++){b[8+i]='bP';b[48+i]='wP';}
+  return b;
+}
+let chessSelected = null;
+let chessHints = [];
+let chessCurState = null;
+let chessMyRole = null;
+let chessLobbyId = null;
+
+function renderChess(state, role, lobbyId) {
+  chessCurState = state; chessMyRole = role; chessLobbyId = lobbyId;
+  const area = document.getElementById('game-area');
+  const myColor = role==='host'?'white':'black';
+  const isMyTurn = (state.turn==='host'&&role==='host')||(state.turn==='guest'&&role==='guest');
+  const opName = role==='host'?esc(state.guestName||'Гость'):esc(state.hostName||'Хост');
+  const turnTxt = state.winner ? (state.winner===role?'🏆 Вы победили!':'😢 Поражение') : (isMyTurn?'♟️ Ваш ход':'⏳ Ход соперника...');
+  const board = state.board;
+  const flip = myColor==='black';
+  let cellsHtml = '';
+  for (let row=0;row<8;row++) {
+    for (let col=0;col<8;col++) {
+      const r = flip?7-row:row;
+      const c = flip?7-col:col;
+      const idx = r*8+c;
+      const piece = board[idx];
+      const isLight = (r+c)%2===0;
+      const isSel = chessSelected===idx;
+      const isHint = chessHints.includes(idx);
+      const pieceColor = piece ? (piece[0]==='w'?'white':'black') : null;
+      cellsHtml += `<div class="ch-cell${isLight?' light':' dark'}${isSel?' sel':''}${isHint?' hint':''}" onclick="chessClick(${idx})">${piece?'<span class="ch-piece" style="color:'+(piece[0]==='w'?'#f5f5f5':'#1a1a1a')+'">'+CHESS_PIECES[piece]+'</span>':''}</div>`;
+    }
+  }
+  area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button><div class="gtit">♟️ Шахматы</div>
+    <div style="font-size:.82rem;color:var(--t3);margin:.2rem 0">Вы: ${myColor==='white'?'♔ Белые':'♚ Чёрные'} | Соперник: ${opName}</div>
+    <div class="gst">${turnTxt}</div>
+    <div class="chess-board" id="chess-board">${cellsHtml}</div>
+    ${state.winner?'<button class="gbtn" onclick="startGame(\'chess\')">Ещё раз</button>':''}`;
+  if (state.winner && !area.dataset.ended) { area.dataset.ended='1'; gameEnd(state.winner===role,'Шахматы','',lobbyId); }
+}
+
+window.chessClick = async idx => {
+  const state = chessCurState; if (!state) return;
+  const myColor = chessMyRole==='host'?'white':'black';
+  const isMyTurn = (state.turn==='host'&&chessMyRole==='host')||(state.turn==='guest'&&chessMyRole==='guest');
+  if (!isMyTurn || state.winner) return;
+  const piece = state.board[idx];
+  if (chessSelected !== null) {
+    if (chessHints.includes(idx)) {
+      const newBoard = [...state.board];
+      newBoard[idx] = newBoard[chessSelected];
+      newBoard[chessSelected] = null;
+      // pawn promotion
+      if (newBoard[idx]==='wP'&&Math.floor(idx/8)===0) newBoard[idx]='wQ';
+      if (newBoard[idx]==='bP'&&Math.floor(idx/8)===7) newBoard[idx]='bQ';
+      chessSelected = null; chessHints = [];
+      // check if king captured
+      const hasWK = newBoard.some(p=>p==='wK'), hasBK = newBoard.some(p=>p==='bK');
+      const winner = !hasWK?'guest':!hasBK?'host':null;
+      const nextTurn = state.turn==='host'?'guest':'host';
+      await updateDoc(doc(db,'games',chessLobbyId), {board:newBoard,turn:nextTurn,...(winner?{winner}:{})});
+      if (winner) gameEnd(winner===chessMyRole,'Шахматы','',chessLobbyId);
+      return;
+    }
+    chessSelected = null; chessHints = [];
+  }
+  if (piece && piece[0]===(myColor==='white'?'w':'b')) {
+    chessSelected = idx;
+    chessHints = getChessMoves(state.board, idx, piece);
+  }
+  renderChess(state, chessMyRole, chessLobbyId);
+};
+
+function getChessMoves(board, idx, piece) {
+  const moves = [];
+  const r = Math.floor(idx/8), c = idx%8;
+  const color = piece[0];
+  const type = piece[1];
+  const opp = color==='w'?'b':'w';
+  const push = (nr,nc)=>{ if(nr<0||nr>7||nc<0||nc>7)return false; const ni=nr*8+nc; const t=board[ni]; if(t&&t[0]===color)return false; moves.push(ni); return !t; };
+  if (type==='P') {
+    const dir = color==='w'?-1:1;
+    const start = color==='w'?6:1;
+    if (!board[(r+dir)*8+c]) { push(r+dir,c); if(r===start&&!board[(r+2*dir)*8+c]) push(r+2*dir,c); }
+    [[r+dir,c-1],[r+dir,c+1]].forEach(([nr,nc])=>{ if(nr>=0&&nr<=7&&nc>=0&&nc<=7&&board[nr*8+nc]&&board[nr*8+nc][0]===opp) moves.push(nr*8+nc); });
+  } else if (type==='N') {
+    [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr,dc])=>push(r+dr,c+dc));
+  } else if (type==='B') {
+    for(const[dr,dc]of[[-1,-1],[-1,1],[1,-1],[1,1]])for(let i=1;i<8;i++)if(!push(r+dr*i,c+dc*i))break;
+  } else if (type==='R') {
+    for(const[dr,dc]of[[-1,0],[1,0],[0,-1],[0,1]])for(let i=1;i<8;i++)if(!push(r+dr*i,c+dc*i))break;
+  } else if (type==='Q') {
+    for(const[dr,dc]of[[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]])for(let i=1;i<8;i++)if(!push(r+dr*i,c+dc*i))break;
+  } else if (type==='K') {
+    [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr,dc])=>push(r+dr,c+dc));
+  }
+  return moves;
+}
+
+// ══════════════════════════════
+// CROC / КРОКОДИЛ
+// ══════════════════════════════
+function renderCroc(state, role, lobbyId) {
+  const area = document.getElementById('game-area');
+  const isDescriber = state.describer === role;
+  const word = state.word;
+  const guesses = state.guesses || [];
+  const done = !!state.guessedBy;
+  const opName = role==='host'?esc(state.guestName||'Гость'):esc(state.hostName||'Хост');
+  let statusTxt;
+  if (done) statusTxt = state.guessedBy===role ? '🎉 Вы угадали!' : `😔 Угадал ${state.guessedBy===state.describer?'нет':'соперник'}`;
+  else if (isDescriber) statusTxt = `🐊 Объясни слово: <b>${esc(word)}</b>`;
+  else statusTxt = '🤔 Угадывай слово...';
+  const guessHtml = guesses.slice(-12).map(g=>
+    `<div style="font-size:.83rem;padding:.15rem .3rem;color:${g.by===role?'var(--pu)':'var(--t2)'}">${esc(g.by===role?'Ты':'☑️')} — ${esc(g.text)}</div>`
+  ).join('');
+  const scoreHost = state.roundScore?.host||0, scoreGuest = state.roundScore?.guest||0;
+  area.innerHTML = `<button class="gback" onclick="leaveGame()">← Назад</button>
+    <div class="gtit">🐊 Крокодил</div>
+    <div class="srow"><div class="si"><div class="sv">${role==='host'?scoreHost:scoreGuest}</div><div class="sl">Ты</div></div><div class="si"><div class="sv"> </div><div class="sl">VS</div></div><div class="si"><div class="sv">${role==='host'?scoreGuest:scoreHost}</div><div class="sl">${opName}</div></div></div>
+    <div class="gst">${statusTxt}</div>
+    <div style="background:var(--bg3);border-radius:12px;padding:.6rem .8rem;max-height:180px;overflow-y:auto;margin:.4rem 0">${guessHtml||'<div style="color:var(--t3);font-size:.82rem">Ещё нет попыток</div>'}</div>
+    ${!done&&!isDescriber?`<div style="display:flex;gap:.4rem"><input id="croc-guess-inp" placeholder="Введи слово..." style="flex:1;border:1px solid var(--brd);border-radius:10px;padding:.5rem .8rem;background:var(--bg3);color:var(--t1);font-size:.9rem;outline:none"/><button class="snd" style="padding:.5rem .8rem" onclick="crocGuess()">➤</button></div>`:''}
+    ${done?`<button class="gbtn" onclick="crocNextRound('${lobbyId}')">Следующий раунд</button>`:''}`;
+  const gi = document.getElementById('croc-guess-inp');
+  if (gi) gi.addEventListener('keydown', e=>{ if(e.key==='Enter') window.crocGuess(); });
+}
+
+window.crocGuess = async () => {
+  const inp = document.getElementById('croc-guess-inp');
+  if (!inp || !currentGame) return;
+  const txt = inp.value.trim(); if (!txt) return;
+  inp.value = '';
+  const ref = doc(db,'games',currentGame.lobbyId);
+  const snap = await getDoc(ref); if (!snap.exists()) return;
+  const state = snap.data();
+  if (state.guessedBy) return;
+  const isDescriber = state.describer === currentGame.role;
+  if (isDescriber) return toast('Ты описываешь!');
+  const newGuesses = [...(state.guesses||[]), {by:currentGame.role, text:txt, ts:Date.now()}];
+  const isCorrect = txt.trim().toLowerCase() === (state.word||'').toLowerCase();
+  const updates = {guesses: newGuesses};
+  if (isCorrect) {
+    updates.guessedBy = currentGame.role;
+    const sc = {...(state.roundScore||{host:0,guest:0})};
+    sc[currentGame.role] = (sc[currentGame.role]||0)+1;
+    updates.roundScore = sc;
+  }
+  await updateDoc(ref, updates);
+  if (isCorrect) toast('🎉 Правильно!');
+};
+
+window.crocNextRound = async (lobbyId) => {
+  const words = ['слон','трамвай','солнце','зима','птица','гора','река','книга','компьютер','дерево',
+    'телефон','кухня','музыка','самолёт','машина','лодка','рыба','кот','собака','дом',
+    'школа','врач','спорт','город','дорога','небо','облако','снег','огонь','вода'];
+  const ref = doc(db,'games',lobbyId);
+  const snap = await getDoc(ref); if (!snap.exists()) return;
+  const state = snap.data();
+  const nextDescriber = state.describer==='host'?'guest':'host';
+  const newWord = words[~~(Math.random()*words.length)];
+  await updateDoc(ref, {guesses:[],guessedBy:null,describer:nextDescriber,word:newWord});
+};
+
+// ══════════════════════════════
+// VERIFICATION BADGES
+// ══════════════════════════════
+
+// ─── Config: set admin: true on your Firestore user doc to get admin access ──
+function isAdmin() { return ME && ME.admin === true; }
+
+// Returns HTML badge span (or empty string)
+function vBadge(verified, large) {
+  if (!verified) return '';
+  return `<span class="vbadge${large?' vbadge-lg':''}"></span>`;
+}
+
+// ─── Open panel (user side) ───────────────────────────────────────────────────
+window.openVerifyPanel = async () => {
+  document.getElementById('verify-reason-inp').value = '';
+  const statusBlock = document.getElementById('verify-status-block');
+  const formBlock = document.getElementById('verify-form-block');
+  statusBlock.innerHTML = '';
+
+  if (ME.verified) {
+    statusBlock.innerHTML = `<div class="verify-status-chip vsc-approved">✔ Аккаунт верифицирован</div>`;
+    formBlock.style.display = 'none';
+    openOv('verify-req-ov');
+    return;
+  }
+
+  // Check existing request
+  const q = query(collection(db,'verifyRequests'), where('uid','==',ME.uid), limit(1));
+  const snap = await getDocs(q);
+  if (!snap.empty) {
+    const req = snap.docs[0].data();
+    const statusMap = { pending: ['vsc-pending','⏳ Заявка на рассмотрении'], approved: ['vsc-approved','✔ Одобрено'], rejected: ['vsc-rejected','✕ Отклонено'] };
+    const [cls, txt] = statusMap[req.status] || ['vsc-pending','⏳'];
+    statusBlock.innerHTML = `<div class="verify-status-chip ${cls}">${txt}</div>${req.status==='rejected'&&req.rejectReason?`<div style="font-size:.78rem;color:var(--t3);margin-top:.3rem">Причина: ${esc(req.rejectReason)}</div>`:''}`;
+    formBlock.style.display = req.status === 'rejected' ? '' : 'none';
+    if (req.status === 'rejected') {
+      document.querySelector('#verify-form-block label').textContent = 'Подать заявку повторно:';
+    }
+  } else {
+    formBlock.style.display = '';
+  }
+  openOv('verify-req-ov');
+};
+
+window.submitVerifyRequest = async () => {
+  const reason = document.getElementById('verify-reason-inp').value.trim();
+  if (!reason) return toast('Напиши, почему хочешь верификацию');
+  // Delete any old rejected request
+  const qOld = query(collection(db,'verifyRequests'), where('uid','==',ME.uid));
+  const oldSnap = await getDocs(qOld);
+  await Promise.all(oldSnap.docs.map(d => deleteDoc(d.ref)));
+  // Create new request
+  await addDoc(collection(db,'verifyRequests'), {
+    uid: ME.uid,
+    username: ME.username,
+    av: ME.av||'👤',
+    reason,
+    ts: serverTimestamp(),
+    status: 'pending'
+  });
+  toast('Заявка отправлена! ⏳ Ждём решения.');
+  document.getElementById('verify-status-block').innerHTML = `<div class="verify-status-chip vsc-pending">⏳ Заявка на рассмотрении</div>`;
+  document.getElementById('verify-form-block').style.display = 'none';
+  // Notify admin via notification doc
+  await addDoc(collection(db,'notifications'), {
+    type: 'verify_request',
+    uid: ME.uid,
+    username: ME.username,
+    ts: serverTimestamp()
+  }).catch(()=>{});
+};
+
+// ─── Admin panel ──────────────────────────────────────────────────────────────
+// (kept for backward compat, now delegates to new panel)
+window.openAdminVerifyPanel = () => openAdminPanel('verify');
+
+window.adminApproveVerify = async (reqId, uid) => {
+  await updateDoc(doc(db,'verifyRequests',reqId), { status: 'approved', decidedAt: serverTimestamp() });
+  await updateDoc(doc(db,'users',uid), { verified: true });
+  await addDoc(collection(db,'notifications'), { type:'verify_approved', toUid:uid, ts:serverTimestamp() }).catch(()=>{});
+  document.getElementById('vrqitem-'+reqId)?.remove();
+  toast('Верификация выдана ✔');
+};
+
+window.adminRejectVerify = (reqId, uid) => {
+  const reason = prompt('Причина отклонения (необязательно):') ?? '';
+  updateDoc(doc(db,'verifyRequests',reqId), { status:'rejected', rejectReason:reason, decidedAt:serverTimestamp() })
+    .then(() => addDoc(collection(db,'notifications'), { type:'verify_rejected', toUid:uid, reason, ts:serverTimestamp() }).catch(()=>{}))
+    .then(() => { document.getElementById('vrqitem-'+reqId)?.remove(); toast('Заявка отклонена'); });
+};
+
+// ─── Load pending count for admin badge in profile ────────────────────────────
+async function loadAdminVerifyBadge() {
+  if (!isAdmin()) return;
+  document.getElementById('admin-panel-btn').style.display = '';
+  const q = query(collection(db,'verifyRequests'), where('status','==','pending'), limit(50));
+  const snap = await getDocs(q);
+  const cnt = snap.docs.length;
+  const badge = document.getElementById('adm-menu-badge');
+  if (badge) badge.textContent = cnt > 0 ? cnt : '›';
+  const topBdg = document.getElementById('adm-pending-badge');
+  if (topBdg) { topBdg.textContent = cnt; topBdg.style.display = cnt > 0 ? '' : 'none'; }
+}
+
+// ══════════════════════════════
+// ADMIN PANEL
+// ══════════════════════════════
+let _adminTabId = 'stats';
+let _adminUserSearch = '';
+
+window.openAdminPanel = (tab) => {
+  if (!isAdmin()) return toast('Нет доступа');
+  openOv('admin-panel-ov');
+  adminTab(tab || 'stats');
+};
+
+window.adminTab = t => {
+  _adminTabId = t;
+  document.querySelectorAll('.adm-tab').forEach(el => el.classList.toggle('on', el.dataset.tab === t));
+  const c = document.getElementById('adm-content');
+  c.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--t3);font-size:.85rem">Загрузка...</div>';
+  if (t === 'stats')     adminLoadStats();
+  else if (t === 'users')    adminLoadUsers('');
+  else if (t === 'verify')   adminLoadVerifyTab();
+  else if (t === 'channels') adminLoadChannels();
+  else if (t === 'broadcast') adminLoadBroadcast();
+};
+
+// ── Stats ────────────────────────────────────────────────────────────────────
+async function adminLoadStats() {
+  const c = document.getElementById('adm-content');
+  const [usersSnap, channelsSnap, presenceSnap, groupsSnap] = await Promise.all([
+    getDocs(query(collection(db,'users'), limit(1000))),
+    getDocs(query(collection(db,'channels'), limit(500))),
+    getDocs(query(collection(db,'presence'), where('online','==',true), limit(300))),
+    getDocs(query(collection(db,'groups'), limit(500))),
+  ]);
+  const now = Date.now();
+  const verifiedCount = usersSnap.docs.filter(d => d.data().verified).length;
+  const bannedCount   = usersSnap.docs.filter(d => d.data().banned).length;
+  const adminCount    = usersSnap.docs.filter(d => d.data().admin).length;
+  const onlineCount   = presenceSnap.docs.filter(d => {
+    const lastMs = d.data().last?.toMillis?.() || 0;
+    return (now - lastMs) < 5 * 60 * 1000;
+  }).length;
+  c.innerHTML = `
+    <div class="adm-section-hd">📊 Статистика платформы</div>
+    <div class="adm-stat-grid">
+      <div class="adm-stat"><div class="adm-stat-val">${usersSnap.docs.length}</div><div class="adm-stat-lbl">👥 Пользователей</div></div>
+      <div class="adm-stat"><div class="adm-stat-val" style="color:#10b981">${onlineCount}</div><div class="adm-stat-lbl">🟢 Онлайн сейчас</div></div>
+      <div class="adm-stat"><div class="adm-stat-val" style="color:#1d9bf0">${verifiedCount}</div><div class="adm-stat-lbl">✔️ Верифицированных</div></div>
+      <div class="adm-stat"><div class="adm-stat-val" style="color:#f59e0b">${channelsSnap.docs.length}</div><div class="adm-stat-lbl">📢 Каналов</div></div>
+      <div class="adm-stat"><div class="adm-stat-val">${groupsSnap.docs.length}</div><div class="adm-stat-lbl">💬 Групп</div></div>
+      <div class="adm-stat"><div class="adm-stat-val" style="color:#ef4444">${bannedCount}</div><div class="adm-stat-lbl">🚫 Заблокированных</div></div>
+    </div>
+    <div class="adm-section-hd">⚙️ Инфо</div>
+    <div style="font-size:.82rem;color:var(--t2);line-height:2">
+      <div>👑 Администраторов: <b>${adminCount}</b></div>
+      <div>🗄️ Firestore: <span style="color:#10b981">активно</span></div>
+      <div>🔐 Firebase Auth: <span style="color:#10b981">активно</span></div>
+      <div>👤 Вы: <b>${esc(ME.username)}</b> (admin)</div>
+    </div>`;
+}
+
+// ── Users ─────────────────────────────────────────────────────────────────────
+window.adminLoadUsers = async (search) => {
+  _adminUserSearch = search;
+  const c = document.getElementById('adm-content');
+  const searchEl = `<div style="margin-bottom:.75rem"><input class="adm-search" placeholder="🔍 Поиск по нику..." value="${esc(search)}" oninput="adminLoadUsers(this.value)"/></div>`;
+  let snap;
+  if (search.trim()) {
+    const term = search.trim().toLowerCase();
+    snap = await getDocs(query(collection(db,'users'), where('usernameLower','>=',term), where('usernameLower','<=',term+'\uf8ff'), limit(30)));
+  } else {
+    snap = await getDocs(query(collection(db,'users'), orderBy('username'), limit(60)));
+  }
+  if (snap.empty) {
+    c.innerHTML = searchEl + '<div class="empty"><div class="ei">👥</div><div class="et">Никого не найдено</div></div>';
+    return;
+  }
+  const rows = snap.docs.map(d => {
+    const u = d.data(); const uid = d.id;
+    const isVerified = !!u.verified;
+    const isBanned   = !!u.banned;
+    const isAdm      = !!u.admin;
+    const isMe       = uid === ME.uid;
+    const avS = u.av && u.av.startsWith('data') ? `style="background-image:url(${u.av});background-size:cover;background-position:center"` : '';
+    const avT = u.av && !u.av.startsWith('data') ? u.av : '👤';
+    const tags = [
+      isVerified ? '<span style="color:#1d9bf0;font-size:.68rem">✔ верифицирован</span>' : '',
+      isBanned   ? '<span style="color:#ef4444;font-size:.68rem">🚫 бан</span>'          : '',
+      isAdm      ? '<span style="color:var(--pu);font-size:.68rem">👑 админ</span>'      : '',
+    ].filter(Boolean).join(' · ') || esc(u.bio||'');
+    return `<div class="adm-urow" id="admurow-${uid}">
+      <div class="adm-urow-av" ${avS}>${avT}</div>
+      <div class="adm-urow-info">
+        <div class="adm-urow-name">${esc(u.username)}${vBadge(isVerified)}${isMe?' <span style="font-size:.65rem;color:var(--t3)">(вы)</span>':''}</div>
+        <div class="adm-urow-sub">${tags}</div>
+        <div class="adm-urow-acts">
+          ${isVerified
+            ? `<button class="adm-btn" onclick="admToggleVerify('${uid}',false)">✕ Снять ✔</button>`
+            : `<button class="adm-btn success" onclick="admToggleVerify('${uid}',true)">✔ Верифицировать</button>`}
+          ${isBanned
+            ? `<button class="adm-btn success" onclick="admToggleBan('${uid}',false)">✅ Разбанить</button>`
+            : `<button class="adm-btn danger"  onclick="admToggleBan('${uid}',true)">🚫 Забанить</button>`}
+          ${!isMe ? (isAdm
+            ? `<button class="adm-btn" onclick="admToggleAdmin('${uid}',false)">− Снять права</button>`
+            : `<button class="adm-btn primary" onclick="admToggleAdmin('${uid}',true)">👑 Назначить</button>`) : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  c.innerHTML = searchEl + `<div class="adm-section-hd">👥 Пользователи (${snap.docs.length})</div>` + rows;
+};
+
+window.admToggleVerify = async (uid, verified) => {
+  await updateDoc(doc(db,'users',uid), { verified });
+  toast(verified ? '✔ Верификация выдана' : 'Верификация снята');
+  adminLoadUsers(_adminUserSearch);
+};
+
+window.admToggleBan = async (uid, banned) => {
+  if (uid === ME.uid) return toast('Нельзя забанить себя');
+  if (banned && !confirm('Заблокировать пользователя? Он не сможет войти.')) return;
+  await updateDoc(doc(db,'users',uid), { banned });
+  toast(banned ? '🚫 Пользователь заблокирован' : '✅ Пользователь разблокирован');
+  adminLoadUsers(_adminUserSearch);
+};
+
+window.admToggleAdmin = async (uid, admin) => {
+  if (admin && !confirm('Назначить администратором?')) return;
+  await updateDoc(doc(db,'users',uid), { admin });
+  toast(admin ? '👑 Права выданы' : 'Права сняты');
+  adminLoadUsers(_adminUserSearch);
+};
+
+// ── Verification tab ──────────────────────────────────────────────────────────
+async function adminLoadVerifyTab() {
+  const c = document.getElementById('adm-content');
+  c.innerHTML = `<div style="display:flex;gap:.4rem;margin-bottom:.75rem;flex-wrap:wrap">
+    <button class="adm-btn primary" id="avf-pending" onclick="admVerifyFilter('pending')">⏳ Ожидают</button>
+    <button class="adm-btn" id="avf-approved" onclick="admVerifyFilter('approved')">✔ Одобренные</button>
+    <button class="adm-btn" id="avf-rejected" onclick="admVerifyFilter('rejected')">✕ Отклонённые</button>
+  </div><div id="avf-list"><div style="color:var(--t3);font-size:.82rem">Загрузка...</div></div>`;
+  admVerifyFilter('pending');
+}
+
+window.admVerifyFilter = async status => {
+  ['pending','approved','rejected'].forEach(s => {
+    const el = document.getElementById('avf-'+s);
+    if(!el) return;
+    el.className = 'adm-btn' + (s===status?' primary':'');
+  });
+  const listEl = document.getElementById('avf-list');
+  if (!listEl) return;
+  listEl.innerHTML = '<div style="color:var(--t3);font-size:.82rem">Загрузка...</div>';
+  const snap = await getDocs(query(collection(db,'verifyRequests'), where('status','==',status), orderBy('ts','asc'), limit(50)));
+  if (snap.empty) { listEl.innerHTML = '<div style="color:var(--t3);font-size:.82rem;padding:.5rem 0">Заявок нет</div>'; return; }
+  const rejectReasonHtml = r => r.rejectReason ? `<div style="font-size:.72rem;color:#ef4444;margin-top:.2rem">Отказ: ${esc(r.rejectReason)}</div>` : '';
+  listEl.innerHTML = snap.docs.map(d => {
+    const r = d.data();
+    const avS = r.av&&r.av.startsWith('data') ? `style="background-image:url(${r.av});background-size:cover;background-position:center"` : '';
+    const avT = r.av&&!r.av.startsWith('data') ? r.av : '👤';
+    const btns = status === 'pending' ? `
+      <button class="vrq-approve" onclick="admApproveVerify('${d.id}','${r.uid}')">✔ Одобрить</button>
+      <button class="vrq-reject"  onclick="admRejectVerify('${d.id}','${r.uid}')">✕ Отклонить</button>` : '';
+    return `<div class="verify-req-item" id="avfi-${d.id}">
+      <div class="verify-req-av" ${avS}>${avT}</div>
+      <div style="flex:1;min-width:0">
+        <div class="vrq-name">${esc(r.username)}</div>
+        <div class="vrq-reason">"${esc(r.reason)}"</div>
+        ${r.ts?`<div style="font-size:.7rem;color:var(--t3)">${fmtAgo(r.ts.toDate())}</div>`:''}
+        ${rejectReasonHtml(r)}
+        <div class="vrq-btns">${btns}</div>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.admApproveVerify = async (reqId, uid) => {
+  await updateDoc(doc(db,'verifyRequests',reqId), { status:'approved', decidedAt:serverTimestamp() });
+  await updateDoc(doc(db,'users',uid), { verified:true });
+  await addDoc(collection(db,'notifications'), { type:'verify_approved', toUid:uid, ts:serverTimestamp() }).catch(()=>{});
+  document.getElementById('avfi-'+reqId)?.remove();
+  toast('Верификация выдана ✔');
+  loadAdminVerifyBadge();
+};
+
+window.admRejectVerify = (reqId, uid) => {
+  const reason = prompt('Причина отклонения:') ?? '';
+  updateDoc(doc(db,'verifyRequests',reqId), { status:'rejected', rejectReason:reason, decidedAt:serverTimestamp() })
+    .then(() => addDoc(collection(db,'notifications'), { type:'verify_rejected', toUid:uid, reason, ts:serverTimestamp() }).catch(()=>{}))
+    .then(() => { document.getElementById('avfi-'+reqId)?.remove(); toast('Заявка отклонена'); loadAdminVerifyBadge(); });
+};
+
+// ── Channels ──────────────────────────────────────────────────────────────────
+async function adminLoadChannels() {
+  const c = document.getElementById('adm-content');
+  const snap = await getDocs(query(collection(db,'channels'), limit(100)));
+  if (snap.empty) {
+    c.innerHTML = '<div class="empty"><div class="ei">📢</div><div class="et">Каналов нет</div></div>';
+    return;
+  }
+  c.innerHTML = `<div class="adm-section-hd">📢 Каналы (${snap.docs.length})</div>` + snap.docs.map(d => {
+    const ch = d.data();
+    const avS = ch.av&&ch.av.startsWith('data') ? `style="background-image:url(${ch.av});background-size:cover;background-position:center"` : '';
+    const avT = ch.av&&!ch.av.startsWith('data') ? ch.av : '📢';
+    return `<div class="adm-urow" id="admch-${d.id}">
+      <div class="adm-urow-av" ${avS}>${avT}</div>
+      <div class="adm-urow-info">
+        <div class="adm-urow-name">${esc(ch.name)} ${ch.isPublic?'<span style="font-size:.65rem;color:var(--t3)">🌍 публичный</span>':'<span style="font-size:.65rem;color:var(--t3)">🔒 приватный</span>'}</div>
+        <div class="adm-urow-sub">👥 ${(ch.subscribers||[]).length} подписчиков · создал: ${esc(ch.createdByName||'?')}</div>
+        <div class="adm-urow-acts">
+          <button class="adm-btn danger" onclick="admDeleteChannel('${d.id}')">🗑️ Удалить канал</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.admDeleteChannel = async id => {
+  if (!confirm('Удалить канал навсегда?')) return;
+  await updateDoc(doc(db,'channels',id), { deleted:true, subscribers:[] }).catch(()=>{});
+  document.getElementById('admch-'+id)?.remove();
+  toast('Канал удалён');
+};
+
+// ── Broadcast ─────────────────────────────────────────────────────────────────
+function adminLoadBroadcast() {
+  const c = document.getElementById('adm-content');
+  c.innerHTML = `
+    <div class="adm-section-hd">📣 Новая рассылка</div>
+    <div class="adm-broadcast-box">
+      <div style="font-size:.8rem;color:var(--t3);line-height:1.5">Сообщение увидят все пользователи при следующем открытии приложения в виде уведомления.</div>
+      <input id="adm-bc-title" style="background:var(--bg);border:1px solid var(--brd2);border-radius:10px;padding:.5rem .75rem;color:var(--t1);font-size:.85rem;outline:none" placeholder="Заголовок (необязательно)"/>
+      <textarea id="adm-bc-text" style="background:var(--bg);border:1px solid var(--brd2);border-radius:10px;padding:.5rem .75rem;color:var(--t1);font-size:.85rem;min-height:90px;resize:none;outline:none;font-family:inherit" placeholder="Текст рассылки..."></textarea>
+      <button class="snd" style="padding:.7rem;border-radius:12px;font-size:.9rem" onclick="admSendBroadcast()">📣 Отправить всем</button>
+    </div>
+    <div class="adm-section-hd" style="margin-top:1rem">📜 История рассылок</div>
+    <div id="adm-bc-history"><div style="color:var(--t3);font-size:.82rem">Загрузка...</div></div>`;
+  admLoadBroadcastHistory();
+}
+
+async function admLoadBroadcastHistory() {
+  const el = document.getElementById('adm-bc-history');
+  if (!el) return;
+  const snap = await getDocs(query(collection(db,'broadcasts'), orderBy('ts','desc'), limit(10)));
+  if (snap.empty) { el.innerHTML = '<div style="color:var(--t3);font-size:.82rem">История пуста</div>'; return; }
+  el.innerHTML = snap.docs.map(d => {
+    const b = d.data();
+    return `<div style="background:var(--bg3);border-radius:10px;padding:.65rem;margin-bottom:.5rem;border:1px solid var(--brd)">
+      ${b.title?`<div style="font-size:.85rem;font-weight:700;margin-bottom:.2rem">📣 ${esc(b.title)}</div>`:''}
+      <div style="font-size:.82rem">${esc(b.text)}</div>
+      <div style="font-size:.7rem;color:var(--t3);margin-top:.3rem">${b.ts?fmtAgo(b.ts.toDate()):''} · от ${esc(b.fromName||'?')}</div>
+    </div>`;
+  }).join('');
+}
+
+window.admSendBroadcast = async () => {
+  const title = document.getElementById('adm-bc-title').value.trim();
+  const text  = document.getElementById('adm-bc-text').value.trim();
+  if (!text) return toast('Введи текст рассылки');
+  if (!confirm(`Отправить рассылку всем пользователям?`)) return;
+  await addDoc(collection(db,'broadcasts'), { title, text, from:ME.uid, fromName:ME.username, ts:serverTimestamp() });
+  document.getElementById('adm-bc-title').value = '';
+  document.getElementById('adm-bc-text').value = '';
+  toast('Рассылка отправлена! 📣');
+  admLoadBroadcastHistory();
+};
+
+// ══════════════════════════════
+// CHANNELS — Telegram-style
+// ══════════════════════════════
+let currentChannelId = null;
+let channelUnsub = null;
+let channelPostsUnsub = null;
+let chanType = 'public'; // for creation
+let chanImgB64 = null;
+let _chanData = null; // current channel data cache
+
+const CHAN_EMOJIS = ['📢','📰','🎵','🎮','🏀','⚽','🎨','📸','🍕','✈️','🚀','💡','🔥','💎','🌍','🎬','📚','💪','🎯','🦁','🐱','🐶','🌸','🍀','⚡','🌈','👑','🛡️','🎭','🎪'];
+
+// ─── Channel list in chats tab ────────────────────────────────────────────────
+function listenMyChannels() {
+  if (!ME) return;
+  const el = document.getElementById('channel-list');
+  // Listen to channels where user is subscriber or creator
+  const q1 = query(collection(db,'channels'), where('subscribers','array-contains',ME.uid), limit(30));
+  channelUnsub = onSnapshot(q1, snap => {
+    const channels = snap.docs.map(d=>({id:d.id,...d.data()}));
+    channels.sort((a,b)=>(b.lastPostTs?.seconds||0)-(a.lastPostTs?.seconds||0));
+    if (!channels.length) {
+      el.innerHTML = '<div class="empty" style="padding:1.5rem 0"><div class="ei">📢</div><div class="et">Нет каналов<br><small style="font-size:.75rem;color:var(--t3)">Найди или создай</small></div></div>';
+      return;
+    }
+    el.innerHTML = channels.map(ch => {
+      const isAdmin = ch.createdBy === ME.uid;
+      const subs = (ch.subscribers||[]).length;
+      const lastTxt = ch.lastPost ? ch.lastPost.substring(0,55)+(ch.lastPost.length>55?'…':'') : 'Нажми чтобы открыть';
+      return `<div class="chi" onclick="openChannel('${ch.id}')">
+        <div class="chi-av" ${ch.av&&ch.av.startsWith('data')?`style="background-image:url(${ch.av});background-size:cover;background-position:center"`:''}>${ch.av&&!ch.av.startsWith('data')?ch.av:''}</div>
+        <div class="chi-body">
+          <div class="chi-r1">
+            <span class="chi-name">${esc(ch.name)} ${ch.isPublic?'':'🔒'}</span>
+            ${isAdmin?'<span class="chi-badge">Админ</span>':''}
+          </div>
+          <div class="chi-last">${esc(lastTxt)}</div>
+          <div class="chi-subs">👥 ${subs} подписчиков</div>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+// ─── Open channel ─────────────────────────────────────────────────────────────
+window.openChannel = async id => {
+  currentChannelId = id;
+  if (channelPostsUnsub) { channelPostsUnsub(); channelPostsUnsub = null; }
+  const snap = await getDoc(doc(db,'channels',id));
+  if (!snap.exists()) return toast('Канал не найден');
+  _chanData = { id, ...snap.data() };
+  renderChannelHeader(_chanData);
+  openOv('channel-ov');
+  // Increment view of channel itself
+  updateDoc(doc(db,'channels',id), { viewCount: (_chanData.viewCount||0)+1 }).catch(()=>{});
+  // Listen posts
+  const q2 = query(collection(db,'channels',id,'posts'), orderBy('ts','desc'), limit(40));
+  channelPostsUnsub = onSnapshot(q2, snap2 => {
+    renderChannelPosts(snap2.docs.map(d=>({id:d.id,...d.data()})), _chanData);
+  });
+};
+
+function renderChannelHeader(ch) {
+  const isAdmin = ch.createdBy === ME.uid;
+  const isSubscribed = (ch.subscribers||[]).includes(ME.uid);
+  const avEl = document.getElementById('ch-ov-av');
+  if (ch.av && ch.av.startsWith('data')) {
+    avEl.style.backgroundImage = `url(${ch.av})`;
+    avEl.style.backgroundSize = 'cover';
+    avEl.textContent = '';
+  } else {
+    avEl.style.backgroundImage = '';
+    avEl.textContent = ch.av||'📢';
+  }
+  document.getElementById('ch-ov-name').textContent = ch.name;
+  document.getElementById('ch-ov-subs').textContent = `👥 ${(ch.subscribers||[]).length} подписчиков${ch.description?' · '+ch.description.substring(0,40):''}`;
+  const subBtn = document.getElementById('ch-ov-subscribe-btn');
+  if (isAdmin) {
+    subBtn.style.display = 'none';
+  } else {
+    subBtn.style.display = '';
+    subBtn.textContent = isSubscribed ? 'Отписаться' : 'Подписаться';
+    subBtn.style.background = isSubscribed ? 'var(--bg3)' : 'var(--pu)';
+    subBtn.style.color = isSubscribed ? 'var(--t2)' : '#fff';
+    subBtn.style.border = isSubscribed ? '1px solid var(--brd)' : 'none';
+    subBtn.style.borderRadius = '10px';
+    subBtn.style.padding = '.3rem .75rem';
+    subBtn.style.cursor = 'pointer';
+    subBtn.style.fontSize = '.82rem';
+  }
+  document.getElementById('ch-ov-settings-btn').style.display = isAdmin ? '' : 'none';
+  document.getElementById('ch-ov-composer').style.display = isAdmin ? '' : 'none';
+}
+
+function renderChannelPosts(posts, ch) {
+  const el = document.getElementById('ch-ov-posts');
+  if (!posts.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">📢</div><div class="et">Нет постов<br><small style="font-size:.75rem;color:var(--t3)">Будьте первым!</small></div></div>';
+    return;
+  }
+  el.innerHTML = posts.map(p => {
+    const ts = p.ts ? fmtAgo(p.ts.toDate()) : '';
+    const imgHtml = p.imageUrl ? `<img class="chan-post-img" src="${p.imageUrl}" alt="фото" onclick="viewImgRaw('${p.id}','${p.imageUrl}')"/>` : '';
+    const views = p.views || 0;
+    // Reactions summary
+    const reacts = p.reactions || {};
+    const counts = {};
+    Object.values(reacts).forEach(e => { counts[e]=(counts[e]||0)+1; });
+    const myReact = reacts[ME.uid] || null;
+    const reactsHtml = Object.entries(counts).map(([emoji,cnt]) =>
+      `<button class="chan-react-btn${myReact===emoji?' mine':''}" onclick="chanReact('${ch.id}','${p.id}','${emoji}')">${emoji} ${cnt}</button>`
+    ).join('');
+    const addReactBtn = `<button class="chan-react-btn" onclick="openChanReactPicker('${ch.id}','${p.id}')">😊</button>`;
+    return `<div class="chan-post" id="chpost-${p.id}">
+      <div class="chan-post-meta">
+        <div class="chan-post-av" ${ch.av&&ch.av.startsWith('data')?`style="background-image:url(${ch.av});background-size:cover;background-position:center"`:''}>${ch.av&&!ch.av.startsWith('data')?ch.av:''}</div>
+        <span class="chan-post-name">${esc(ch.name)}</span>
+        <span class="chan-post-time">${ts}</span>
+      </div>
+      ${p.text ? `<div class="chan-post-text">${esc(p.text)}</div>` : ''}
+      ${imgHtml}
+      <div class="chan-post-acts">
+        ${reactsHtml}${addReactBtn}
+        <span class="chan-views">👁️ ${views}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.closeChannelOv = () => {
+  closeOv('channel-ov');
+  if (channelPostsUnsub) { channelPostsUnsub(); channelPostsUnsub = null; }
+  currentChannelId = null; _chanData = null;
+};
+
+// ─── Subscribe / Unsubscribe ──────────────────────────────────────────────────
+window.toggleChannelSubscribe = async () => {
+  if (!currentChannelId) return;
+  const ch = _chanData;
+  const isSubscribed = (ch.subscribers||[]).includes(ME.uid);
+  if (isSubscribed) {
+    await updateDoc(doc(db,'channels',currentChannelId), { subscribers: arrayRemove(ME.uid) });
+    toast('Вы отписались от канала');
+  } else {
+    await updateDoc(doc(db,'channels',currentChannelId), { subscribers: arrayUnion(ME.uid) });
+    toast('Вы подписались на канал! 🔔');
+  }
+  // Refresh header
+  const snap = await getDoc(doc(db,'channels',currentChannelId));
+  if (snap.exists()) { _chanData = {id:currentChannelId,...snap.data()}; renderChannelHeader(_chanData); }
+};
+
+// ─── Reactions on posts ───────────────────────────────────────────────────────
+window.chanReact = async (chanId, postId, emoji) => {
+  const ref = doc(db,'channels',chanId,'posts',postId);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+  const cur = (snap.data().reactions||{})[ME.uid];
+  if (cur === emoji) {
+    await updateDoc(ref, { [`reactions.${ME.uid}`]: deleteField() });
+  } else {
+    await updateDoc(ref, { [`reactions.${ME.uid}`]: emoji });
+  }
+};
+
+let _chanReactTarget = null;
+window.openChanReactPicker = (chanId, postId) => {
+  _chanReactTarget = { chanId, postId };
+  // Reuse existing react picker
+  const rp = document.getElementById('react-picker');
+  if (!rp) return;
+  rp.style.display = 'flex';
+  rp.style.position = 'fixed';
+  rp.style.bottom = '80px';
+  rp.style.left = '50%';
+  rp.style.transform = 'translateX(-50%)';
+  rp.style.zIndex = '700';
+};
+// Re-use pickReact for channel reactions
+const _origPickReact = window.pickReact;
+window.pickReact = emoji => {
+  if (_chanReactTarget) {
+    const {chanId, postId} = _chanReactTarget;
+    _chanReactTarget = null;
+    document.getElementById('react-picker').style.display = '';
+    chanReact(chanId, postId, emoji);
+  } else {
+    _origPickReact && _origPickReact(emoji);
+  }
+};
+
+// ─── Publish post ─────────────────────────────────────────────────────────────
+window.chPickImg = async inp => {
+  const file = inp.files[0]; if (!file) return;
+  chanImgB64 = await compressImage(file, 1280, 0.82);
+  const prev = document.getElementById('ch-comp-img');
+  prev.src = chanImgB64;
+  document.getElementById('ch-comp-img-preview').style.display = '';
+};
+window.chCancelImg = () => {
+  chanImgB64 = null;
+  document.getElementById('ch-comp-img-preview').style.display = 'none';
+  document.getElementById('ch-img-inp').value = '';
+};
+
+window.publishChannelPost = async () => {
+  const txt = document.getElementById('ch-post-inp').value.trim();
+  if (!txt && !chanImgB64) return toast('Добавь текст или фото');
+  const postData = { text: txt, uid: ME.uid, ts: serverTimestamp(), views: 0, reactions: {} };
+  if (chanImgB64) postData.imageUrl = chanImgB64;
+  await addDoc(collection(db,'channels',currentChannelId,'posts'), postData);
+  await updateDoc(doc(db,'channels',currentChannelId), {
+    lastPost: txt.substring(0,80)||(chanImgB64?'📷 Фото':''),
+    lastPostTs: serverTimestamp()
+  });
+  document.getElementById('ch-post-inp').value = '';
+  chCancelImg();
+  toast('Пост опубликован! 📢');
+};
+
+// ─── View count increment when post enters viewport ───────────────────────────
+function setupPostViewTracking() {
+  if (!('IntersectionObserver' in window)) return;
+  const seen = new Set();
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id = e.target.dataset.postId;
+      if (!id || seen.has(id) || !currentChannelId) return;
+      seen.add(id);
+      updateDoc(doc(db,'channels',currentChannelId,'posts',id), { views: increment(1) }).catch(()=>{});
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.chan-post[data-post-id]').forEach(el => obs.observe(el));
+}
+
+// ─── Create channel ───────────────────────────────────────────────────────────
+let chanCreateAv = '📢';
+
+window.openCreateChannel = () => {
+  chanCreateAv = '📢'; chanType = 'public';
+  document.getElementById('chan-create-name').value = '';
+  document.getElementById('chan-create-desc').value = '';
+  chanSetType('public');
+  // render emoji grid
+  const grid = document.getElementById('chan-emoji-grid');
+  grid.innerHTML = CHAN_EMOJIS.map(e =>
+    `<div onclick="chanSelectEmoji(this,'${e}')" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;cursor:pointer;background:var(--bg3);border:2px solid transparent" data-em="${e}">${e}</div>`
+  ).join('');
+  openOv('channel-create-ov');
+};
+window.chanSelectEmoji = (el, em) => {
+  chanCreateAv = em;
+  document.querySelectorAll('#chan-emoji-grid > div').forEach(d => d.style.borderColor = 'transparent');
+  el.style.borderColor = 'var(--pu)';
+};
+window.chanSetType = t => {
+  chanType = t;
+  document.getElementById('chan-type-pub').style.background = t==='public'?'var(--pu)':'var(--bg3)';
+  document.getElementById('chan-type-pub').style.color = t==='public'?'#fff':'var(--t1)';
+  document.getElementById('chan-type-pub').style.borderColor = t==='public'?'var(--pu)':'var(--brd)';
+  document.getElementById('chan-type-prv').style.background = t==='private'?'var(--pu)':'var(--bg3)';
+  document.getElementById('chan-type-prv').style.color = t==='private'?'#fff':'var(--t1)';
+  document.getElementById('chan-type-prv').style.borderColor = t==='private'?'var(--pu)':'var(--brd)';
+};
+window.submitCreateChannel = async () => {
+  const name = document.getElementById('chan-create-name').value.trim();
+  if (!name) return toast('Введи название канала');
+  const desc = document.getElementById('chan-create-desc').value.trim();
+  const chRef = await addDoc(collection(db,'channels'), {
+    name, description: desc, av: chanCreateAv,
+    createdBy: ME.uid, createdByName: ME.username,
+    isPublic: chanType === 'public',
+    subscribers: [ME.uid],
+    lastPost: null, lastPostTs: serverTimestamp(),
+    viewCount: 0
+  });
+  closeOv('channel-create-ov');
+  toast('Канал создан! 📢');
+  openChannel(chRef.id);
+};
+
+// ─── Channel Settings ─────────────────────────────────────────────────────────
+window.openChannelSettings = async () => {
+  const ch = _chanData; if (!ch) return;
+  const el = document.getElementById('channel-settings-content');
+  el.innerHTML = `
+    <label style="font-size:.8rem;color:var(--t3)">Название</label>
+    <input id="chs-name" class="chan-field" value="${esc(ch.name)}"/>
+    <label style="font-size:.8rem;color:var(--t3)">Описание</label>
+    <textarea id="chs-desc" class="chan-field" style="min-height:72px;resize:none">${esc(ch.description||'')}</textarea>
+    <label style="font-size:.8rem;color:var(--t3)">Тип канала</label>
+    <div style="display:flex;gap:.5rem">
+      <button id="chs-type-pub" onclick="chsSetType('public')" style="flex:1;padding:.5rem;border:1px solid ${ch.isPublic?'var(--pu)':'var(--brd)'};border-radius:10px;background:${ch.isPublic?'var(--pu)':'var(--bg3)'};color:${ch.isPublic?'#fff':'var(--t1)'};cursor:pointer;font-size:.85rem">🌍 Публичный</button>
+      <button id="chs-type-prv" onclick="chsSetType('private')" style="flex:1;padding:.5rem;border:1px solid ${!ch.isPublic?'var(--pu)':'var(--brd)'};border-radius:10px;background:${!ch.isPublic?'var(--pu)':'var(--bg3)'};color:${!ch.isPublic?'#fff':'var(--t1)'};cursor:pointer;font-size:.85rem">🔒 Приватный</button>
+    </div>
+    <div style="padding:.5rem 0;font-size:.8rem;color:var(--t3);border-top:1px solid var(--brd);margin-top:.3rem">👥 Подписчиков: ${(ch.subscribers||[]).length}</div>
+    <button class="snd" style="width:100%;padding:.7rem;border-radius:12px" onclick="saveChannelSettings()">Сохранить</button>
+    <button onclick="deleteChannel()" style="width:100%;padding:.7rem;border-radius:12px;background:transparent;border:1px solid var(--rd);color:var(--rd);cursor:pointer;font-size:.9rem">🗑️ Удалить канал</button>
+  `;
+  openOv('channel-settings-ov');
+};
+let chsType = null;
+window.chsSetType = t => {
+  chsType = t;
+  document.getElementById('chs-type-pub').style.background = t==='public'?'var(--pu)':'var(--bg3)';
+  document.getElementById('chs-type-pub').style.color = t==='public'?'#fff':'var(--t1)';
+  document.getElementById('chs-type-pub').style.borderColor = t==='public'?'var(--pu)':'var(--brd)';
+  document.getElementById('chs-type-prv').style.background = t==='private'?'var(--pu)':'var(--bg3)';
+  document.getElementById('chs-type-prv').style.color = t==='private'?'#fff':'var(--t1)';
+  document.getElementById('chs-type-prv').style.borderColor = t==='private'?'var(--pu)':'var(--brd)';
+};
+window.saveChannelSettings = async () => {
+  const name = document.getElementById('chs-name').value.trim();
+  if (!name) return toast('Введи название');
+  const desc = document.getElementById('chs-desc').value.trim();
+  const isPublic = chsType !== null ? chsType === 'public' : _chanData.isPublic;
+  await updateDoc(doc(db,'channels',currentChannelId), { name, description: desc, isPublic });
+  _chanData = { ..._chanData, name, description: desc, isPublic };
+  renderChannelHeader(_chanData);
+  closeOv('channel-settings-ov');
+  toast('Настройки сохранены ✓');
+};
+window.deleteChannel = async () => {
+  if (!confirm('Удалить канал навсегда?')) return;
+  await updateDoc(doc(db,'channels',currentChannelId), { deleted: true, subscribers: [] }).catch(()=>{});
+  closeOv('channel-settings-ov');
+  closeChannelOv();
+  toast('Канал удалён');
+};
+
+// ─── Channel Discovery ────────────────────────────────────────────────────────
+window.openChannelDiscover = () => {
+  document.getElementById('chan-disc-inp').value = '';
+  document.getElementById('chan-disc-list').innerHTML = '<div style="padding:1rem;color:var(--t3);font-size:.85rem;text-align:center">Начни вводить название или нажми 🔍</div>';
+  // Show "create channel" button
+  document.getElementById('chan-disc-list').innerHTML = `
+    <div class="chan-disc-item" onclick="openCreateChannel();closeOv('channel-discover-ov')" style="cursor:pointer">
+      <div class="chi-av" style="background:var(--pu)">➕</div>
+      <div><div style="font-size:.9rem;font-weight:700;color:var(--pu)">Создать канал</div><div style="font-size:.75rem;color:var(--t3)">Свой канал</div></div>
+    </div>
+    <div style="padding:.5rem 0;font-size:.8rem;color:var(--t3)">Найди публичные каналы:</div>
+    <div id="chan-disc-results"></div>`;
+  openOv('channel-discover-ov');
+  searchChannels('');
+};
+
+window.searchChannels = async q => {
+  const resultsEl = document.getElementById('chan-disc-results');
+  if (!resultsEl) return;
+  resultsEl.innerHTML = '<div style="color:var(--t3);font-size:.82rem;padding:.5rem 0">Поиск...</div>';
+  const snap = await getDocs(query(collection(db,'channels'), where('isPublic','==',true), limit(30)));
+  const all = snap.docs.map(d=>({id:d.id,...d.data()})).filter(ch=>!ch.deleted);
+  const term = q.trim().toLowerCase();
+  const filtered = term ? all.filter(ch=>ch.name.toLowerCase().includes(term)) : all;
+  if (!filtered.length) { resultsEl.innerHTML = '<div style="color:var(--t3);font-size:.82rem;padding:.5rem 0">Ничего не найдено</div>'; return; }
+  resultsEl.innerHTML = filtered.map(ch => {
+    const isJoined = (ch.subscribers||[]).includes(ME.uid);
+    return `<div class="chan-disc-item">
+      <div class="chi-av" ${ch.av&&ch.av.startsWith('data')?`style="background-image:url(${ch.av});background-size:cover;background-position:center"`:''}>${ch.av&&!ch.av.startsWith('data')?ch.av:''}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.9rem;font-weight:700">${esc(ch.name)}</div>
+        <div style="font-size:.75rem;color:var(--t3)">${esc(ch.description||'')}</div>
+        <div style="font-size:.7rem;color:var(--t3)">👥 ${(ch.subscribers||[]).length}</div>
+      </div>
+      <button onclick="discJoinChannel('${ch.id}',${isJoined})" style="padding:.3rem .7rem;border-radius:10px;font-size:.8rem;cursor:pointer;border:1px solid ${isJoined?'var(--brd)':'var(--pu)'};background:${isJoined?'var(--bg3)':'var(--pu)'};color:${isJoined?'var(--t2)':'#fff'}">${isJoined?'Открыть':'Подписаться'}</button>
+    </div>`;
+  }).join('');
+};
+
+window.discJoinChannel = async (id, isJoined) => {
+  if (isJoined) {
+    closeOv('channel-discover-ov');
+    openChannel(id);
+  } else {
+    await updateDoc(doc(db,'channels',id), { subscribers: arrayUnion(ME.uid) });
+    toast('Вы подписались! 🔔');
+    openChannel(id);
+    closeOv('channel-discover-ov');
+  }
+};
+
+// ── helper: raw image viewer for channel posts ────────────────────────────────
+window.viewImgRaw = (id, url) => {
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:900;background:#000e;display:flex;align-items:center;justify-content:center';
+  ov.onclick = () => ov.remove();
+  const img = document.createElement('img');
+  img.src = url; img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain';
+  ov.appendChild(img); document.body.appendChild(ov);
+};
+
+// ══════════════════════════════
+// GROUP SETTINGS
+// ══════════════════════════════
+let grpSettingsId = null;
+
+window.openGrpSettings = async () => {
+  grpSettingsId = chatGroupId;
+  if (!grpSettingsId) return;
+  const el = document.getElementById('grp-settings-content');
+  el.innerHTML = '<div style="color:var(--t3);padding:2rem;text-align:center">Загрузка...</div>';
+  openOv('grp-settings-ov');
+  const snap = await getDoc(doc(db,'groups',grpSettingsId));
+  if (!snap.exists()) return;
+  await renderGrpSettings(snap.data());
+};
+
+async function renderGrpSettings(g) {
+  const isCreator = g.createdBy === ME.uid;
+  const el = document.getElementById('grp-settings-content');
+  const members = g.members || [];
+  const memberSnaps = await Promise.all(members.map(uid => getDoc(doc(db,'users',uid))));
+  const memberList = memberSnaps.map(s => s.exists() ? {uid:s.id,...s.data()} : {uid:s.id,username:'?',av:'👤'});
+  el.innerHTML = `
+  <div style="display:flex;flex-direction:column;align-items:center;padding:1.5rem 1rem;gap:.5rem;border-bottom:1px solid var(--brd)">
+    <div id="grp-s-av" style="width:76px;height:76px;border-radius:50%;background:var(--bg3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:2.2rem;background-size:cover;background-position:center;overflow:hidden;cursor:${isCreator?'pointer':'default'}" ${isCreator?'onclick="openGrpAvEditor()"':''}></div>
+    ${isCreator?`<div style="font-size:.72rem;color:var(--t3)">Нажми для смены фото</div>`:''}
+    <div style="font-weight:700;font-size:1.1rem;margin-top:.2rem">${esc(g.name)}</div>
+    ${isCreator?`
+    <div style="display:flex;gap:.5rem;align-items:center;margin-top:.3rem">
+      <input class="af" id="grp-s-name-inp" value="${esc(g.name)}" style="margin:0;font-size:.85rem;max-width:160px" placeholder="Название"/>
+      <button class="abtn" style="padding:.35rem .8rem;font-size:.8rem" onclick="saveGrpName()">Сохранить</button>
+    </div>`:''}
+    <div style="font-size:.78rem;color:var(--t3)">${members.length} участников</div>
+  </div>
+  <div style="padding:.6rem 1rem">
+    <div style="font-size:.7rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.3rem 0 .5rem">Участники</div>
+    ${memberList.map(p=>`
+    <div class="grp-member-row">
+      <div class="grp-m-av" id="gms-${p.uid}"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.88rem;font-weight:600">${esc(p.username)}${p.uid===g.createdBy?' <span style="font-size:.65rem;background:var(--pu)22;color:var(--pu);border-radius:6px;padding:.1rem .35rem">создатель</span>':''}</div>
+      </div>
+      ${isCreator&&p.uid!==ME.uid?`<button onclick="kickGrpMember('${p.uid}')" style="background:var(--rd)15;color:var(--rd);border:1px solid var(--rd)30;border-radius:8px;padding:.28rem .6rem;font-size:.75rem;cursor:pointer">Удалить</button>`:''}
+      ${p.uid===ME.uid?`<span style="font-size:.72rem;color:var(--t3)">Ты</span>`:''}
+    </div>`).join('')}
+  </div>
+  <div style="padding:.5rem 1rem 2rem;display:flex;flex-direction:column;gap:.5rem">
+    ${!isCreator?`<button class="gbtn-s" onclick="leaveGroup()" style="border-color:var(--rd)40;color:var(--rd)">🚪 Покинуть группу</button>`:''}
+    ${isCreator?`<button class="gbtn-s" onclick="deleteGroup()" style="border-color:var(--rd)40;color:var(--rd)">🗑️ Удалить группу</button>`:''}
+  </div>`;
+  setTimeout(()=>{ memberList.forEach(p=>{ const e=document.getElementById('gms-'+p.uid); if(e) setAvEl(e,p.av); }); const sav=document.getElementById('grp-s-av'); if(sav) setAvEl(sav, g.av||'👥'); },0);
+}
+
+window.saveGrpName = async () => {
+  const name = (document.getElementById('grp-s-name-inp')?.value||'').trim();
+  if (!name || !grpSettingsId) return;
+  await updateDoc(doc(db,'groups',grpSettingsId), {name});
+  document.getElementById('cd-name').textContent = name;
+  toast('Название обновлено ✅');
+};
+
+window.kickGrpMember = async uid => {
+  if (!grpSettingsId) return;
+  await updateDoc(doc(db,'groups',grpSettingsId), {members: arrayRemove(uid)});
+  toast('Участник удалён');
+  const snap = await getDoc(doc(db,'groups',grpSettingsId));
+  if (snap.exists()) await renderGrpSettings(snap.data());
+};
+
+window.leaveGroup = async () => {
+  if (!grpSettingsId) return;
+  await updateDoc(doc(db,'groups',grpSettingsId), {members: arrayRemove(ME.uid)});
+  closeOv('grp-settings-ov');
+  closeChatOv();
+  toast('Вы покинули группу');
+};
+
+window.deleteGroup = async () => {
+  if (!grpSettingsId) return;
+  await deleteDoc(doc(db,'groups',grpSettingsId));
+  closeOv('grp-settings-ov');
+  closeChatOv();
+  toast('Группа удалена');
+};
+
+window.openGrpAvEditor = () => {
+  if (!grpSettingsId) return;
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/*';
+  inp.onchange = async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 10*1024*1024) return toast('Файл слишком большой');
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      const img = new Image();
+      img.onload = async () => {
+        const SIZE = 96; const canvas = document.createElement('canvas');
+        canvas.width = SIZE; canvas.height = SIZE;
+        const ctx = canvas.getContext('2d');
+        const side = Math.min(img.width, img.height);
+        const sx = (img.width-side)/2, sy = (img.height-side)/2;
+        ctx.beginPath(); ctx.arc(SIZE/2,SIZE/2,SIZE/2,0,Math.PI*2); ctx.clip();
+        ctx.drawImage(img, sx, sy, side, side, 0, 0, SIZE, SIZE);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        await updateDoc(doc(db,'groups',grpSettingsId), {av: dataUrl});
+        setAvEl(document.getElementById('cd-av'), dataUrl);
+        const sav = document.getElementById('grp-s-av');
+        if (sav) setAvEl(sav, dataUrl);
+        toast('Аватар группы обновлён 👍');
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+};
+
+// ══════════════════════════════
+// GROUP CALLS (WebRTC mesh, audio-only)
+// ══════════════════════════════
+const GC_ICE_CFG = { iceServers: [
+  {urls:'stun:stun.l.google.com:19302'},
+  {urls:'stun:stun1.l.google.com:19302'},
+  {urls:'turn:global.relay.metered.ca:80', username:'openrelayproject', credential:'openrelayproject'},
+  {urls:'turn:global.relay.metered.ca:443', username:'openrelayproject', credential:'openrelayproject'},
+  {urls:'turn:global.relay.metered.ca:443?transport=tcp', username:'openrelayproject', credential:'openrelayproject'}
+]};
+
+let gcId = null, gcGid = null;
+let gcPeers = {}, gcLocalStream = null;
+let gcParticipants = [];
+let gcUnsub = null, gcSignalUnsub = null;
+let gcMuted = false;
+let gcPendingCallId = null;
+
+window.startGroupCall = async () => {
+  if (gcId) return toast('Вы уже в звонке');
+  gcGid = chatGroupId;
+  if (!gcGid) return;
+  const gSnap = await getDoc(doc(db,'groups',gcGid));
+  if (!gSnap.exists()) return;
+  const g = gSnap.data();
+  try {
+    gcLocalStream = await navigator.mediaDevices.getUserMedia({audio:true});
+  } catch(e) { return toast('🎤 Нет доступа к микрофону'); }
+  const callRef = await addDoc(collection(db,'group_calls'), {
+    groupId: gcGid, groupName: g.name,
+    createdBy: ME.uid,
+    participants: [{uid:ME.uid, name:ME.username, av:ME.av||'👤'}],
+    status: 'active', createdAt: serverTimestamp()
+  });
+  gcId = callRef.id;
+  for (const uid of (g.members||[])) {
+    if (uid === ME.uid) continue;
+    await addDoc(collection(db,'notifications'), {
+      to: uid, from: ME.uid, fromName: ME.username, fromAv: ME.av||'👤',
+      type: 'group_call', callId: gcId, groupId: gcGid, groupName: g.name,
+      title: `📞 ${ME.username}`, body: `Групповой звонок в «${g.name}»`,
+      read: false, ts: serverTimestamp()
+    });
+  }
+  openGcOverlay(g.name);
+  listenGc();
+};
+
+window.acceptGroupCall = async () => {
+  const callId = document.getElementById('incoming-gcall').dataset.callId;
+  document.getElementById('incoming-gcall').classList.remove('on');
+  if (!callId) return;
+  gcId = callId;
+  const snap = await getDoc(doc(db,'group_calls',callId));
+  if (!snap.exists() || snap.data().status !== 'active') return toast('Звонок завершён');
+  gcGid = snap.data().groupId;
+  try {
+    gcLocalStream = await navigator.mediaDevices.getUserMedia({audio:true});
+  } catch(e) { return toast('🎤 Нет доступа к микрофону'); }
+  await updateDoc(doc(db,'group_calls',callId), {
+    participants: arrayUnion({uid:ME.uid, name:ME.username, av:ME.av||'👤'})
+  });
+  openGcOverlay(snap.data().groupName||'Групповой звонок');
+  listenGc();
+};
+
+window.declineGroupCall = () => {
+  document.getElementById('incoming-gcall').classList.remove('on');
+};
+
+function openGcOverlay(name) {
+  gcMuted = false;
+  document.getElementById('gc-mute-btn').textContent = '🎤';
+  document.getElementById('grp-call-name').textContent = `📞 ${name}`;
+  document.getElementById('grp-call-ov').classList.add('on');
+  renderGcUI();
+}
+
+function renderGcUI() {
+  const el = document.getElementById('grp-call-participants');
+  const all = [{uid:ME.uid, name:ME.username+'(Ты)', av:ME.av||'👤'}, ...gcParticipants];
+  el.innerHTML = all.map(p=>`
+  <div class="gcall-part">
+    <div class="gcall-av" id="gcav-${p.uid}"></div>
+    <div class="gcall-name">${esc(p.name||'')}</div>
+    <div class="gcall-mic">🎤</div>
+  </div>`).join('');
+  setTimeout(()=>{ all.forEach(p=>{ const e=document.getElementById('gcav-'+p.uid); if(e) setAvEl(e,p.av); }); },0);
+}
+
+function listenGc() {
+  if (gcUnsub) gcUnsub();
+  gcUnsub = onSnapshot(doc(db,'group_calls',gcId), async snap => {
+    if (!snap.exists() || snap.data().status==='ended') { leaveGroupCall(); return; }
+    const data = snap.data();
+    gcParticipants = (data.participants||[]).filter(p=>p.uid!==ME.uid);
+    renderGcUI();
+    for (const p of gcParticipants) {
+      if (!gcPeers[p.uid] && ME.uid < p.uid) await createGcOffer(p.uid);
+    }
+    for (const uid of Object.keys(gcPeers)) {
+      if (!gcParticipants.find(p=>p.uid===uid)) { gcPeers[uid]?.close(); delete gcPeers[uid]; gcRemoveAudio(uid); }
+    }
+  });
+  if (gcSignalUnsub) gcSignalUnsub();
+  const sigQ = query(collection(db,'group_calls',gcId,'signals'), where('to','==',ME.uid));
+  gcSignalUnsub = onSnapshot(sigQ, snap => {
+    snap.docChanges().forEach(async ch => { if (ch.type==='added') await handleGcSignal(ch.doc.data()); });
+  });
+}
+
+async function createGcOffer(toUid) {
+  if (gcPeers[toUid]) return;
+  const pc = new RTCPeerConnection(GC_ICE_CFG);
+  gcPeers[toUid] = pc;
+  if (gcLocalStream) gcLocalStream.getTracks().forEach(t=>pc.addTrack(t,gcLocalStream));
+  pc.ontrack = e => gcAttachAudio(toUid, e.streams[0]);
+  pc.onicecandidate = async ev => {
+    if (ev.candidate) await addDoc(collection(db,'group_calls',gcId,'signals'),
+      {from:ME.uid, to:toUid, type:'ice', candidate:ev.candidate.toJSON(), ts:serverTimestamp()}).catch(()=>{});
+  };
+  pc.onconnectionstatechange = () => { if (pc.connectionState==='failed') { pc.close(); delete gcPeers[toUid]; } };
+  const offer = await pc.createOffer({offerToReceiveAudio:true});
+  await pc.setLocalDescription(offer);
+  await addDoc(collection(db,'group_calls',gcId,'signals'),
+    {from:ME.uid, to:toUid, type:'offer', sdp:{type:offer.type,sdp:offer.sdp}, ts:serverTimestamp()});
+}
+
+async function handleGcSignal(sig) {
+  const from = sig.from;
+  if (sig.type==='offer') {
+    let pc = gcPeers[from];
+    if (!pc) {
+      pc = new RTCPeerConnection(GC_ICE_CFG);
+      gcPeers[from] = pc;
+      if (gcLocalStream) gcLocalStream.getTracks().forEach(t=>pc.addTrack(t,gcLocalStream));
+      pc.ontrack = e => gcAttachAudio(from, e.streams[0]);
+      pc.onicecandidate = async ev => {
+        if (ev.candidate) await addDoc(collection(db,'group_calls',gcId,'signals'),
+          {from:ME.uid, to:from, type:'ice', candidate:ev.candidate.toJSON(), ts:serverTimestamp()}).catch(()=>{});
+      };
+      pc.onconnectionstatechange = () => { if (pc.connectionState==='failed') { pc.close(); delete gcPeers[from]; } };
+    }
+    await pc.setRemoteDescription(new RTCSessionDescription(sig.sdp));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    await addDoc(collection(db,'group_calls',gcId,'signals'),
+      {from:ME.uid, to:from, type:'answer', sdp:{type:answer.type,sdp:answer.sdp}, ts:serverTimestamp()});
+  } else if (sig.type==='answer') {
+    const pc = gcPeers[from];
+    if (pc && !pc.currentRemoteDescription) await pc.setRemoteDescription(new RTCSessionDescription(sig.sdp)).catch(()=>{});
+  } else if (sig.type==='ice') {
+    const pc = gcPeers[from];
+    if (pc && pc.remoteDescription) await pc.addIceCandidate(new RTCIceCandidate(sig.candidate)).catch(()=>{});
+  }
+}
+
+function gcAttachAudio(uid, stream) {
+  let el = document.getElementById('gcaudio-'+uid);
+  if (!el) { el = document.createElement('audio'); el.id='gcaudio-'+uid; el.autoplay=true; document.body.appendChild(el); }
+  el.srcObject = stream;
+}
+function gcRemoveAudio(uid) { const el=document.getElementById('gcaudio-'+uid); if(el) el.remove(); }
+
+window.leaveGroupCall = async () => {
+  if (gcSignalUnsub) { gcSignalUnsub(); gcSignalUnsub = null; }
+  if (gcUnsub) { gcUnsub(); gcUnsub = null; }
+  Object.values(gcPeers).forEach(pc=>pc.close()); gcPeers = {};
+  if (gcLocalStream) { gcLocalStream.getTracks().forEach(t=>t.stop()); gcLocalStream = null; }
+  gcParticipants.forEach(p=>gcRemoveAudio(p.uid));
+  if (gcId) {
+    const snap = await getDoc(doc(db,'group_calls',gcId)).catch(()=>null);
+    if (snap?.exists()) {
+      const remaining = (snap.data().participants||[]).filter(p=>p.uid!==ME.uid);
+      if (remaining.length===0) await updateDoc(doc(db,'group_calls',gcId),{status:'ended'}).catch(()=>{});
+      else await updateDoc(doc(db,'group_calls',gcId),{participants:remaining}).catch(()=>{});
+    }
+  }
+  gcId=null; gcGid=null; gcParticipants=[];
+  document.getElementById('grp-call-ov').classList.remove('on');
+};
+
+window.toggleGcMute = () => {
+  gcMuted = !gcMuted;
+  if (gcLocalStream) gcLocalStream.getAudioTracks().forEach(t=>t.enabled=!gcMuted);
+  document.getElementById('gc-mute-btn').textContent = gcMuted ? '🔇' : '🎤';
+};
+
+// Hook group_call notifications into existing listener
+function handleGroupCallNotif(n) {
+  if (gcId) return; // already in a call
+  const banner = document.getElementById('incoming-gcall');
+  banner.dataset.callId = n.callId;
+  setAvEl(document.getElementById('igc-av'), n.fromAv||'👤');
+  document.getElementById('igc-name').textContent = n.fromName||'Звонок';
+  document.getElementById('igc-sub').textContent = `📞 ${n.groupName||'Групповой звонок'}`;
+  banner.classList.add('on');
+  setTimeout(()=>banner.classList.remove('on'), 25000);
+}
+
+// ══════════════════════════════
+// DRAW GAME — «Рисуй и угадывай»
+// ══════════════════════════════
+const DRAW_WORDS = ['кот','собака','дом','машина','дерево','солнце','рыба','птица','цветок','самолёт','корабль','пицца','торт','книга','телефон','компьютер','велосипед','гитара','замок','мороженое','ракета','слон','жираф','лягушка','робот','пингвин','радуга','гриб','парашют','вулкан','маяк','снеговик','лев','тигр','кролик','дракон','зонт','поезд','горы','луна'];
+
+let drawRoomId = null;
+let drawRoomUnsub = null;
+let drawIsDrawer = false;
+let drawCanvas = null, drawCtx = null;
+let drawColor = '#000', drawSize = 4, drawEraser = false;
+let drawIsDrawing = false, drawLastX = 0, drawLastY = 0;
+let drawStrokeBuffer = [], drawFlushTimer = null;
+let drawTimerInterval = null;
+let drawCurrentWord = null;
+
+// ─── LOBBY ───
+window.goTab = t => {
+  TABS.forEach(id => {
+    document.getElementById('tp-'+id).classList.toggle('on', id===t);
+    document.getElementById('nb-'+id).classList.toggle('on', id===t);
+  });
+  document.getElementById('tb-tit').textContent = TAB_T[t];
+  document.getElementById('tb-ic').textContent = TAB_IC[t];
+  document.getElementById('tb-add').style.display = t==='feed' ? 'flex' : 'none';
+  if (t==='chats') { listenChats(); listenMyChannels(); }
+  if (t==='feed') { listenFeed(); setAvEl(document.getElementById('feed-av'), ME?.av); }
+  if (t==='friends') renderFriends();
+  if (t==='profile') renderProfile();
+  if (t==='draw') renderDrawLobby();
+};
+
+async function renderDrawLobby() {
+  const el = document.getElementById('draw-lobby-area');
+  el.innerHTML = '<div style="color:var(--t3);font-size:.85rem">Загрузка...</div>';
+  const q = query(collection(db,'draw_rooms'), where('status','in',['waiting','playing']), limit(10));
+  const snap = await getDocs(q);
+  const rooms = snap.docs.map(d => ({id:d.id,...d.data()})).filter(r => (r.players||[]).length < (r.maxPlayers||8));
+  let html = `
+  <div class="draw-lobby-card">
+    <div style="font-weight:700;font-size:1rem;margin-bottom:.6rem">Создать комнату</div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+      <select id="draw-maxp" style="background:var(--bg);border:1px solid var(--brd2);border-radius:8px;padding:.4rem .6rem;color:var(--t1);font-size:.85rem">
+        <option value="4">4 игрока</option><option value="6">6 игроков</option><option value="8" selected>8 игроков</option>
+      </select>
+      <select id="draw-rounds" style="background:var(--bg);border:1px solid var(--brd2);border-radius:8px;padding:.4rem .6rem;color:var(--t1);font-size:.85rem">
+        <option value="2">2 раунда</option><option value="3" selected>3 раунда</option><option value="5">5 раундов</option>
+      </select>
+      <button class="abtn" style="padding:.45rem 1rem;font-size:.85rem;flex:1;min-width:100px" onclick="createDrawRoom()">Создать 🎨</button>
+    </div>
+  </div>
+  <div class="draw-lobby-card">
+    <div style="font-weight:700;font-size:1rem;margin-bottom:.6rem">Войти по коду</div>
+    <div style="display:flex;gap:.5rem">
+      <input id="draw-code-inp" class="af" placeholder="Код комнаты" style="flex:1;margin:0;text-transform:uppercase" maxlength="6"/>
+      <button class="abtn" style="padding:.45rem 1rem;font-size:.85rem" onclick="joinDrawByCode()">Войти</button>
+    </div>
+  </div>`;
+  if (rooms.length) {
+    html += `<div class="draw-lobby-card"><div style="font-weight:700;font-size:1rem;margin-bottom:.5rem">Открытые комнаты</div>`;
+    rooms.forEach(r => {
+      html += `<div class="draw-room-row">
+        <div style="flex:1"><div style="font-weight:600;font-size:.9rem">${esc(r.hostName||'Хост')}</div><div style="font-size:.75rem;color:var(--t3)">${(r.players||[]).length}/${r.maxPlayers||8} игроков · ${r.rounds||3} раундов</div></div>
+        <button class="sb sb-acc" onclick="joinDrawRoom('${r.id}')">Войти</button>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+window.createDrawRoom = async () => {
+  const maxPlayers = parseInt(document.getElementById('draw-maxp').value);
+  const rounds = parseInt(document.getElementById('draw-rounds').value);
+  const code = Math.random().toString(36).substr(2,6).toUpperCase();
+  const ref = await addDoc(collection(db,'draw_rooms'), {
+    hostUid: ME.uid, hostName: ME.username,
+    players: [{uid:ME.uid, name:ME.username, av:ME.av||'👤', score:0}],
+    maxPlayers, rounds, currentRound:0, status:'waiting',
+    code, createdAt: serverTimestamp(),
+    messages: [], drawerUid: null, currentWord: null, timeLeft: 60,
+    roundStartAt: null, wordOptions: [], phase:'lobby'
+  });
+  drawRoomId = ref.id;
+  openDrawRoom(ref.id);
+};
+
+window.joinDrawByCode = async () => {
+  const code = (document.getElementById('draw-code-inp').value||'').trim().toUpperCase();
+  if (!code) return toast('Введи код комнаты');
+  const q = query(collection(db,'draw_rooms'), where('code','==',code), limit(1));
+  const snap = await getDocs(q);
+  if (snap.empty) return toast('Комната не найдена');
+  joinDrawRoom(snap.docs[0].id);
+};
+
+window.joinDrawRoom = async rid => {
+  const snap = await getDoc(doc(db,'draw_rooms',rid));
+  if (!snap.exists()) return toast('Комната не найдена');
+  const r = snap.data();
+  if ((r.players||[]).find(p=>p.uid===ME.uid)) { drawRoomId=rid; openDrawRoom(rid); return; }
+  if ((r.players||[]).length >= (r.maxPlayers||8)) return toast('Комната полная');
+  await updateDoc(doc(db,'draw_rooms',rid), { players: arrayUnion({uid:ME.uid, name:ME.username, av:ME.av||'👤', score:0}) });
+  drawRoomId = rid;
+  openDrawRoom(rid);
+};
+
+function openDrawRoom(rid) {
+  drawRoomId = rid;
+  openOv('draw-ov');
+  initDrawCanvas();
+  if (drawRoomUnsub) drawRoomUnsub();
+  drawRoomUnsub = onSnapshot(doc(db,'draw_rooms',rid), snap => {
+    if (!snap.exists()) return;
+    renderDrawGame(snap.data());
+  });
+}
+
+window.leaveDrawGame = async () => {
+  if (drawRoomUnsub) { drawRoomUnsub(); drawRoomUnsub = null; }
+  if (drawRoomId) {
+    const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
+    if (snap.exists()) {
+      const pl = (snap.data().players||[]).filter(p=>p.uid!==ME.uid);
+      if (pl.length === 0) await deleteDoc(doc(db,'draw_rooms',drawRoomId));
+      else await updateDoc(doc(db,'draw_rooms',drawRoomId), { players: pl });
+    }
+  }
+  drawRoomId = null; drawCurrentWord = null;
+  if (drawTimerInterval) { clearInterval(drawTimerInterval); drawTimerInterval = null; }
+  closeOv('draw-ov');
+};
+
+// ─── GAME RENDER ───
+function renderDrawGame(state) {
+  const imDrawer = state.drawerUid === ME.uid;
+  drawIsDrawer = imDrawer;
+
+  // header
+  if (state.phase === 'lobby') {
+    document.getElementById('draw-word-display').textContent = `Код: ${state.code}`;
+    document.getElementById('draw-round-info').textContent = '';
+    document.getElementById('draw-timer').textContent = '⏳';
+  } else if (state.phase === 'choosing') {
+    document.getElementById('draw-round-info').textContent = `Раунд ${state.currentRound}/${state.rounds}`;
+    if (imDrawer) {
+      document.getElementById('draw-word-display').textContent = 'Выбери слово:';
+    } else {
+      const drawerName = (state.players||[]).find(p=>p.uid===state.drawerUid)?.name || 'Игрок';
+      document.getElementById('draw-word-display').textContent = `${drawerName} выбирает слово...`;
+    }
+    document.getElementById('draw-timer').textContent = '✏️';
+  } else if (state.phase === 'drawing') {
+    document.getElementById('draw-round-info').textContent = `Раунд ${state.currentRound}/${state.rounds}`;
+    if (imDrawer) {
+      document.getElementById('draw-word-display').textContent = `🎨 ${state.currentWord}`;
+    } else {
+      const mask = state.currentWord ? state.currentWord.split('').map(c=>c===' '?' ':'_').join(' ') : '_ _ _';
+      document.getElementById('draw-word-display').textContent = mask;
+    }
+    startDrawTimer(state.roundStartAt, state.turnDuration||60);
+  } else if (state.phase === 'roundend') {
+    document.getElementById('draw-word-display').textContent = `Слово: ${state.currentWord||'?'}`;
+    document.getElementById('draw-timer').textContent = '✅';
+    if (drawTimerInterval) { clearInterval(drawTimerInterval); drawTimerInterval = null; }
+  } else if (state.phase === 'gameover') {
+    document.getElementById('draw-word-display').textContent = '🏆 Игра окончена!';
+    document.getElementById('draw-timer').textContent = '';
+    if (drawTimerInterval) { clearInterval(drawTimerInterval); drawTimerInterval = null; }
+  }
+
+  document.getElementById('draw-tools').style.display = imDrawer && state.phase==='drawing' ? 'flex' : 'none';
+  document.getElementById('draw-spectate-msg').style.display = !imDrawer && state.phase==='drawing' ? 'flex' : 'none';
+  document.getElementById('draw-guess-wrap').style.display = !imDrawer && state.phase==='drawing' ? 'flex' : 'none';
+
+  // canvas strokes
+  if (state.phase === 'drawing' && state.strokes) {
+    redrawCanvas(state.strokes);
+  } else if (state.phase !== 'drawing') {
+    clearDrawCanvas();
+  }
+
+  // messages
+  const msgsEl = document.getElementById('draw-msgs');
+  if (msgsEl && state.messages) {
+    msgsEl.innerHTML = (state.messages||[]).slice(-30).map(m => {
+      const cls = m.correct ? 'correct' : m.system ? 'system' : '';
+      return `<div class="draw-msg ${cls}"><b>${esc(m.name||'')}</b>${m.name?': ':''}${esc(m.text)}</div>`;
+    }).join('');
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  }
+
+  // word choice for drawer
+  const wrap = document.getElementById('draw-canvas-wrap');
+  const choiceEl = document.getElementById('draw-word-choice');
+  if (imDrawer && state.phase === 'choosing' && state.wordOptions) {
+    if (!choiceEl) {
+      const div = document.createElement('div');
+      div.id = 'draw-word-choice';
+      div.style.cssText = 'position:absolute;inset:0;background:#0009;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;z-index:10;';
+      div.innerHTML = '<div style="color:#fff;font-size:1rem;font-weight:700;margin-bottom:.3rem">Выбери слово:</div>' +
+        state.wordOptions.map(w => `<button onclick="drawChooseWord('${w}')" style="background:var(--pu);border:none;border-radius:12px;padding:.6rem 1.5rem;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;min-width:160px">${w}</button>`).join('');
+      wrap.appendChild(div);
+    }
+  } else if (choiceEl) choiceEl.remove();
+
+  // lobby overlay
+  const lobbyOverEl = document.getElementById('draw-lobby-overlay');
+  if (state.phase === 'lobby') {
+    if (!lobbyOverEl) {
+      const div = document.createElement('div');
+      div.id = 'draw-lobby-overlay';
+      div.style.cssText = 'position:absolute;inset:0;background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:1rem;z-index:10;overflow-y:auto;';
+      div.innerHTML = `<div style="font-size:2rem">🎨</div>
+        <div style="font-weight:700;font-size:1.1rem">Комната создана!</div>
+        <div style="font-size:.85rem;color:var(--t3)">Поделись кодом с друзьями:</div>
+        <div class="draw-code">${state.code}</div>
+        <div style="font-size:.8rem;color:var(--t3);margin-bottom:.4rem">Игроки (${(state.players||[]).length}/${state.maxPlayers}):</div>
+        <div id="draw-lobby-players" style="width:100%;max-width:300px"></div>
+        ${state.hostUid===ME.uid ? `<button class="abtn" style="margin-top:.5rem" onclick="startDrawGame()"${(state.players||[]).length<2?' disabled title="Нужно минимум 2 игрока"':''}>Начать игру →</button>` : '<div style="color:var(--t3);font-size:.85rem">Ждём хоста...</div>'}`;
+      wrap.appendChild(div);
+    } else {
+      const pp = document.getElementById('draw-lobby-players');
+      if (pp) pp.innerHTML = (state.players||[]).map(p=>`<div style="padding:.25rem 0;font-size:.85rem">${avText(p.av,'👤')} ${esc(p.name)}</div>`).join('');
+      const btn = lobbyOverEl.querySelector('button.abtn');
+      if (btn) btn.disabled = (state.players||[]).length < 2;
+    }
+  } else if (lobbyOverEl) lobbyOverEl.remove();
+
+  // scoreboard for roundend/gameover
+  const sbEl = document.getElementById('draw-scoreboard');
+  if (state.phase === 'roundend' || state.phase === 'gameover') {
+    if (!sbEl) {
+      const div = document.createElement('div');
+      div.id = 'draw-scoreboard';
+      div.style.cssText = 'position:absolute;inset:0;background:#000a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;padding:1rem;z-index:10;overflow-y:auto;';
+      wrap.appendChild(div);
+    }
+    const sb = document.getElementById('draw-scoreboard');
+    const sorted = [...(state.players||[])].sort((a,b)=>b.score-a.score);
+    sb.innerHTML = `<div style="color:#fff;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">${state.phase==='gameover'?'🏆 Итоги':'📊 Раунд окончен'}</div>
+      <div style="color:#ccc;font-size:.82rem;margin-bottom:.6rem">${state.phase==='drawing'||state.phase==='roundend'?'Слово: '+esc(state.currentWord||''):''}</div>
+      ${sorted.map((p,i)=>`<div style="background:#fff1;border-radius:10px;padding:.4rem .9rem;min-width:200px;display:flex;align-items:center;gap:.5rem;color:#fff;font-size:.9rem"><span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'▪️'}</span><span style="flex:1">${esc(p.name)}</span><span style="font-weight:700">${p.score} очков</span></div>`).join('')}
+      ${state.phase==='roundend'&&state.hostUid===ME.uid?`<button class="abtn" style="margin-top:.8rem" onclick="nextDrawRound()">Следующий раунд →</button>`:''}
+      ${state.phase==='gameover'?`<button class="abtn" style="margin-top:.8rem" onclick="leaveDrawGame()">Выйти</button>`:''}`;
+  } else if (sbEl) sbEl.remove();
+}
+
+window.startDrawGame = async () => {
+  if (!drawRoomId) return;
+  const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
+  if (!snap.exists()) return;
+  const state = snap.data();
+  if ((state.players||[]).length < 2) return toast('Нужно минимум 2 игрока');
+  await updateDrawRound(state, 1);
+};
+
+async function updateDrawRound(state, roundNum) {
+  const players = state.players||[];
+  const drawerIdx = (roundNum - 1) % players.length;
+  const drawer = players[drawerIdx];
+  const words = DRAW_WORDS.sort(()=>Math.random()-.5).slice(0,3);
+  await updateDoc(doc(db,'draw_rooms',drawRoomId), {
+    phase: 'choosing', currentRound: roundNum,
+    drawerUid: drawer.uid, wordOptions: words,
+    currentWord: null, strokes: [], messages: [...(state.messages||[]), {system:true, name:'', text:`Раунд ${roundNum}: ${drawer.name} рисует!`}],
+    roundStartAt: null, guessedUids: []
+  });
+}
+
+window.nextDrawRound = async () => {
+  if (!drawRoomId) return;
+  const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
+  if (!snap.exists()) return;
+  const state = snap.data();
+  if (state.currentRound >= state.rounds) {
+    await updateDoc(doc(db,'draw_rooms',drawRoomId), { phase: 'gameover' });
+  } else {
+    await updateDrawRound(state, state.currentRound + 1);
+  }
+};
+
+window.drawChooseWord = async word => {
+  if (!drawRoomId) return;
+  drawCurrentWord = word;
+  await updateDoc(doc(db,'draw_rooms',drawRoomId), {
+    phase: 'drawing', currentWord: word, wordOptions: [],
+    strokes: [], roundStartAt: Date.now(), turnDuration: 60,
+    guessedUids: []
+  });
+};
+
+// ─── TIMER ───
+function startDrawTimer(startAt, duration) {
+  if (drawTimerInterval) clearInterval(drawTimerInterval);
+  const el = document.getElementById('draw-timer');
+  drawTimerInterval = setInterval(async () => {
+    if (!startAt) return;
+    const left = Math.max(0, Math.ceil((startAt + duration*1000 - Date.now()) / 1000));
+    if (el) el.textContent = left;
+    if (left <= 0) {
+      clearInterval(drawTimerInterval); drawTimerInterval = null;
+      // host ends the round
+      const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
+      if (snap.exists() && snap.data().phase==='drawing' && snap.data().hostUid===ME.uid) {
+        await updateDoc(doc(db,'draw_rooms',drawRoomId), { phase:'roundend' });
+      }
+    }
+  }, 500);
+}
+
+// ─── GUESSING ───
+window.sendDrawGuess = async () => {
+  const inp = document.getElementById('draw-guess-inp');
+  const guess = (inp?.value||'').trim();
+  if (!guess || !drawRoomId) return;
+  inp.value = '';
+  const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
+  if (!snap.exists()) return;
+  const state = snap.data();
+  if (state.phase !== 'drawing') return;
+  const correct = guess.toLowerCase() === (state.currentWord||'').toLowerCase();
+  const alreadyGuessed = (state.guessedUids||[]).includes(ME.uid);
+  if (alreadyGuessed) return;
+  const timeLeft = Math.max(0, Math.ceil((state.roundStartAt + (state.turnDuration||60)*1000 - Date.now()) / 1000));
+  const points = correct ? Math.max(50, Math.round(timeLeft / (state.turnDuration||60) * 100)) : 0;
+  const updPlayers = (state.players||[]).map(p => p.uid===ME.uid && correct ? {...p, score:(p.score||0)+points} : p);
+  const newMsg = { name: ME.username, text: correct ? `угадал слово! +${points} очков` : guess, correct, uid: ME.uid };
+  const updates = { messages: [...(state.messages||[]).slice(-50), newMsg], players: updPlayers };
+  if (correct) updates.guessedUids = arrayUnion(ME.uid);
+  await updateDoc(doc(db,'draw_rooms',drawRoomId), updates);
+  // check all guessed
+  if (correct) {
+    const newGuessed = [...(state.guessedUids||[]), ME.uid];
+    const nonDrawers = (state.players||[]).filter(p=>p.uid!==state.drawerUid);
+    if (newGuessed.length >= nonDrawers.length && state.hostUid===ME.uid) {
+      await updateDoc(doc(db,'draw_rooms',drawRoomId), { phase:'roundend' });
+    }
+  }
+};
+
+// ─── CANVAS ───
+function initDrawCanvas() {
+  drawCanvas = document.getElementById('draw-canvas');
+  drawCtx = drawCanvas.getContext('2d');
+  resizeDrawCanvas();
+  drawCanvas.addEventListener('pointerdown', onDrawStart);
+  drawCanvas.addEventListener('pointermove', onDrawMove);
+  drawCanvas.addEventListener('pointerup', onDrawEnd);
+  drawCanvas.addEventListener('pointerleave', onDrawEnd);
+  window.addEventListener('resize', resizeDrawCanvas);
+}
+
+function resizeDrawCanvas() {
+  if (!drawCanvas) return;
+  const wrap = document.getElementById('draw-canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  drawCanvas.width = rect.width;
+  drawCanvas.height = rect.height;
+}
+
+function onDrawStart(e) {
+  if (!drawIsDrawer) return;
+  drawIsDrawing = true;
+  const pos = getDrawPos(e);
+  drawLastX = pos.x; drawLastY = pos.y;
+  drawStrokeBuffer = [{x:pos.x, y:pos.y}];
+  e.preventDefault();
+}
+function onDrawMove(e) {
+  if (!drawIsDrawing || !drawIsDrawer) return;
+  const pos = getDrawPos(e);
+  drawCtx.beginPath();
+  drawCtx.moveTo(drawLastX, drawLastY);
+  drawCtx.lineTo(pos.x, pos.y);
+  drawCtx.strokeStyle = drawEraser ? '#fff' : drawColor;
+  drawCtx.lineWidth = drawEraser ? drawSize*2 : drawSize;
+  drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round';
+  drawCtx.stroke();
+  drawStrokeBuffer.push({x:pos.x, y:pos.y});
+  drawLastX = pos.x; drawLastY = pos.y;
+  scheduleFlushStroke();
+  e.preventDefault();
+}
+function onDrawEnd() {
+  if (!drawIsDrawing) return;
+  drawIsDrawing = false;
+  flushStroke();
+}
+function getDrawPos(e) {
+  const rect = drawCanvas.getBoundingClientRect();
+  const touch = e.touches ? e.touches[0] : e;
+  return { x: (touch.clientX - rect.left) / rect.width * drawCanvas.width, y: (touch.clientY - rect.top) / rect.height * drawCanvas.height };
+}
+function scheduleFlushStroke() {
+  if (drawFlushTimer) return;
+  drawFlushTimer = setTimeout(() => { drawFlushTimer = null; flushStroke(); }, 80);
+}
+async function flushStroke() {
+  if (!drawRoomId || drawStrokeBuffer.length < 2) { drawStrokeBuffer = []; return; }
+  const stroke = { color: drawEraser?'#fff':drawColor, size: drawEraser?drawSize*2:drawSize, pts: drawStrokeBuffer };
+  drawStrokeBuffer = [];
+  const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
+  if (snap.exists() && snap.data().phase==='drawing') {
+    const existing = snap.data().strokes || [];
+    if (existing.length > 400) return; // limit
+    await updateDoc(doc(db,'draw_rooms',drawRoomId), { strokes: arrayUnion(stroke) });
+  }
+}
+function redrawCanvas(strokes) {
+  if (!drawCtx || !drawCanvas) return;
+  drawCtx.clearRect(0,0,drawCanvas.width,drawCanvas.height);
+  for (const s of strokes) {
+    if (!s.pts || s.pts.length < 2) continue;
+    drawCtx.beginPath();
+    drawCtx.moveTo(s.pts[0].x, s.pts[0].y);
+    for (let i = 1; i < s.pts.length; i++) drawCtx.lineTo(s.pts[i].x, s.pts[i].y);
+    drawCtx.strokeStyle = s.color||'#000';
+    drawCtx.lineWidth = s.size||4;
+    drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round';
+    drawCtx.stroke();
+  }
+}
+function clearDrawCanvas() { if (drawCtx && drawCanvas) drawCtx.clearRect(0,0,drawCanvas.width,drawCanvas.height); }
+
+window.drawSetColor = (c, el) => {
+  drawColor = c; drawEraser = false;
+  document.querySelectorAll('.draw-color').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('draw-eraser-btn').classList.remove('active');
+};
+window.drawSetSize = (s, el) => {
+  drawSize = s;
+  document.querySelectorAll('.draw-size-btn').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+};
+window.drawToggleEraser = () => {
+  drawEraser = !drawEraser;
+  document.getElementById('draw-eraser-btn').classList.toggle('active', drawEraser);
+};
+window.drawClear = async () => {
+  if (!drawRoomId || !drawIsDrawer) return;
+  await updateDoc(doc(db,'draw_rooms',drawRoomId), { strokes: [] });
+  clearDrawCanvas();
+};
+
 // PWA
 let pwPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();pwPrompt=e;document.getElementById('pwa-bar').classList.add('on');});
@@ -3064,6 +5878,7 @@ let callMuted = false;
 let callVideoOff = false;
 let callIsVideo = false;
 let incomingCallUnsub = null;
+let callIceBuffer = []; // buffer ICE candidates until remote desc is set
 
 function listenIncomingCalls() {
   if (!ME) return;
@@ -3078,7 +5893,7 @@ function listenIncomingCalls() {
     const call = d.data();
     // Don't show if we're already in a call
     if (callPc) return;
-    document.getElementById('ic-av').textContent = call.fromAv || '👤';
+    setAvEl(document.getElementById('ic-av'), call.fromAv || '👤');
     document.getElementById('ic-name').textContent = call.fromName || 'Неизвестный';
     document.getElementById('ic-sub').textContent = call.video ? '📹 Видеозвонок' : '📞 Голосовой звонок';
     document.getElementById('incoming-call').dataset.callId = d.id;
@@ -3212,6 +6027,11 @@ async function initCallPeer(callId, role, video) {
       const d = snap.data();
       if (d.answer && callPc && !callPc.currentRemoteDescription) {
         await callPc.setRemoteDescription(new RTCSessionDescription(d.answer)).catch(()=>{});
+        // flush buffered ICE candidates
+        for (const cand of callIceBuffer) {
+          await callPc.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
+        }
+        callIceBuffer = [];
       }
       if (d.status === 'declined') { toast('📵 Звонок отклонён'); endCall(); }
       if (d.status === 'ended') endCall();
@@ -3220,8 +6040,12 @@ async function initCallPeer(callId, role, video) {
     // Also pick up callee ICE candidates after remote is set
     callIceSub = onSnapshot(collection(db,'calls',callId,'calleeCands'), snap => {
       snap.docChanges().forEach(async ch => {
-        if (ch.type === 'added' && callPc && callPc.remoteDescription)
+        if (ch.type !== 'added') return;
+        if (callPc?.currentRemoteDescription) {
           await callPc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{});
+        } else {
+          callIceBuffer.push(ch.doc.data());
+        }
       });
     });
   } else {
@@ -3290,6 +6114,7 @@ window.endCall = async () => {
   if (callTimerInt) { clearInterval(callTimerInt); callTimerInt = null; }
   if (callPc) { callPc.close(); callPc = null; }
   if (callStreamLocal) { callStreamLocal.getTracks().forEach(t => t.stop()); callStreamLocal = null; }
+  callIceBuffer = [];
   const rv = document.getElementById('call-remote-vid');
   if (rv) rv.srcObject = null;
   const lv = document.getElementById('call-local-vid');
@@ -3339,7 +6164,9 @@ function listenNotifications() {
     if (newest && !newest.read && newest.ts) {
       const age = Date.now() - newest.ts.toMillis();
       if (age < 8000) {
-        if (!document.getElementById('notif-ov').classList.contains('on')) {
+        if (newest.type === 'group_call') {
+          handleGroupCallNotif(newest);
+        } else if (!document.getElementById('notif-ov').classList.contains('on')) {
           showNotifBanner(newest);
         }
         // Fire OS-level notification (works even when tab is in background)
