@@ -5890,9 +5890,13 @@ window.cancelVideoCircle = () => stopVideoCircle(false);
 // ══════════════════════════════
 // CALLS (WebRTC + Firebase signaling)
 // ══════════════════════════════
-const ICE_SERVERS = { iceServers: [
+const ICE_SERVERS = { iceTransportPolicy: 'all', iceCandidatePoolSize: 10, iceServers: [
   { urls: 'stun:stun.l.google.com:19302' },
   { urls: 'stun:stun1.l.google.com:19302' },
+  { urls: 'stun:stun2.l.google.com:19302' },
+  { urls: 'stun:stun3.l.google.com:19302' },
+  { urls: 'stun:stun4.l.google.com:19302' },
+  { urls: 'stun:stun.cloudflare.com:3478' },
   { urls: 'stun:stun.relay.metered.ca:80' },
   {
     urls: 'turn:global.relay.metered.ca:80',
@@ -5906,6 +5910,16 @@ const ICE_SERVERS = { iceServers: [
   },
   {
     urls: 'turn:global.relay.metered.ca:443?transport=tcp',
+    username: 'openrelayproject',
+    credential: 'openrelayproject'
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:80',
+    username: 'openrelayproject',
+    credential: 'openrelayproject'
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443',
     username: 'openrelayproject',
     credential: 'openrelayproject'
   }
@@ -6051,11 +6065,11 @@ async function initCallPeer(callId, role, video) {
     }
   };
 
-  // Helper: wait for ICE gathering to complete (max 3s)
+  // Helper: wait for ICE gathering to complete (max 6s)
   function waitForIce(pc) {
     return new Promise(resolve => {
       if (pc.iceGatheringState === 'complete') { resolve(); return; }
-      const t = setTimeout(resolve, 3000);
+      const t = setTimeout(resolve, 6000);
       pc.onicegatheringstatechange = () => { if (pc.iceGatheringState === 'complete') { clearTimeout(t); resolve(); } };
     });
   }
