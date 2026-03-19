@@ -1322,7 +1322,8 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 
 <!-- DOWNLOAD OVERLAY -->
 <div class="ov" id="download-ov" style="z-index:300">
-  <div class="dl-hero">
+  <div class="dl-hero" style="position:relative">
+    <button onclick="dlClose()" style="position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,.2);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
     <div class="dl-hero-ic">📱</div>
     <div class="dl-hero-app">Вместе</div>
     <div class="dl-hero-sub">Установи приложение для лучшего опыта</div>
@@ -1797,6 +1798,19 @@ window.closeOv = id => {
   document.getElementById(id).classList.remove('on');
   if (id === 'game-ov') document.getElementById('gop-chat').classList.remove('mob-open');
 };
+
+window.dlClose = () => {
+  closeOv('download-ov');
+  localStorage.setItem('dlShown','1');
+};
+window.dlShare = () => {
+  const url = location.href.split('?')[0];
+  if (navigator.share) { navigator.share({title:'Вместе',url}); }
+  else { navigator.clipboard.writeText(url).then(() => alert('Ссылка скопирована!')); }
+};
+window.dlInstallPWA = () => { if(window._pwaPrompt){ window._pwaPrompt.prompt(); } };
+// Capture PWA install prompt
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); window._pwaPrompt = e; const b = document.getElementById('dl-pwa-btn'); if(b) b.style.display='flex'; });
 
 // ══════════════════════════════
 // CHATS — real-time list
