@@ -955,7 +955,6 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <button class="nb" id="nb-feed" onclick="goTab('feed')"><span class="ni">🏠</span><span class="nl">Лента</span></button>
     <button class="nb" id="nb-friends" onclick="goTab('friends')"><span class="ni">👥</span><span class="nl">Друзья</span><span class="nbadge" id="nbd-fr"></span></button>
     <button class="nb" id="nb-games" onclick="goTab('games')"><span class="ni">🎮</span><span class="nl">Игры</span></button>
-    <button class="nb" id="nb-draw" onclick="goTab('draw')"><span class="ni">🎨</span><span class="nl">Рисуй</span></button>
     <button class="nb" id="nb-profile" onclick="goTab('profile')"><span class="ni">👤</span><span class="nl">Профиль</span></button>
   </nav>
 </div>
@@ -4479,12 +4478,20 @@ async function adminLoadChannels() {
         <div class="adm-urow-name">${esc(ch.name)} ${ch.isPublic?'<span style="font-size:.65rem;color:var(--t3)">🌍 публичный</span>':'<span style="font-size:.65rem;color:var(--t3)">🔒 приватный</span>'}</div>
         <div class="adm-urow-sub">👥 ${(ch.subscribers||[]).length} подписчиков · создал: ${esc(ch.createdByName||'?')}</div>
         <div class="adm-urow-acts">
+          <button class="adm-btn" onclick="admToggleChannelVerify('${d.id}','${ch.verified?'1':'0'}')">${ch.verified?'❌ Снять галочку':'✅ Дать галочку'}</button>
           <button class="adm-btn danger" onclick="admDeleteChannel('${d.id}')">🗑️ Удалить канал</button>
         </div>
       </div>
     </div>`;
   }).join('');
 }
+
+window.admToggleChannelVerify = async (id, cur) => {
+  const nowVerified = cur !== '1';
+  await updateDoc(doc(db,'channels',id), { verified: nowVerified });
+  toast(nowVerified ? 'Галочка дана ✅' : 'Галочка снята');
+  adminLoadChannels();
+};
 
 window.admDeleteChannel = async id => {
   if (!confirm('Удалить канал навсегда?')) return;
@@ -4569,7 +4576,7 @@ function listenMyChannels() {
         <div class="chi-av" ${ch.av&&ch.av.startsWith('data')?`style="background-image:url(${ch.av});background-size:cover;background-position:center"`:''}>${ch.av&&!ch.av.startsWith('data')?ch.av:''}</div>
         <div class="chi-body">
           <div class="chi-r1">
-            <span class="chi-name">${esc(ch.name)} ${ch.isPublic?'':'🔒'}</span>
+            <span class="chi-name">${esc(ch.name)}${ch.verified?' <span class="vbadge"></span>':''} ${ch.isPublic?'':'🔒'}</span>
             ${isAdmin?'<span class="chi-badge">Админ</span>':''}
           </div>
           <div class="chi-last">${esc(lastTxt)}</div>
@@ -4610,7 +4617,7 @@ function renderChannelHeader(ch) {
     avEl.style.backgroundImage = '';
     avEl.textContent = ch.av||'📢';
   }
-  document.getElementById('ch-ov-name').textContent = ch.name;
+  document.getElementById('ch-ov-name').innerHTML = esc(ch.name) + (ch.verified ? ' <span class="vbadge"></span>' : '');
   document.getElementById('ch-ov-subs').textContent = `👥 ${(ch.subscribers||[]).length} подписчиков${ch.description?' · '+ch.description.substring(0,40):''}`;
   const subBtn = document.getElementById('ch-ov-subscribe-btn');
   if (isAdmin) {
