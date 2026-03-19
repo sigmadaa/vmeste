@@ -59,6 +59,11 @@ button,input,textarea{font-family:inherit;}
 .tp.on{display:block;}
 .tp::-webkit-scrollbar{display:none;}
 #nav{height:var(--nav-h);background:var(--bg3);border-top:1px solid var(--brd);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0);}
+#install-banner{background:linear-gradient(90deg,var(--pu),#3b82f6);color:#fff;display:flex;align-items:center;gap:.5rem;padding:.55rem 1rem;font-size:.82rem;flex-shrink:0;}
+#install-banner.hide{display:none;}
+.install-banner-tx{flex:1;font-weight:600;}
+.install-banner-btn{background:rgba(255,255,255,.22);border:none;color:#fff;padding:.3rem .8rem;border-radius:2rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+.install-banner-x{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:0 .2rem;line-height:1;}
 .nb{flex:1;background:transparent;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--t3);transition:color .15s;position:relative;padding-top:5px;}
 .nb .ni{font-size:1.25rem;line-height:1;}
 .nb .nl{font-size:.58rem;font-weight:600;}
@@ -930,6 +935,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
         <div class="gc" onclick="startGame('sea')"><div class="gc-ic">🚢</div><div class="gc-n">Морской бой</div><div class="gc-d">Классика</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('sea')">👥 Вызвать друга</button></div>
         <div class="gc" onclick="startGame('chess')"><div class="gc-ic">♟️</div><div class="gc-n">Шахматы</div><div class="gc-d">Классика</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('chess')">👥 Вызвать друга</button></div>
         <div class="gc" onclick="startGame('croc')"><div class="gc-ic">🐊</div><div class="gc-n">Крокодил</div><div class="gc-d">Объясни слово</div><button class="gc-inv" onclick="event.stopPropagation();openGameInvite('croc')">👥 Вызвать друга</button></div>
+        <div class="gc" onclick="goTab('draw')"><div class="gc-ic">🎨</div><div class="gc-n">Рисуй и угадывай</div><div class="gc-d">Gartic Phone</div></div>
       </div>
     </div>
     <!-- DRAW GAME TAB -->
@@ -938,6 +944,11 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
       <div style="padding:.3rem 1rem .6rem;font-size:.78rem;color:var(--t3)">Создай комнату или присоединись по коду. Один рисует, остальные угадывают!</div>
       <div id="draw-lobby-area" style="padding:0 1rem 1rem"></div>
     </div>
+  </div>
+  <div id="install-banner" class="hide">
+    <span class="install-banner-tx">📲 Скачай приложение</span>
+    <button class="install-banner-btn" onclick="openOv('download-ov');hideBanner()">Установить</button>
+    <button class="install-banner-x" onclick="hideBanner()">✕</button>
   </div>
   <nav id="nav">
     <button class="nb on" id="nb-chats" onclick="goTab('chats')"><span class="ni">💬</span><span class="nl">Чаты</span><span class="nbadge" id="nbd-chats"></span></button>
@@ -1767,6 +1778,7 @@ function launchApp() {
   if (!localStorage.getItem('dlShown')) {
     setTimeout(() => openOv('download-ov'), 900);
   }
+  showBannerIfNeeded();
 }
 
 // ── Broadcast receiver ──────────────────────────────────────────────────────
@@ -1802,6 +1814,16 @@ window.closeOv = id => {
 window.dlClose = () => {
   closeOv('download-ov');
   localStorage.setItem('dlShown','1');
+  hideBanner();
+};
+window.hideBanner = () => {
+  localStorage.setItem('dlShown','1');
+  const b = document.getElementById('install-banner'); if(b) b.classList.add('hide');
+};
+window.showBannerIfNeeded = () => {
+  if (!localStorage.getItem('dlShown')) {
+    const b = document.getElementById('install-banner'); if(b) b.classList.remove('hide');
+  }
 };
 window.dlShare = () => {
   const url = location.href.split('?')[0];
