@@ -50,24 +50,25 @@ button,input,textarea{font-family:inherit;}
 #tbar{height:var(--top-h);background:var(--bg3);border-bottom:1px solid var(--brd);display:flex;align-items:center;padding:0 .6rem;gap:.35rem;flex-shrink:0;}
 .tbar-ic{font-size:1.35rem;flex-shrink:0;}
 .tbar-title{flex:1;font-size:1.05rem;font-weight:700;padding:0 .3rem;}
-.ibtn{width:38px;height:38px;background:transparent;border:none;color:var(--t2);font-size:1.2rem;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:background .15s;}
-.ibtn:active{background:var(--brd2);}
+.ibtn{width:38px;height:38px;background:transparent;border:none;color:var(--t2);font-size:1.2rem;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:background .15s,transform .1s;}
+.ibtn:active{background:var(--brd2);transform:scale(.9);}
 .ibadge{position:absolute;top:2px;right:2px;background:var(--rd);color:#fff;font-size:.52rem;font-weight:700;min-width:14px;height:14px;border-radius:7px;display:none;align-items:center;justify-content:center;padding:0 2px;}
 .ibadge.on{display:flex;}
 #content{flex:1;overflow:hidden;position:relative;}
 .tp{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:none;padding-bottom:calc(var(--nav-h) + 8px);}
 .tp.on{display:block;}
 .tp::-webkit-scrollbar{display:none;}
-#nav{height:var(--nav-h);background:var(--bg3);border-top:1px solid var(--brd);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0);}
+#nav{height:var(--nav-h);background:var(--bg3);border-top:1px solid var(--brd);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0);box-shadow:0 -1px 0 var(--brd);}
 #install-banner{background:linear-gradient(90deg,var(--pu),#3b82f6);color:#fff;display:flex;align-items:center;gap:.5rem;padding:.55rem 1rem;font-size:.82rem;flex-shrink:0;}
 #install-banner.hide{display:none;}
 .install-banner-tx{flex:1;font-weight:600;}
 .install-banner-btn{background:rgba(255,255,255,.22);border:none;color:#fff;padding:.3rem .8rem;border-radius:2rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;}
 .install-banner-x{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:0 .2rem;line-height:1;}
-.nb{flex:1;background:transparent;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--t3);transition:color .15s;position:relative;padding-top:5px;}
-.nb .ni{font-size:1.25rem;line-height:1;}
+.nb{flex:1;background:transparent;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--t3);transition:color .2s,transform .12s;position:relative;padding-top:5px;}
+.nb .ni{font-size:1.25rem;line-height:1;transition:transform .2s;}
 .nb .nl{font-size:.58rem;font-weight:600;}
 .nb.on{color:var(--pu);}
+.nb.on .ni{transform:scale(1.15);}
 .nbadge{position:absolute;top:5px;right:50%;transform:translateX(9px);background:var(--rd);color:#fff;font-size:.52rem;font-weight:700;min-width:14px;height:14px;border-radius:7px;display:none;align-items:center;justify-content:center;padding:0 2px;}
 .nbadge.on{display:flex;}
 
@@ -86,9 +87,9 @@ button,input,textarea{font-family:inherit;}
 .srch{width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:10px;padding:.6rem 1rem .6rem 2.25rem;color:var(--t1);font-size:.88rem;outline:none;transition:border-color .2s;}
 .srch:focus{border-color:var(--pu);}
 .srch::placeholder{color:var(--t3);}
-.ci{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;cursor:pointer;border-bottom:1px solid #111122;transition:background .1s;}
+.ci{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;cursor:pointer;border-bottom:1px solid rgba(37,37,64,.8);transition:background .12s;}
 .ci:active{background:var(--bg3);}
-.ci-av{width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:1.75rem;flex-shrink:0;position:relative;}
+.ci-av{width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:1.75rem;flex-shrink:0;position:relative;overflow:hidden;background-size:cover;background-position:center;}
 .ci-on{position:absolute;bottom:1px;right:1px;width:12px;height:12px;background:var(--gn);border-radius:50%;border:2px solid var(--bg);}
 .ci-body{flex:1;min-width:0;}
 .ci-r1{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;}
@@ -107,9 +108,10 @@ button,input,textarea{font-family:inherit;}
 .bbl-wrap{display:flex;flex-direction:column;max-width:82%;}
 .bbl-wrap.out{align-self:flex-end;align-items:flex-end;}
 .bbl-wrap.in{align-self:flex-start;align-items:flex-start;}
-.bbl{padding:.55rem .85rem .3rem;border-radius:18px;font-size:.88rem;line-height:1.45;word-break:break-word;position:relative;cursor:pointer;}
-.bbl.out{background:linear-gradient(135deg,#a855f7,#3b82f6);border-bottom-right-radius:5px;color:#fff;}
+.bbl{padding:.55rem .85rem .3rem;border-radius:18px;font-size:.88rem;line-height:1.45;word-break:break-word;position:relative;cursor:pointer;transition:opacity .12s;}
+.bbl.out{background:linear-gradient(135deg,#a855f7,#3b82f6);border-bottom-right-radius:5px;color:#fff;box-shadow:0 2px 12px rgba(168,85,247,.25);}
 .bbl.in{background:var(--bg4);border-bottom-left-radius:5px;border:1px solid var(--brd);}
+.bbl:active{opacity:.85;}
 .bbl-t{font-size:.6rem;opacity:.7;margin-top:.2rem;display:flex;align-items:center;gap:.25rem;}
 .bbl-wrap.out .bbl-t{justify-content:flex-end;}
 .bbl-wrap.in .bbl-t{justify-content:flex-start;}
@@ -208,10 +210,10 @@ button,input,textarea{font-family:inherit;}
 .ps{text-align:center;}
 .ps-v{font-size:1.5rem;font-weight:900;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .ps-l{font-size:.66rem;color:var(--t3);margin-top:.1rem;}
-.pr-menu{margin:.75rem;background:var(--bg4);border:1px solid var(--brd2);border-radius:16px;overflow:hidden;}
-.pmi{display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;border-bottom:1px solid var(--brd);cursor:pointer;transition:background .15s;}
+.pr-menu{margin:.75rem;background:var(--bg4);border:1px solid var(--brd2);border-radius:18px;overflow:hidden;}
+.pmi{display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;border-bottom:1px solid var(--brd);cursor:pointer;transition:background .15s,transform .1s;}
 .pmi:last-child{border-bottom:none;}
-.pmi:active{background:var(--brd);}
+.pmi:active{background:var(--brd);transform:scale(.98);}
 .pmi-ic{font-size:1.15rem;width:22px;text-align:center;flex-shrink:0;}
 .pmi-tx{flex:1;font-size:.9rem;}
 .pmi-ar{color:var(--t3);font-size:.75rem;}
@@ -219,13 +221,13 @@ button,input,textarea{font-family:inherit;}
 /* GAMES */
 .g-head{padding:.85rem .85rem .2rem;font-size:1rem;font-weight:700;}
 .gg{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;padding:.6rem .75rem;}
-.gc{background:var(--bg4);border:1px solid var(--brd2);border-radius:16px;padding:1rem .85rem .75rem;cursor:pointer;text-align:center;transition:all .18s;position:relative;}
-.gc:active{transform:scale(.96);}
+.gc{background:var(--bg4);border:1px solid var(--brd2);border-radius:18px;padding:1rem .85rem .75rem;cursor:pointer;text-align:center;transition:all .18s;position:relative;}
+.gc:active{transform:scale(.95);}
 .gc-ic{font-size:2rem;margin-bottom:.25rem;}
 .gc-n{font-size:.85rem;font-weight:700;}
 .gc-d{font-size:.68rem;color:var(--t3);margin-top:.1rem;}
-.gc-inv{display:block;margin:.5rem auto 0;background:var(--pu)18;border:1px solid var(--pu)40;color:var(--pu);font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:50px;cursor:pointer;transition:background .15s;}
-.gc-inv:active{background:var(--pu)35;}
+.gc-inv{display:block;margin:.5rem auto 0;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);color:var(--pu);font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:50px;cursor:pointer;transition:background .15s;}
+.gc-inv:active{background:rgba(168,85,247,.25);}
 
 /* GAME OVERLAY */
 #game-ov{z-index:150;flex-direction:row;}
@@ -323,7 +325,7 @@ button,input,textarea{font-family:inherit;}
 .load-tx{font-size:.88rem;color:var(--t3);}
 
 /* TOAST */
-#toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg4);border:1px solid var(--pu)50;border-radius:18px;padding:.5rem 1.1rem;font-size:.8rem;z-index:500;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;max-width:90vw;}
+#toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(28,28,46,.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(168,85,247,.3);border-radius:20px;padding:.55rem 1.2rem;font-size:.82rem;z-index:500;opacity:0;transition:opacity .22s,transform .22s;pointer-events:none;white-space:nowrap;max-width:90vw;box-shadow:0 4px 24px rgba(0,0,0,.5);}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
 
 .empty{text-align:center;padding:3rem 2rem;color:var(--t3);}
@@ -383,7 +385,8 @@ button,input,textarea{font-family:inherit;}
 #img-viewer img{max-width:95vw;max-height:92vh;border-radius:12px;object-fit:contain;}
 #img-viewer-cl{position:absolute;top:1rem;right:1rem;background:#0008;color:#fff;border:none;border-radius:50%;width:38px;height:38px;font-size:1.3rem;cursor:pointer;}
 .bbl-file{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:rgba(255,255,255,.08);border-radius:8px;font-size:.82rem;text-decoration:none;color:inherit;}
-.bbl-sender{font-size:.7rem;color:var(--pu);font-weight:700;margin-bottom:.15rem;}
+.bbl-sender{font-size:.7rem;color:var(--pu);font-weight:700;margin-bottom:.15rem;cursor:pointer;}
+.bbl-sender:hover{text-decoration:underline;}
 .att-btn{width:36px;height:36px;background:transparent;border:1px solid var(--brd2);border-radius:50%;color:var(--t2);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .att-btn:active{background:var(--brd2);}
 /* VOICE MESSAGES */
@@ -507,41 +510,49 @@ body.light #auth{background:radial-gradient(ellipse at 50% -10%,#e8e0f8,#f0f4f8 
 body.light .mdate{background:#e2e8f0;color:#475569;}
 
 /* ══════════════ CALL OVERLAY ══════════════ */
-#call-ov{position:fixed;inset:0;z-index:400;background:linear-gradient(160deg,#1a1040,#0d0d18);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+#call-ov{position:fixed;inset:0;z-index:400;background:linear-gradient(160deg,#1a1040,#0d0d18);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);}
 #call-ov.on{transform:translateY(0);}
+.call-bg-blur{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 20%,rgba(168,85,247,.18) 0%,transparent 65%);pointer-events:none;}
 .call-vid-wrap{position:absolute;inset:0;display:none;background:#000;z-index:0;}
 .call-vid-wrap.on{display:block;}
 #call-remote-vid{width:100%;height:100%;object-fit:cover;}
-#call-local-vid{position:absolute;bottom:1rem;right:1rem;width:100px;height:130px;object-fit:cover;border-radius:12px;border:2px solid #fff4;}
+#call-local-vid{position:absolute;bottom:1rem;right:1rem;width:110px;height:145px;object-fit:cover;border-radius:14px;border:2px solid rgba(255,255,255,.25);box-shadow:0 4px 20px #0008;cursor:pointer;transition:opacity .2s;}
+#call-local-vid:hover{opacity:.85;}
 .call-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
-.call-av-ring{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#a855f730,#3b82f630);border:3px solid #a855f750;display:flex;align-items:center;justify-content:center;font-size:3.5rem;margin-bottom:1rem;animation:callpulse 1.8s ease-in-out infinite;}
-@keyframes callpulse{0%,100%{box-shadow:0 0 0 0 #a855f760}50%{box-shadow:0 0 0 28px #a855f700}}
-.call-name-txt{font-size:1.4rem;font-weight:900;color:#fff;}
-.call-status-txt{font-size:.9rem;color:#ffffff80;margin:.3rem 0 2rem;}
-#call-timer-el{font-size:1.05rem;color:#ffffff80;margin-top:.8rem;font-variant-numeric:tabular-nums;min-height:1.4rem;}
-.call-actions{display:flex;gap:2.5rem;align-items:center;}
-.call-cta{width:65px;height:65px;border-radius:50%;border:none;font-size:1.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s;}
-.call-cta:active{transform:scale(.9);}
-.call-cta.end-c{background:var(--rd);}
+.call-av-ring{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(59,130,246,.25));border:3px solid rgba(168,85,247,.4);display:flex;align-items:center;justify-content:center;font-size:3.8rem;margin-bottom:1.1rem;animation:callpulse 2s ease-in-out infinite;box-shadow:0 0 0 0 rgba(168,85,247,.5);}
+@keyframes callpulse{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.5)}50%{box-shadow:0 0 0 32px rgba(168,85,247,0)}}
+.call-name-txt{font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-.02em;}
+.call-status-txt{font-size:.88rem;color:rgba(255,255,255,.55);margin:.3rem 0 2rem;letter-spacing:.03em;}
+#call-timer-el{font-size:1.05rem;color:rgba(255,255,255,.55);margin-top:.8rem;font-variant-numeric:tabular-nums;min-height:1.4rem;letter-spacing:.06em;}
+.call-actions{display:flex;gap:1.8rem;align-items:flex-start;}
+.call-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:.4rem;}
+.call-cta-lbl{font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:.02em;}
+.call-cta{width:66px;height:66px;border-radius:50%;border:none;font-size:1.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s;}
+.call-cta:active{transform:scale(.88);}
+.call-cta:hover{box-shadow:0 4px 18px rgba(0,0,0,.4);}
+.call-cta.end-c{background:var(--rd);box-shadow:0 4px 20px rgba(239,68,68,.4);}
 .call-cta.accept-c{background:var(--gn);}
-.call-cta.mute-c{background:rgba(255,255,255,.18);}
-.call-cta.vid-c{background:rgba(255,255,255,.18);}
+.call-cta.mute-c{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);}
+.call-cta.vid-c{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);}
+.call-cta.share-c{background:rgba(59,130,246,.35);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.5);}
+.call-cta.share-c.active{background:rgba(59,130,246,.7);border-color:var(--bl);}
 
 /* ══════════════ INCOMING CALL ══════════════ */
-#incoming-call{position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateY(-130%);background:var(--bg4);border:1px solid var(--pu)50;border-radius:18px;padding:1rem 1.25rem;z-index:450;width:calc(100% - 2rem);max-width:380px;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 30px #0007;}
+#incoming-call{position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateY(-140%);background:rgba(30,30,50,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(168,85,247,.3);border-radius:20px;padding:1rem 1.25rem;z-index:450;width:calc(100% - 2rem);max-width:380px;transition:transform .32s cubic-bezier(.4,0,.2,1);box-shadow:0 12px 40px rgba(0,0,0,.6);}
 #incoming-call.on{transform:translateX(-50%) translateY(0);}
 .ic-row{display:flex;align-items:center;gap:.75rem;}
-.ic-av{font-size:2.2rem;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center;overflow:hidden;}
+.ic-av{font-size:2.2rem;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center;overflow:hidden;border:2px solid rgba(168,85,247,.4);}
 .ic-info{flex:1;}
-.ic-name{font-weight:700;}
-.ic-sub{font-size:.75rem;color:var(--t3);}
+.ic-name{font-weight:700;color:#fff;}
+.ic-sub{font-size:.75rem;color:rgba(255,255,255,.5);}
 .ic-btns{display:flex;gap:.5rem;}
-.ic-btn{width:44px;height:44px;border-radius:50%;border:none;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.ic-btn.acc-c{background:var(--gn);}
-.ic-btn.dec-c{background:var(--rd);}
+.ic-btn{width:46px;height:46px;border-radius:50%;border:none;font-size:1.35rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s,box-shadow .1s;}
+.ic-btn:active{transform:scale(.9);}
+.ic-btn.acc-c{background:var(--gn);box-shadow:0 4px 16px rgba(16,185,129,.4);}
+.ic-btn.dec-c{background:var(--rd);box-shadow:0 4px 16px rgba(239,68,68,.4);}
 
 /* ══════════════ INCOMING GROUP CALL ══════════════ */
-#incoming-gcall{position:fixed;top:5rem;left:50%;transform:translateX(-50%) translateY(-200%);background:var(--bg4);border:1px solid #22c55e40;border-radius:18px;padding:1rem 1.25rem;z-index:451;width:calc(100% - 2rem);max-width:380px;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 30px #0007;}
+#incoming-gcall{position:fixed;top:5rem;left:50%;transform:translateX(-50%) translateY(-200%);background:rgba(30,30,50,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(34,197,94,.3);border-radius:20px;padding:1rem 1.25rem;z-index:451;width:calc(100% - 2rem);max-width:380px;transition:transform .32s cubic-bezier(.4,0,.2,1);box-shadow:0 12px 40px rgba(0,0,0,.6);}
 #incoming-gcall.on{transform:translateX(-50%) translateY(0);}
 
 /* ══════════════ GROUP SETTINGS ══════════════ */
@@ -587,10 +598,12 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 .pin-bar-ico{font-size:.9rem;}
 .pin-bar-txt{flex:1;font-size:.78rem;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .pin-bar-close{font-size:.85rem;color:var(--t3);cursor:pointer;padding:.1rem .3rem;}
-.msg-ctx-menu{position:fixed;z-index:600;background:var(--bg4);border:1px solid var(--brd2);border-radius:14px;padding:.35rem 0;min-width:170px;box-shadow:0 8px 32px #0008;}
-.msg-ctx-item{display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem;font-size:.85rem;cursor:pointer;color:var(--t1);}
-.msg-ctx-item:active{background:var(--bg3);}
-.msg-ctx-item.danger{color:var(--rd);}
+.msg-ctx-menu{position:fixed;z-index:600;background:rgba(28,28,46,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:.4rem 0;min-width:180px;box-shadow:0 16px 48px rgba(0,0,0,.6);}
+.msg-ctx-item{display:flex;align-items:center;gap:.65rem;padding:.6rem 1rem;font-size:.86rem;cursor:pointer;color:var(--t1);border-radius:0;transition:background .12s;}
+.msg-ctx-item:hover{background:rgba(255,255,255,.06);}
+.msg-ctx-item:active{background:rgba(255,255,255,.1);}
+.msg-ctx-item.danger{color:#f87171;}
+.msg-ctx-item + .msg-ctx-item{border-top:1px solid rgba(255,255,255,.04);}
 .chat-search-bar{display:none;align-items:center;gap:.5rem;padding:.4rem .75rem;background:var(--bg3);border-bottom:1px solid var(--brd);}
 .chat-search-bar.on{display:flex;}
 .chat-srch-inp{flex:1;background:var(--bg);border:1px solid var(--brd);border-radius:10px;padding:.4rem .75rem;color:var(--t1);font-size:.85rem;outline:none;}
@@ -912,6 +925,8 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
         <div class="pmi" onclick="goTab('friends')"><span class="pmi-ic">👥</span><span class="pmi-tx">Мои друзья</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openVerifyPanel()"><span class="pmi-ic">✔️</span><span class="pmi-tx" id="verify-menu-tx">Запросить верификацию</span><span class="pmi-ar" id="verify-menu-badge">›</span></div>
         <div class="pmi" id="admin-panel-btn" style="display:none" onclick="openAdminPanel()"><span class="pmi-ic">🛡️</span><span class="pmi-tx">Панель администратора</span><span class="pmi-ar" id="adm-menu-badge">›</span></div>
+        <div class="pmi" onclick="openInviteLink()"><span class="pmi-ic">🔗</span><span class="pmi-tx">Пригласить друга</span><span class="pmi-ar">›</span></div>
+        <div class="pmi" onclick="openQrCode()"><span class="pmi-ic">🔲</span><span class="pmi-tx">Мой QR-код</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openOv('download-ov')"><span class="pmi-ic">📲</span><span class="pmi-tx">Скачать приложение</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="toggleTheme()"><span class="pmi-ic" id="theme-ic">🌙</span><span class="pmi-tx" id="theme-tx">Светлая тема</span><span class="pmi-ar">›</span></div>
       </div>
@@ -1006,6 +1021,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
       <button class="mic-btn" id="mic-btn" onclick="toggleVoice()">🎤</button>
       <button class="vidc-btn" id="vidc-btn" onclick="toggleVideoCircle()" title="Видеокружок">⏺️</button>
       <button class="poll-btn" id="poll-btn" onclick="openPollCreator()" style="display:none;background:none;border:none;font-size:1.25rem;cursor:pointer;padding:0 .2rem;">📊</button>
+      <button id="stk-btn" onclick="toggleStickerPanel()" style="background:none;border:none;font-size:1.25rem;cursor:pointer;padding:0 .2rem;" title="Стикеры">😄</button>
       <button class="snd" id="snd-btn" onclick="sendMsg()">➤</button>
     </div>
   </div>
@@ -1105,15 +1121,30 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <video id="call-remote-vid" autoplay playsinline></video>
     <video id="call-local-vid" autoplay playsinline muted></video>
   </div>
+  <!-- Blur layer for audio calls -->
+  <div class="call-bg-blur"></div>
   <div class="call-content">
     <div class="call-av-ring" id="call-remote-av">👤</div>
     <div class="call-name-txt" id="call-remote-name">—</div>
     <div class="call-status-txt" id="call-status">Вызов...</div>
     <div id="call-timer-el"></div>
     <div class="call-actions" style="margin-top:2.5rem">
-      <button class="call-cta mute-c" id="call-muted-btn" onclick="toggleMute()">🎤</button>
-      <button class="call-cta end-c" onclick="endCall()">📵</button>
-      <button class="call-cta vid-c" id="call-vid-btn" style="display:none" onclick="toggleCallVideo()">🎥</button>
+      <div class="call-cta-wrap">
+        <button class="call-cta mute-c" id="call-muted-btn" onclick="toggleMute()">🎤</button>
+        <span class="call-cta-lbl">Звук</span>
+      </div>
+      <div class="call-cta-wrap">
+        <button class="call-cta share-c" id="call-share-btn" style="display:none" onclick="toggleScreenShare()" title="Показать экран">🖥️</button>
+        <span class="call-cta-lbl" id="call-share-lbl" style="display:none">Экран</span>
+      </div>
+      <div class="call-cta-wrap">
+        <button class="call-cta end-c" onclick="endCall()">📵</button>
+        <span class="call-cta-lbl">Завершить</span>
+      </div>
+      <div class="call-cta-wrap">
+        <button class="call-cta vid-c" id="call-vid-btn" style="display:none" onclick="toggleCallVideo()">🎥</button>
+        <span class="call-cta-lbl" id="call-vid-lbl" style="display:none">Камера</span>
+      </div>
     </div>
   </div>
 </div>
@@ -1450,10 +1481,58 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 <!-- MESSAGE CONTEXT MENU -->
 <div id="msg-ctx-menu" class="msg-ctx-menu" style="display:none" onclick="hideMsgCtxMenu()">
   <div class="msg-ctx-item" onclick="ctxReply()">↩️ Ответить</div>
+  <div class="msg-ctx-item" onclick="ctxForward()">↪️ Переслать</div>
   <div class="msg-ctx-item" onclick="ctxPin()">📌 Закрепить</div>
   <div class="msg-ctx-item" onclick="ctxFavorite()">⭐ Избранное</div>
   <div class="msg-ctx-item" onclick="ctxCopy()">📋 Копировать</div>
   <div class="msg-ctx-item danger" onclick="ctxDelete()">🗑️ Удалить</div>
+</div>
+
+<!-- USER PROFILE SHEET -->
+<div class="ov" id="user-profile-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('user-profile-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700" id="upo-title">Профиль</div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:.75rem;padding:1.5rem 1rem">
+    <div id="upo-av" style="width:80px;height:80px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:2.5rem;background-size:cover;background-position:center;flex-shrink:0;border:3px solid var(--pu)"></div>
+    <div style="font-size:1.1rem;font-weight:700" id="upo-name">—</div>
+    <div style="font-size:.82rem;color:var(--t2);text-align:center" id="upo-bio"></div>
+    <div style="display:flex;gap:.6rem;margin-top:.5rem">
+      <button class="abtn" style="flex:1;padding:.6rem 1.2rem;font-size:.9rem" onclick="upoWriteMsg()">💬 Написать</button>
+      <button class="abtn" id="upo-add-btn" style="flex:1;padding:.6rem 1.2rem;font-size:.9rem;background:var(--bg4);border:1px solid var(--brd2);color:var(--t1)" onclick="upoAddFriend()">+ Добавить</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORWARD PICKER -->
+<div class="ov" id="forward-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('forward-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">↪️ Переслать в...</div>
+  </div>
+  <div id="forward-list" style="overflow-y:auto;flex:1;padding:.5rem"></div>
+</div>
+
+<!-- QR CODE OVERLAY -->
+<div class="ov" id="qr-ov">
+  <div class="ov-head">
+    <button class="ibtn" onclick="closeOv('qr-ov')">←</button>
+    <div style="flex:1;font-size:1rem;font-weight:700">🔲 Мой QR-код</div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:2rem 1rem">
+    <div style="font-size:.85rem;color:var(--t2);text-align:center">Другой пользователь сканирует — и сразу может написать тебе</div>
+    <div style="background:#fff;padding:12px;border-radius:12px">
+      <img id="qr-img" src="" alt="QR" style="width:200px;height:200px;display:block"/>
+    </div>
+    <div id="qr-link-txt" style="font-size:.75rem;color:var(--t3);word-break:break-all;text-align:center;max-width:280px"></div>
+    <button class="abtn" style="padding:.6rem 1.5rem" onclick="shareQrLink()">🔗 Поделиться ссылкой</button>
+  </div>
+</div>
+
+<!-- STICKER PANEL -->
+<div id="sticker-panel" style="display:none;position:fixed;left:0;right:0;background:var(--bg3);border-top:1px solid var(--brd);padding:.6rem;z-index:310;max-height:200px;overflow-y:auto;box-shadow:0 -4px 20px rgba(0,0,0,.3)">
+  <div style="display:flex;flex-wrap:wrap;gap:.15rem;justify-content:space-evenly" id="sticker-grid"></div>
 </div>
 
 <!-- POLL CREATOR OVERLAY -->
@@ -1542,7 +1621,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, limit, onSnapshot, addDoc, serverTimestamp, getDocs, arrayUnion, arrayRemove, deleteDoc, deleteField, increment } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, limit, onSnapshot, addDoc, serverTimestamp, getDocs, arrayUnion, arrayRemove, deleteDoc, deleteField, increment, writeBatch, getCountFromServer } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwDwvEmDyrXoR3DAGesHmxpJsflWV6Wng",
@@ -1567,6 +1646,8 @@ let chatFilter = '';
 let chatWith = null;
 let chatMode = 'dm'; // 'dm' | 'group'
 let chatGroupId = null;
+let _groupMembers = []; // cached members of the currently open group
+const _profileCache = {}; // uid -> user profile data (persistent across renders)
 let cgSelected = new Set();
 let cgAv = '👥';
 let msgUnsub = null;
@@ -1857,23 +1938,29 @@ function listenChats() {
     chatMetas.forEach(c => c.users.forEach(u => { if(u!==ME.uid) chatUids.add(u); }));
     const friendsWithNoChat = friends.filter(u => !chatUids.has(u));
     const allUids = [...new Set([...chatUids, ...friendsWithNoChat])];
-    const profiles = {};
-    await Promise.all(allUids.map(async uid => {
-      const s = await getDoc(doc(db,'users',uid));
-      if (s.exists()) profiles[uid] = s.data();
-    }));
+    // Fetch only profiles not yet cached
+    const missing = allUids.filter(uid => !_profileCache[uid]);
+    if (missing.length) {
+      await Promise.all(missing.map(async uid => {
+        const s = await getDoc(doc(db,'users',uid));
+        if (s.exists()) _profileCache[uid] = s.data();
+      }));
+    }
+    const profiles = _profileCache;
 
     const items = [];
+    const seenUids = new Set(); // deduplicate DM entries
     chatMetas.forEach(c => {
       const uid = c.users.find(u => u !== ME.uid);
-      if (!uid || !profiles[uid]) return;
+      if (!uid || !profiles[uid] || seenUids.has(uid)) return;
+      seenUids.add(uid);
       items.push({ _t:'dm', uid, p: profiles[uid], lastMsg: c.lastMsg, lastTs: c.lastTs, unread: c['unread_'+ME.uid]||0, lastFrom: c.lastFrom });
     });
     groupMetas.forEach(g => {
       items.push({ _t:'group', id: g.id, name: g.name, av: g.av, lastMsg: g.lastMsg, lastTs: g.lastTs, unread: g['unread_'+ME.uid]||0, lastFrom: g.lastFrom });
     });
     friendsWithNoChat.forEach(uid => {
-      if (profiles[uid]) items.push({ _t:'dm', uid, p: profiles[uid], lastMsg: null, lastTs: null, unread: 0 });
+      if (profiles[uid] && !seenUids.has(uid)) { seenUids.add(uid); items.push({ _t:'dm', uid, p: profiles[uid], lastMsg: null, lastTs: null, unread: 0 }); }
     });
     items.sort((a,b) => (b.lastTs?.seconds||0) - (a.lastTs?.seconds||0));
 
@@ -2014,6 +2101,7 @@ window.openGroup = async gid => {
   document.getElementById('cd-favs-btn').style.display = '';
   document.getElementById('poll-btn').style.display = '';
   chatMode = 'group'; chatGroupId = gid; chatWith = null;
+  _groupMembers = g.members || [];
   cancelReply(); openOv('chat-detail');
   applyWallpaper(gid);
   listenMessages(gid);
@@ -2055,8 +2143,18 @@ document.addEventListener('visibilitychange', () => {
   if (!ME) return;
   if (document.visibilityState === 'hidden') {
     setOffline();
+    // Re-acquire wake lock if it was released by the system while the tab was hidden
+    if (callPc) _acquireCallWakeLock();
   } else {
     updatePresence();
+    // If we have an active call and connection dropped while backgrounded — restart ICE
+    if (callPc) {
+      const s = callPc.connectionState;
+      if (s === 'disconnected' || s === 'failed') {
+        document.getElementById('call-status').textContent = 'Переподключение...';
+        callPc.restartIce();
+      }
+    }
   }
 });
 window.addEventListener('beforeunload', () => { if (ME) setOffline(); });
@@ -2118,13 +2216,16 @@ async function markGroupRead(gid) {
 async function markRead(uid) {
   if (!ME || !uid) return;
   const key = chatKey(ME.uid, uid);
-  // mark all unread messages as read
-  const q2 = query(collection(db,'chats',key,'messages'), where('from','==',uid), where('read','==',false));
+  const q2 = query(collection(db,'chats',key,'messages'), where('from','==',uid), where('read','==',false), limit(20));
   const snap = await getDocs(q2).catch(()=>({docs:[]}));
-  const batch = snap.docs.slice(0,20);
-  await Promise.all(batch.map(d => updateDoc(d.ref, { read: true }).catch(()=>{})));
-  // reset unread count in chat meta
-  await updateDoc(doc(db,'chats',key), { ['unread_'+ME.uid]: 0 }).catch(()=>{});
+  if (snap.docs.length) {
+    const wb = writeBatch(db);
+    snap.docs.forEach(d => wb.update(d.ref, { read: true }));
+    wb.update(doc(db,'chats',key), { ['unread_'+ME.uid]: 0 });
+    await wb.commit().catch(()=>{});
+  } else {
+    await updateDoc(doc(db,'chats',key), { ['unread_'+ME.uid]: 0 }).catch(()=>{});
+  }
 }
 
 // ━━━━ MESSAGES ━━━━
@@ -2135,7 +2236,7 @@ function listenMessages(target) {
   const msgCol = isGroup
     ? collection(db,'groups',target,'messages')
     : collection(db,'chats',chatKey(ME.uid,target),'messages');
-  const q2 = query(msgCol, orderBy('ts','asc'));
+  const q2 = query(msgCol, orderBy('ts','desc'), limit(60));
   let firstLoad = true;
   msgUnsub = onSnapshot(q2, snap => {
     const el = document.getElementById('msg-list');
@@ -2145,8 +2246,10 @@ function listenMessages(target) {
       if (!isGroup) ensureTypingEl(el);
       return;
     }
+    // Reverse so oldest is at top (query is desc for efficiency)
+    const orderedDocs = [...snap.docs].reverse();
     let lastDate = '';
-    const html = snap.docs.map(d => {
+    const html = orderedDocs.map(d => {
       const m = d.data();
       if (!m.ts) return '';
       const mid = d.id;
@@ -2156,7 +2259,7 @@ function listenMessages(target) {
       const isMe = m.from === ME.uid;
       const ts = dt.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
       const checks = isMe && !isGroup ? `<span class="bbl-checks${m.read?' read':''}">` + (m.read ? '✓✓' : '✓') + `</span>` : '';
-      const senderHtml = isGroup && !isMe ? `<div class="bbl-sender">${esc(m.senderName||'???')}</div>` : '';
+      const senderHtml = isGroup && !isMe ? `<div class="bbl-sender" onclick="openUserProfile('${m.from}')" style="cursor:pointer">${esc(m.senderName||'???')}</div>` : '';
       const replyHtml = m.replyText ? `<div class="reply-q">${esc(m.replyText.substring(0,60))}</div>` : '';
       let content = '';
       if (m.type === 'image') {
@@ -2208,7 +2311,15 @@ function listenMessages(target) {
         }).join('');
         content = `<div class="poll-msg"><div class="poll-q">${esc(m.question||'Опрос')}</div>${optsHtml}<div class="poll-voted">${totalVotes} ${totalVotes===1?'голос':'голосов'}</div></div>`;
       } else {
-        content = esc(m.text||'');
+        if (m.isSticker) {
+          content = `<span style="font-size:2.4rem;line-height:1.2">${esc(m.text||'')}</span>`;
+        } else {
+          // Highlight @mentions
+          const isMentioned = Array.isArray(m.mentions) && m.mentions.includes(ME.uid);
+          const rawText = esc(m.text||'');
+          content = rawText.replace(/@(\w+)/g, (_,n) => `<span style="color:var(--pu);font-weight:700">@${n}</span>`);
+          if (isMentioned) content = `<span style="background:rgba(168,85,247,.15);border-radius:4px;padding:0 2px">${content}</span>`;
+        }
       }
       let reactHtml = '';
       if (m.reactions && Object.keys(m.reactions).length) {
@@ -2259,11 +2370,22 @@ window.sendMsg = async () => {
   if (replyTo) { msgData.replyText = replyTo.text.substring(0,80); msgData.replyFrom = replyTo.from; }
   cancelReply();
   if (isGroup) {
+    // Detect @mentions
+    const mentionNames = [...new Set((txt.match(/@(\w+)/g)||[]).map(m=>m.slice(1).toLowerCase()))];
+    if (mentionNames.length) {
+      // Use cached members + cached profiles — no extra reads
+      const mentionedUids = [];
+      for (const uid of _groupMembers) {
+        if (uid === ME.uid) continue;
+        const prof = _profileCache[uid];
+        if (prof && mentionNames.includes((prof.username||'').toLowerCase())) mentionedUids.push(uid);
+      }
+      if (mentionedUids.length) msgData.mentions = mentionedUids;
+    }
     await addDoc(collection(db,'groups',target,'messages'), msgData);
-    const gSnap = await getDoc(doc(db,'groups',target));
-    const members = gSnap.data()?.members || [];
+    // Use increment(1) — no read needed
     const upd = { lastMsg: txt, lastTs: serverTimestamp(), lastFrom: ME.uid };
-    members.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = (gSnap.data()?.['unread_'+u]||0)+1; });
+    _groupMembers.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = increment(1); });
     await updateDoc(doc(db,'groups',target), upd);
   } else {
     const key = chatKey(ME.uid, target);
@@ -2273,12 +2395,20 @@ window.sendMsg = async () => {
       lastMsg: txt,
       lastTs: serverTimestamp(),
       lastFrom: ME.uid,
-      ['unread_'+target]: (await getDoc(doc(db,'chats',key)).then(s => (s.data()?.['unread_'+target]||0)+1).catch(()=>1))
+      ['unread_'+target]: increment(1)
     }, { merge: true });
   }
 };
 
 document.getElementById('msg-inp').addEventListener('keydown', e => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendMsg();} });
+// Close sticker panel when clicking outside
+document.addEventListener('click', e => {
+  const sp = document.getElementById('sticker-panel');
+  const stkBtn = document.getElementById('stk-btn');
+  if (sp && sp.style.display !== 'none' && !sp.contains(e.target) && e.target !== stkBtn) {
+    sp.style.display = 'none';
+  }
+});
 window.autoResize = el => { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,110)+'px'; };
 
 // ━━━━ REPLY ━━━━
@@ -2566,17 +2696,15 @@ window.stopVoice = (send) => {
     try {
       if (isGroup) {
         await addDoc(collection(db,'groups',target,'messages'), msgData);
-        const gSnap = await getDoc(doc(db,'groups',target));
-        const members = gSnap.data()?.members || [];
         const upd = { lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid };
-        members.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = (gSnap.data()?.['unread_'+u]||0)+1; });
+        _groupMembers.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = increment(1); });
         await updateDoc(doc(db,'groups',target), upd);
       } else {
         const key = chatKey(ME.uid, target);
         await addDoc(collection(db,'chats',key,'messages'), msgData);
         await setDoc(doc(db,'chats',key), {
           users: [ME.uid, target], lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid,
-          ['unread_'+target]: (await getDoc(doc(db,'chats',key)).then(s => (s.data()?.['unread_'+target]||0)+1).catch(()=>1))
+          ['unread_'+target]: increment(1)
         }, { merge: true });
       }
       toast('Голосовое отправлено 🎤');
@@ -2666,17 +2794,15 @@ window.handleFileAttach = async input => {
     if (isGroup) { msgData.senderName = ME.username; }
     if (isGroup) {
       await addDoc(collection(db,'groups',target,'messages'), msgData);
-      const gSnap = await getDoc(doc(db,'groups',target));
-      const members = gSnap.data()?.members || [];
       const upd = { lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid };
-      members.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = (gSnap.data()?.['unread_'+u]||0)+1; });
+      _groupMembers.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = increment(1); });
       await updateDoc(doc(db,'groups',target), upd);
     } else {
       const key = chatKey(ME.uid, target);
       await addDoc(collection(db,'chats',key,'messages'), msgData);
       await setDoc(doc(db,'chats',key), {
         users: [ME.uid, target], lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid,
-        ['unread_'+target]: (await getDoc(doc(db,'chats',key)).then(s => (s.data()?.['unread_'+target]||0)+1).catch(()=>1))
+        ['unread_'+target]: increment(1)
       }, { merge: true });
     }
     toast('Фото отправлено ✅');
@@ -3795,6 +3921,212 @@ window.ctxDelete = async () => {
 };
 
 // ══════════════════════════════
+// FORWARD MESSAGES / ПЕРЕСЫЛКА
+// ══════════════════════════════
+let _fwdText = null, _fwdFrom = null;
+window.ctxForward = () => {
+  if (!ctxText) return;
+  _fwdText = ctxText;
+  _fwdFrom = null;
+  openForwardPicker();
+};
+window.openForwardPicker = async () => {
+  const el = document.getElementById('forward-list');
+  el.innerHTML = '<div style="color:var(--t3);font-size:.85rem;padding:1rem">Загрузка...</div>';
+  openOv('forward-ov');
+  // Load friends
+  const fSnap = await getDocs(collection(db,'users',ME.uid,'friends'));
+  if (fSnap.empty) { el.innerHTML = '<div style="color:var(--t3);font-size:.85rem;padding:1rem;text-align:center">Нет друзей для пересылки</div>'; return; }
+  const uids = fSnap.docs.map(d=>d.id);
+  const usersSnap = await getDocs(query(collection(db,'users'), where('__name__','in', uids.slice(0,10))));
+  el.innerHTML = usersSnap.docs.map(d => {
+    const u = d.data(); const uid = d.id;
+    const avS = u.av && u.av.startsWith('data') ? `style="background-image:url(${u.av});background-size:cover;background-position:center"` : '';
+    const avT = u.av && !u.av.startsWith('data') ? u.av : '👤';
+    return `<div onclick="forwardTo('${uid}')" style="display:flex;align-items:center;gap:.75rem;padding:.6rem .5rem;cursor:pointer;border-radius:10px;transition:background .15s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
+      <div style="width:44px;height:44px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;background-size:cover;background-position:center" ${avS}>${avT}</div>
+      <div style="font-size:.93rem;font-weight:600">${esc(u.username)}</div>
+    </div>`;
+  }).join('');
+};
+window.forwardTo = async (uid) => {
+  closeOv('forward-ov');
+  const key = chatKey(ME.uid, uid);
+  const msgData = { from: ME.uid, text: `↪️ Переслано:\n${_fwdText}`, ts: serverTimestamp(), read: false, forwarded: true };
+  await addDoc(collection(db,'chats',key,'messages'), msgData);
+  await setDoc(doc(db,'chats',key), {
+    users: [ME.uid, uid], lastMsg: '↪️ Переслано: '+(_fwdText||'').substring(0,40),
+    lastTs: serverTimestamp(), lastFrom: ME.uid,
+    ['unread_'+uid]: increment(1)
+  }, { merge: true });
+  toast('Переслано! ↪️');
+};
+
+// ══════════════════════════════
+// USER PROFILE OVERLAY
+// ══════════════════════════════
+let _upoUid = null;
+window.openUserProfile = async (uid) => {
+  if (!uid || uid === ME.uid) return;
+  _upoUid = uid;
+  document.getElementById('upo-av').textContent = '👤';
+  document.getElementById('upo-av').style.backgroundImage = '';
+  document.getElementById('upo-name').textContent = '...';
+  document.getElementById('upo-bio').textContent = '';
+  document.getElementById('upo-add-btn').textContent = '+ Добавить';
+  document.getElementById('upo-add-btn').disabled = false;
+  openOv('user-profile-ov');
+  const snap = await getDoc(doc(db,'users',uid));
+  if (!snap.exists()) return;
+  const u = snap.data();
+  document.getElementById('upo-title').textContent = esc(u.username||'Профиль');
+  document.getElementById('upo-name').textContent = esc(u.username||'—') + (u.verified ? ' ✔' : '');
+  document.getElementById('upo-bio').textContent = u.bio || '';
+  if (u.av && u.av.startsWith('data')) {
+    document.getElementById('upo-av').style.backgroundImage = `url(${u.av})`;
+    document.getElementById('upo-av').textContent = '';
+  } else if (u.av) {
+    document.getElementById('upo-av').textContent = u.av;
+  }
+  // Check friendship
+  const frSnap = await getDoc(doc(db,'users',ME.uid,'friends',uid));
+  const sentSnap = await getDoc(doc(db,'users',uid,'friendReqs',ME.uid));
+  if (frSnap.exists()) {
+    document.getElementById('upo-add-btn').textContent = '👥 Друзья';
+    document.getElementById('upo-add-btn').disabled = true;
+  } else if (sentSnap.exists()) {
+    document.getElementById('upo-add-btn').textContent = '✓ Отправлено';
+    document.getElementById('upo-add-btn').disabled = true;
+  }
+};
+window.upoWriteMsg = () => {
+  closeOv('user-profile-ov');
+  if (_upoUid) openChat(_upoUid);
+};
+window.upoAddFriend = () => {
+  if (_upoUid) {
+    sendFr(_upoUid).then(() => {
+      document.getElementById('upo-add-btn').textContent = '✓ Отправлено';
+      document.getElementById('upo-add-btn').disabled = true;
+    });
+  }
+};
+
+// ══════════════════════════════
+// STICKERS
+// ══════════════════════════════
+const STICKERS = [
+  '😀','😂','🥰','😍','🤩','😎','🥺','😭','😤','🤔',
+  '👍','👎','❤️','🔥','💯','✨','🎉','🎊','🤝','💪',
+  '😴','🤗','😈','👻','💀','🤡','🐶','🐱','🐸','🦊',
+  '🍕','🍔','🍟','🌮','🍦','🍩','☕','🎮','🎯','🏆',
+  '💥','⚡','🌈','❄️','🌙','☀️','🌊','🍀','🎵','📱',
+];
+window.toggleStickerPanel = () => {
+  const p = document.getElementById('sticker-panel');
+  if (p.style.display === 'none') {
+    const grid = document.getElementById('sticker-grid');
+    if (!grid.children.length) {
+      grid.innerHTML = STICKERS.map(s => `<span onclick="sendSticker('${s}')" style="font-size:1.8rem;cursor:pointer;padding:.25rem;border-radius:8px;transition:background .12s" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background=''">${s}</span>`).join('');
+    }
+    // Position just above the mbar
+    const mbar = document.querySelector('#chat-detail .mbar');
+    if (mbar) {
+      const r = mbar.getBoundingClientRect();
+      p.style.bottom = (window.innerHeight - r.top) + 'px';
+    }
+    p.style.display = 'block';
+    document.getElementById('msg-inp').focus();
+  } else {
+    p.style.display = 'none';
+  }
+};
+window.sendSticker = async (sticker) => {
+  document.getElementById('sticker-panel').style.display = 'none';
+  const isGroup = chatMode === 'group';
+  const target = isGroup ? chatGroupId : chatWith;
+  if (!target) return;
+  const msgData = { from: ME.uid, text: sticker, ts: serverTimestamp(), read: false, isSticker: true };
+  if (isGroup) {
+    msgData.senderName = ME.username;
+    await addDoc(collection(db,'groups',target,'messages'), msgData);
+    const upd = { lastMsg: sticker, lastTs: serverTimestamp(), lastFrom: ME.uid };
+    _groupMembers.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = increment(1); });
+    await updateDoc(doc(db,'groups',target), upd);
+  } else {
+    const key = chatKey(ME.uid, target);
+    await addDoc(collection(db,'chats',key,'messages'), msgData);
+    await setDoc(doc(db,'chats',key), {
+      users: [ME.uid, target], lastMsg: sticker, lastTs: serverTimestamp(), lastFrom: ME.uid,
+      ['unread_'+target]: increment(1)
+    }, { merge: true });
+  }
+};
+
+// ══════════════════════════════
+// INVITE LINK
+// ══════════════════════════════
+window.openInviteLink = () => {
+  const link = `${location.origin}${location.pathname}?invite=${ME.uid}`;
+  if (navigator.share) {
+    navigator.share({ title: 'Вместе', text: `Добавь меня в Вместе! 👋`, url: link });
+  } else {
+    navigator.clipboard?.writeText(link).then(() => toast('Ссылка скопирована! 🔗'));
+  }
+};
+
+// Handle invite param on load
+(function checkInvite() {
+  const params = new URLSearchParams(location.search);
+  const inviteUid = params.get('invite');
+  if (!inviteUid) return;
+  // Strip param from URL without reload
+  const url = new URL(location.href); url.searchParams.delete('invite');
+  history.replaceState(null,'',url.toString());
+  // Wait for auth, then show prompt
+  let attempts = 0;
+  const checkReady = setInterval(() => {
+    attempts++;
+    if (attempts > 30) { clearInterval(checkReady); return; } // 24s timeout
+    if (ME && ME.uid && inviteUid !== ME.uid) {
+      clearInterval(checkReady);
+      (async () => {
+        try {
+          const snap = await getDoc(doc(db,'users',inviteUid));
+          if (!snap.exists()) return;
+          const u = snap.data();
+          const alreadyFr = await getDoc(doc(db,'users',ME.uid,'friends',inviteUid));
+          if (alreadyFr.exists()) return toast(`${u.username} уже в друзьях!`);
+          if (confirm(`Добавить ${u.username} в друзья?`)) {
+            await sendFr(inviteUid);
+            toast(`Заявка отправлена ${u.username}! 👋`);
+          }
+        } catch(e) {}
+      })();
+    }
+  }, 800);
+})();
+
+// ══════════════════════════════
+// QR CODE
+// ══════════════════════════════
+window.openQrCode = () => {
+  const link = `${location.origin}${location.pathname}?invite=${ME.uid}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(link)}&size=200x200&bgcolor=ffffff&color=000000`;
+  document.getElementById('qr-img').src = qrUrl;
+  document.getElementById('qr-link-txt').textContent = link;
+  openOv('qr-ov');
+};
+window.shareQrLink = () => {
+  const link = `${location.origin}${location.pathname}?invite=${ME.uid}`;
+  if (navigator.share) {
+    navigator.share({ title: 'Вместе', text: 'Добавь меня в Вместе! 👋', url: link });
+  } else {
+    navigator.clipboard?.writeText(link).then(() => toast('Ссылка скопирована! 🔗'));
+  }
+};
+
+// ══════════════════════════════
 // FAVORITES / ИЗБРАННОЕ
 // ══════════════════════════════
 window.saveToFavorites = async (mid, text) => {
@@ -4296,33 +4628,31 @@ window.adminTab = t => {
 // ── Stats ────────────────────────────────────────────────────────────────────
 async function adminLoadStats() {
   const c = document.getElementById('adm-content');
-  const [usersSnap, channelsSnap, presenceSnap, groupsSnap] = await Promise.all([
-    getDocs(query(collection(db,'users'), limit(1000))),
-    getDocs(query(collection(db,'channels'), limit(500))),
-    getDocs(query(collection(db,'presence'), where('online','==',true), limit(300))),
-    getDocs(query(collection(db,'groups'), limit(500))),
+  c.innerHTML = '<div style="color:var(--t3);text-align:center;padding:2rem">Загрузка...</div>';
+  // Use count aggregation — 4 reads total instead of thousands
+  const [usersCount, channelsCount, onlineCount, groupsCount,
+         verifiedSnap, bannedSnap, adminSnap] = await Promise.all([
+    getCountFromServer(collection(db,'users')),
+    getCountFromServer(collection(db,'channels')),
+    getCountFromServer(query(collection(db,'presence'), where('online','==',true))),
+    getCountFromServer(collection(db,'groups')),
+    getCountFromServer(query(collection(db,'users'), where('verified','==',true))),
+    getCountFromServer(query(collection(db,'users'), where('banned','==',true))),
+    getCountFromServer(query(collection(db,'users'), where('admin','==',true))),
   ]);
-  const now = Date.now();
-  const verifiedCount = usersSnap.docs.filter(d => d.data().verified).length;
-  const bannedCount   = usersSnap.docs.filter(d => d.data().banned).length;
-  const adminCount    = usersSnap.docs.filter(d => d.data().admin).length;
-  const onlineCount   = presenceSnap.docs.filter(d => {
-    const lastMs = d.data().last?.toMillis?.() || 0;
-    return (now - lastMs) < 5 * 60 * 1000;
-  }).length;
   c.innerHTML = `
     <div class="adm-section-hd">📊 Статистика платформы</div>
     <div class="adm-stat-grid">
-      <div class="adm-stat"><div class="adm-stat-val">${usersSnap.docs.length}</div><div class="adm-stat-lbl">👥 Пользователей</div></div>
-      <div class="adm-stat"><div class="adm-stat-val" style="color:#10b981">${onlineCount}</div><div class="adm-stat-lbl">🟢 Онлайн сейчас</div></div>
-      <div class="adm-stat"><div class="adm-stat-val" style="color:#1d9bf0">${verifiedCount}</div><div class="adm-stat-lbl">✔️ Верифицированных</div></div>
-      <div class="adm-stat"><div class="adm-stat-val" style="color:#f59e0b">${channelsSnap.docs.length}</div><div class="adm-stat-lbl">📢 Каналов</div></div>
-      <div class="adm-stat"><div class="adm-stat-val">${groupsSnap.docs.length}</div><div class="adm-stat-lbl">💬 Групп</div></div>
-      <div class="adm-stat"><div class="adm-stat-val" style="color:#ef4444">${bannedCount}</div><div class="adm-stat-lbl">🚫 Заблокированных</div></div>
+      <div class="adm-stat"><div class="adm-stat-val">${usersCount.data().count}</div><div class="adm-stat-lbl">👥 Пользователей</div></div>
+      <div class="adm-stat"><div class="adm-stat-val" style="color:#10b981">${onlineCount.data().count}</div><div class="adm-stat-lbl">🟢 Онлайн сейчас</div></div>
+      <div class="adm-stat"><div class="adm-stat-val" style="color:#1d9bf0">${verifiedSnap.data().count}</div><div class="adm-stat-lbl">✔️ Верифицированных</div></div>
+      <div class="adm-stat"><div class="adm-stat-val" style="color:#f59e0b">${channelsCount.data().count}</div><div class="adm-stat-lbl">📢 Каналов</div></div>
+      <div class="adm-stat"><div class="adm-stat-val">${groupsCount.data().count}</div><div class="adm-stat-lbl">💬 Групп</div></div>
+      <div class="adm-stat"><div class="adm-stat-val" style="color:#ef4444">${bannedSnap.data().count}</div><div class="adm-stat-lbl">🚫 Заблокированных</div></div>
     </div>
     <div class="adm-section-hd">⚙️ Инфо</div>
     <div style="font-size:.82rem;color:var(--t2);line-height:2">
-      <div>👑 Администраторов: <b>${adminCount}</b></div>
+      <div>👑 Администраторов: <b>${adminSnap.data().count}</b></div>
       <div>🗄️ Firestore: <span style="color:#10b981">активно</span></div>
       <div>🔐 Firebase Auth: <span style="color:#10b981">активно</span></div>
       <div>👤 Вы: <b>${esc(ME.username)}</b> (admin)</div>
@@ -4339,7 +4669,8 @@ window.adminLoadUsers = async (search) => {
     const term = search.trim().toLowerCase();
     snap = await getDocs(query(collection(db,'users'), where('usernameLower','>=',term), where('usernameLower','<=',term+'\uf8ff'), limit(30)));
   } else {
-    snap = await getDocs(query(collection(db,'users'), orderBy('username'), limit(60)));
+    c.innerHTML = searchEl + '<div style="color:var(--t3);font-size:.85rem;text-align:center;padding:2rem 1rem">🔍 Введи ник для поиска пользователя</div>';
+    return;
   }
   if (snap.empty) {
     c.innerHTML = searchEl + '<div class="empty"><div class="ei">👥</div><div class="et">Никого не найдено</div></div>';
@@ -4552,6 +4883,7 @@ let channelPostsUnsub = null;
 let chanType = 'public'; // for creation
 let chanImgB64 = null;
 let _chanData = null; // current channel data cache
+let _chanPosts = []; // current channel posts cache (for chanReact without re-reads)
 
 const CHAN_EMOJIS = ['📢','📰','🎵','🎮','🏀','⚽','🎨','📸','🍕','✈️','🚀','💡','🔥','💎','🌍','🎬','📚','💪','🎯','🦁','🐱','🐶','🌸','🍀','⚡','🌈','👑','🛡️','🎭','🎪'];
 
@@ -4597,7 +4929,7 @@ window.openChannel = async id => {
   renderChannelHeader(_chanData);
   openOv('channel-ov');
   // Increment view of channel itself
-  updateDoc(doc(db,'channels',id), { viewCount: (_chanData.viewCount||0)+1 }).catch(()=>{});
+  updateDoc(doc(db,'channels',id), { viewCount: increment(1) }).catch(()=>{});
   // Listen posts
   const q2 = query(collection(db,'channels',id,'posts'), orderBy('ts','desc'), limit(40));
   channelPostsUnsub = onSnapshot(q2, snap2 => {
@@ -4638,6 +4970,7 @@ function renderChannelHeader(ch) {
 }
 
 function renderChannelPosts(posts, ch) {
+  _chanPosts = posts; // cache for chanReact — no re-read needed
   const el = document.getElementById('ch-ov-posts');
   if (!posts.length) {
     el.innerHTML = '<div class="empty"><div class="ei">📢</div><div class="et">Нет постов<br><small style="font-size:.75rem;color:var(--t3)">Будьте первым!</small></div></div>';
@@ -4681,26 +5014,25 @@ window.closeChannelOv = () => {
 // ─── Subscribe / Unsubscribe ──────────────────────────────────────────────────
 window.toggleChannelSubscribe = async () => {
   if (!currentChannelId) return;
-  const ch = _chanData;
-  const isSubscribed = (ch.subscribers||[]).includes(ME.uid);
+  const isSubscribed = (_chanData.subscribers||[]).includes(ME.uid);
   if (isSubscribed) {
     await updateDoc(doc(db,'channels',currentChannelId), { subscribers: arrayRemove(ME.uid) });
+    _chanData.subscribers = (_chanData.subscribers||[]).filter(u => u !== ME.uid);
     toast('Вы отписались от канала');
   } else {
     await updateDoc(doc(db,'channels',currentChannelId), { subscribers: arrayUnion(ME.uid) });
+    _chanData.subscribers = [...(_chanData.subscribers||[]), ME.uid];
     toast('Вы подписались на канал! 🔔');
   }
-  // Refresh header
-  const snap = await getDoc(doc(db,'channels',currentChannelId));
-  if (snap.exists()) { _chanData = {id:currentChannelId,...snap.data()}; renderChannelHeader(_chanData); }
+  renderChannelHeader(_chanData); // update UI from local cache — no extra read
 };
 
 // ─── Reactions on posts ───────────────────────────────────────────────────────
 window.chanReact = async (chanId, postId, emoji) => {
+  // Find current reaction from cached post data — no read needed
+  const cachedPost = (_chanPosts||[]).find(p => p.id === postId);
+  const cur = cachedPost ? ((cachedPost.reactions||{})[ME.uid]) : undefined;
   const ref = doc(db,'channels',chanId,'posts',postId);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) return;
-  const cur = (snap.data().reactions||{})[ME.uid];
   if (cur === emoji) {
     await updateDoc(ref, { [`reactions.${ME.uid}`]: deleteField() });
   } else {
@@ -5056,12 +5388,17 @@ window.openGrpAvEditor = () => {
 // ══════════════════════════════
 // GROUP CALLS (WebRTC mesh, audio-only)
 // ══════════════════════════════
-const GC_ICE_CFG = { iceServers: [
+const GC_ICE_CFG = { iceTransportPolicy:'all', iceCandidatePoolSize:6, iceServers: [
   {urls:'stun:stun.l.google.com:19302'},
   {urls:'stun:stun1.l.google.com:19302'},
+  {urls:'stun:stun2.l.google.com:19302'},
+  {urls:'stun:stun.cloudflare.com:3478'},
+  {urls:'stun:stun.relay.metered.ca:80'},
   {urls:'turn:global.relay.metered.ca:80', username:'openrelayproject', credential:'openrelayproject'},
   {urls:'turn:global.relay.metered.ca:443', username:'openrelayproject', credential:'openrelayproject'},
-  {urls:'turn:global.relay.metered.ca:443?transport=tcp', username:'openrelayproject', credential:'openrelayproject'}
+  {urls:'turn:global.relay.metered.ca:443?transport=tcp', username:'openrelayproject', credential:'openrelayproject'},
+  {urls:'turn:openrelay.metered.ca:80', username:'openrelayproject', credential:'openrelayproject'},
+  {urls:'turn:openrelay.metered.ca:443', username:'openrelayproject', credential:'openrelayproject'}
 ]};
 
 let gcId = null, gcGid = null;
@@ -5259,6 +5596,7 @@ function handleGroupCallNotif(n) {
 const DRAW_WORDS = ['кот','собака','дом','машина','дерево','солнце','рыба','птица','цветок','самолёт','корабль','пицца','торт','книга','телефон','компьютер','велосипед','гитара','замок','мороженое','ракета','слон','жираф','лягушка','робот','пингвин','радуга','гриб','парашют','вулкан','маяк','снеговик','лев','тигр','кролик','дракон','зонт','поезд','горы','луна'];
 
 let drawRoomId = null;
+let _drawRoomState = null; // cached snapshot of current draw room
 let drawRoomUnsub = null;
 let drawIsDrawer = false;
 let drawCanvas = null, drawCtx = null;
@@ -5369,7 +5707,8 @@ function openDrawRoom(rid) {
   if (drawRoomUnsub) drawRoomUnsub();
   drawRoomUnsub = onSnapshot(doc(db,'draw_rooms',rid), snap => {
     if (!snap.exists()) return;
-    renderDrawGame(snap.data());
+    _drawRoomState = snap.data();
+    renderDrawGame(_drawRoomState);
   });
 }
 
@@ -5383,7 +5722,7 @@ window.leaveDrawGame = async () => {
       else await updateDoc(doc(db,'draw_rooms',drawRoomId), { players: pl });
     }
   }
-  drawRoomId = null; drawCurrentWord = null;
+  drawRoomId = null; drawCurrentWord = null; _drawRoomState = null;
   if (drawTimerInterval) { clearInterval(drawTimerInterval); drawTimerInterval = null; }
   closeOv('draw-ov');
 };
@@ -5504,12 +5843,9 @@ function renderDrawGame(state) {
 }
 
 window.startDrawGame = async () => {
-  if (!drawRoomId) return;
-  const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
-  if (!snap.exists()) return;
-  const state = snap.data();
-  if ((state.players||[]).length < 2) return toast('Нужно минимум 2 игрока');
-  await updateDrawRound(state, 1);
+  if (!drawRoomId || !_drawRoomState) return;
+  if ((_drawRoomState.players||[]).length < 2) return toast('Нужно минимум 2 игрока');
+  await updateDrawRound(_drawRoomState, 1);
 };
 
 async function updateDrawRound(state, roundNum) {
@@ -5526,14 +5862,11 @@ async function updateDrawRound(state, roundNum) {
 }
 
 window.nextDrawRound = async () => {
-  if (!drawRoomId) return;
-  const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
-  if (!snap.exists()) return;
-  const state = snap.data();
-  if (state.currentRound >= state.rounds) {
+  if (!drawRoomId || !_drawRoomState) return;
+  if (_drawRoomState.currentRound >= _drawRoomState.rounds) {
     await updateDoc(doc(db,'draw_rooms',drawRoomId), { phase: 'gameover' });
   } else {
-    await updateDrawRound(state, state.currentRound + 1);
+    await updateDrawRound(_drawRoomState, _drawRoomState.currentRound + 1);
   }
 };
 
@@ -5557,10 +5890,9 @@ function startDrawTimer(startAt, duration) {
     if (el) el.textContent = left;
     if (left <= 0) {
       clearInterval(drawTimerInterval); drawTimerInterval = null;
-      // host ends the round
-      const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
-      if (snap.exists() && snap.data().phase==='drawing' && snap.data().hostUid===ME.uid) {
-        await updateDoc(doc(db,'draw_rooms',drawRoomId), { phase:'roundend' });
+      // host ends the round — use cached state, no extra read
+      if (_drawRoomState?.phase === 'drawing' && _drawRoomState?.hostUid === ME.uid) {
+        await updateDoc(doc(db,'draw_rooms',drawRoomId), { phase:'roundend' }).catch(()=>{});
       }
     }
   }, 500);
@@ -5572,9 +5904,9 @@ window.sendDrawGuess = async () => {
   const guess = (inp?.value||'').trim();
   if (!guess || !drawRoomId) return;
   inp.value = '';
-  const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
-  if (!snap.exists()) return;
-  const state = snap.data();
+  // Use cached state — no extra getDoc read
+  if (!_drawRoomState) return;
+  const state = _drawRoomState;
   if (state.phase !== 'drawing') return;
   const correct = guess.toLowerCase() === (state.currentWord||'').toLowerCase();
   const alreadyGuessed = (state.guessedUids||[]).includes(ME.uid);
@@ -5657,11 +5989,10 @@ async function flushStroke() {
   if (!drawRoomId || drawStrokeBuffer.length < 2) { drawStrokeBuffer = []; return; }
   const stroke = { color: drawEraser?'#fff':drawColor, size: drawEraser?drawSize*2:drawSize, pts: drawStrokeBuffer };
   drawStrokeBuffer = [];
-  const snap = await getDoc(doc(db,'draw_rooms',drawRoomId));
-  if (snap.exists() && snap.data().phase==='drawing') {
-    const existing = snap.data().strokes || [];
-    if (existing.length > 400) return; // limit
-    await updateDoc(doc(db,'draw_rooms',drawRoomId), { strokes: arrayUnion(stroke) });
+  // Use cached state — no extra getDoc read
+  if (_drawRoomState?.phase === 'drawing') {
+    if ((_drawRoomState.strokes||[]).length > 400) return;
+    await updateDoc(doc(db,'draw_rooms',drawRoomId), { strokes: arrayUnion(stroke) }).catch(()=>{});
   }
 }
 function redrawCanvas(strokes) {
@@ -5867,17 +6198,15 @@ window.stopVideoCircle = send => {
     try {
       if (isGroup) {
         await addDoc(collection(db,'groups',target,'messages'), msgData);
-        const gSnap = await getDoc(doc(db,'groups',target));
-        const members = gSnap.data()?.members || [];
         const upd = { lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid };
-        members.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = (gSnap.data()?.['unread_'+u]||0)+1; });
+        _groupMembers.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = increment(1); });
         await updateDoc(doc(db,'groups',target), upd);
       } else {
         const key = chatKey(ME.uid, target);
         await addDoc(collection(db,'chats',key,'messages'), msgData);
         await setDoc(doc(db,'chats',key), {
           users: [ME.uid, target], lastMsg: preview, lastTs: serverTimestamp(), lastFrom: ME.uid,
-          ['unread_'+target]: (await getDoc(doc(db,'chats',key)).then(s => (s.data()?.['unread_'+target]||0)+1).catch(()=>1))
+          ['unread_'+target]: increment(1)
         }, { merge: true });
       }
       toast('Видеокружок отправлен 🎥');
@@ -5937,8 +6266,39 @@ let callSeconds2 = 0;
 let callMuted = false;
 let callVideoOff = false;
 let callIsVideo = false;
+let callIsSharing = false;
+let callScreenStream = null;
 let incomingCallUnsub = null;
 let callIceBuffer = []; // buffer ICE candidates until remote desc is set
+let _callWakeLock = null; // WakeLock to keep CPU/screen alive during calls
+let _callKeepAliveAudio = null; // silent audio loop to prevent background suspension
+
+// ── Start protections (wake lock + silent audio) when call begins ──
+async function _acquireCallWakeLock() {
+  // 1. Screen Wake Lock API — prevents device sleep
+  if (navigator.wakeLock) {
+    try { _callWakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+  }
+  // 2. Silent audio loop — keeps AudioContext alive in background on mobile/Chrome
+  try {
+    if (!_callKeepAliveAudio) {
+      const ctx = new AudioContext();
+      const buf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+      const src = ctx.createBufferSource();
+      src.buffer = buf; src.loop = true;
+      src.connect(ctx.destination);
+      src.start();
+      _callKeepAliveAudio = { ctx, src };
+    }
+  } catch(e) {}
+}
+
+function _releaseCallWakeLock() {
+  try { _callWakeLock?.release(); } catch(e) {}
+  _callWakeLock = null;
+  try { _callKeepAliveAudio?.src.stop(); _callKeepAliveAudio?.ctx.close(); } catch(e) {}
+  _callKeepAliveAudio = null;
+}
 
 function listenIncomingCalls() {
   if (!ME) return;
@@ -5965,6 +6325,7 @@ function listenIncomingCalls() {
 
 window.callUser = async (withVideo = false) => {
   if (!chatWith) return;
+  if (callPc) return toast('Вы уже в звонке');
   callIsVideo = withVideo;
   callRemoteUid = chatWith;
   // Create the call doc first
@@ -6000,34 +6361,45 @@ window.declineCall = async () => {
 
 async function initCallPeer(callId, role, video) {
   showCallOverlay(role === 'caller' ? 'Вызов...' : 'Подключение...', video);
+  await _acquireCallWakeLock(); // keep device awake + audio alive during call
+
+  // ── Acquire media ───────────────────────────────────────────────
   try {
     if (video) {
       try {
-        callStreamLocal = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-      } catch(camErr) {
-        // Camera unavailable — fall back to audio only
+        callStreamLocal = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }
+        });
+      } catch {
         toast('📷 Камера недоступна, продолжаем без видео');
         video = false;
-        callStreamLocal = await navigator.mediaDevices.getUserMedia({ audio: true });
+        callStreamLocal = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+        });
       }
     } else {
-      callStreamLocal = await navigator.mediaDevices.getUserMedia({ audio: true });
+      callStreamLocal = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+      });
     }
   } catch(e) {
-    let msg = 'Нет доступа к микрофону';
+    let msg = '🎤 Нет доступа к микрофону';
     if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError')
-      msg = '🚫 Доступ к микрофону запрещён — разреши в настройках браузера';
+      msg = '🚫 Разреши доступ к микрофону в настройках браузера';
     else if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError')
       msg = '🎤 Микрофон не найден — проверь подключение';
     else if (e.name === 'NotReadableError' || e.name === 'TrackStartError')
       msg = '🎤 Микрофон занят другим приложением';
-    else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia)
+    else if (!navigator.mediaDevices?.getUserMedia)
       msg = '⚠️ Звонки работают только по HTTPS';
     toast(msg);
     await updateDoc(doc(db,'calls',callId), { status: 'failed' }).catch(()=>{});
     hideCallOverlay();
     return;
   }
+
+  // ── Local video preview ─────────────────────────────────────────
   if (video) {
     const localVid = document.getElementById('call-local-vid');
     localVid.srcObject = callStreamLocal;
@@ -6035,69 +6407,96 @@ async function initCallPeer(callId, role, video) {
     localVid.play().catch(()=>{});
     document.getElementById('call-vid-wrap').classList.add('on');
     document.getElementById('call-vid-btn').style.display = '';
+    document.getElementById('call-vid-lbl').style.display = '';
   }
+
+  // ── Peer connection ─────────────────────────────────────────────
   callPc = new RTCPeerConnection(ICE_SERVERS);
   callStreamLocal.getTracks().forEach(t => callPc.addTrack(t, callStreamLocal));
 
+  // Remote track → show video
   callPc.ontrack = e => {
+    if (!e.streams[0]) return;
     const rv = document.getElementById('call-remote-vid');
-    if (!document.getElementById('call-vid-wrap').classList.contains('on') && e.streams[0].getVideoTracks().length) {
+    if (e.streams[0].getVideoTracks().length &&
+        !document.getElementById('call-vid-wrap').classList.contains('on')) {
       document.getElementById('call-vid-wrap').classList.add('on');
     }
     if (rv.srcObject !== e.streams[0]) {
       rv.srcObject = e.streams[0];
       rv.play().catch(()=>{});
     }
-    document.getElementById('call-status').textContent = 'В звонке';
-    startCallTimer();
   };
 
+  // Connection state machine
+  let _reconnectTimer = null;
   callPc.onconnectionstatechange = () => {
     const s = callPc?.connectionState;
-    if (s === 'failed') { toast('Не удалось установить связь'); endCall(); }
-    if (s === 'disconnected') document.getElementById('call-status').textContent = 'Подбираем связь...';
-  };
-
-  // Trickle ICE — send each candidate as it appears
-  callPc.onicecandidate = async ev => {
-    if (ev.candidate) {
-      await addDoc(collection(db,'calls',callId, role+'Cands'), ev.candidate.toJSON()).catch(()=>{});
+    const stEl = document.getElementById('call-status');
+    if (s === 'connected') {
+      if (stEl) stEl.textContent = 'В звонке';
+      startCallTimer();
+      if (_reconnectTimer) { clearTimeout(_reconnectTimer); _reconnectTimer = null; }
+    } else if (s === 'connecting') {
+      if (stEl) stEl.textContent = 'Соединение...';
+    } else if (s === 'disconnected') {
+      if (stEl) stEl.textContent = 'Связь прервана...';
+      // Attempt ICE restart after 4s
+      _reconnectTimer = setTimeout(() => {
+        if (callPc?.connectionState === 'disconnected') {
+          callPc.restartIce();
+          if (stEl) stEl.textContent = 'Переподключение...';
+        }
+      }, 4000);
+    } else if (s === 'failed') {
+      clearTimeout(_reconnectTimer);
+      toast('📵 Не удалось установить связь');
+      endCall();
     }
   };
 
-  // Helper: wait for ICE gathering to complete (max 6s)
-  function waitForIce(pc) {
-    return new Promise(resolve => {
-      if (pc.iceGatheringState === 'complete') { resolve(); return; }
-      const t = setTimeout(resolve, 6000);
-      pc.onicegatheringstatechange = () => { if (pc.iceGatheringState === 'complete') { clearTimeout(t); resolve(); } };
-    });
-  }
+  // Trickle ICE — send each candidate immediately as it appears
+  callPc.onicecandidate = ev => {
+    if (ev.candidate) {
+      addDoc(collection(db,'calls',callId, role+'Cands'), ev.candidate.toJSON()).catch(()=>{});
+    }
+  };
 
   const callRef = doc(db,'calls',callId);
 
   if (role === 'caller') {
+    // Create offer & set local SDP — ICE candidates trickled via onicecandidate
     const offer = await callPc.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: video });
     await callPc.setLocalDescription(offer);
-    await waitForIce(callPc);
+    // Send offer immediately — don't wait for ICE gathering
     await updateDoc(callRef, { offer: { sdp: callPc.localDescription.sdp, type: callPc.localDescription.type } }).catch(()=>{});
 
+    // Auto-hangup if no answer in 45s
+    const _noAnswerTimer = setTimeout(() => {
+      if (callPc && callPc.connectionState !== 'connected') {
+        toast('Нет ответа');
+        endCall();
+      }
+    }, 45000);
+
     callUnsub = onSnapshot(callRef, async snap => {
-      if (!snap.exists()) { endCall(); return; }
+      if (!snap.exists()) { clearTimeout(_noAnswerTimer); endCall(); return; }
       const d = snap.data();
       if (d.answer && callPc && !callPc.currentRemoteDescription) {
+        clearTimeout(_noAnswerTimer);
         await callPc.setRemoteDescription(new RTCSessionDescription(d.answer)).catch(()=>{});
-        // flush buffered ICE candidates
+        // Flush buffered callee ICE candidates
         for (const cand of callIceBuffer) {
           await callPc.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
         }
         callIceBuffer = [];
       }
-      if (d.status === 'declined') { toast('📵 Звонок отклонён'); endCall(); }
-      if (d.status === 'ended') endCall();
-      if (d.status === 'failed') { toast('Не удалось соединиться'); endCall(); }
+      if (d.status === 'declined') { clearTimeout(_noAnswerTimer); toast('📵 Звонок отклонён'); endCall(); }
+      if (d.status === 'ended')  { clearTimeout(_noAnswerTimer); endCall(); }
+      if (d.status === 'failed') { clearTimeout(_noAnswerTimer); toast('Не удалось соединиться'); endCall(); }
     });
-    // Also pick up callee ICE candidates after remote is set
+
+    // Pick up callee ICE candidates (buffer until remote desc is set)
     callIceSub = onSnapshot(collection(db,'calls',callId,'calleeCands'), snap => {
       snap.docChanges().forEach(async ch => {
         if (ch.type !== 'added') return;
@@ -6108,30 +6507,49 @@ async function initCallPeer(callId, role, video) {
         }
       });
     });
+
   } else {
-    // callee: get offer from Firestore (retry a couple times in case of slow write)
+    // callee: fetch offer (retry up to 8×500ms = 4s)
     let offerData = null;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
       const snap = await getDoc(callRef);
       offerData = snap.data()?.offer;
       if (offerData) break;
-      await new Promise(r => setTimeout(r, 600));
+      await new Promise(r => setTimeout(r, 500));
     }
     if (!offerData) { toast('Звонок уже завершён'); hideCallOverlay(); return; }
+
     await callPc.setRemoteDescription(new RTCSessionDescription(offerData));
+
+    // Subscribe to caller ICE candidates BEFORE creating answer (avoids missing candidates)
+    callIceSub = onSnapshot(collection(db,'calls',callId,'callerCands'), snap => {
+      snap.docChanges().forEach(async ch => {
+        if (ch.type !== 'added' || !callPc) return;
+        if (callPc.currentRemoteDescription) {
+          await callPc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{});
+        } else {
+          callIceBuffer.push(ch.doc.data());
+        }
+      });
+    });
+
     const answer = await callPc.createAnswer();
     await callPc.setLocalDescription(answer);
-    await waitForIce(callPc);
-    await updateDoc(callRef, { answer: { sdp: callPc.localDescription.sdp, type: callPc.localDescription.type }, status: 'answered' }).catch(()=>{});
+    // Send answer immediately — don't wait for ICE gathering
+    await updateDoc(callRef, {
+      answer: { sdp: callPc.localDescription.sdp, type: callPc.localDescription.type },
+      status: 'answered'
+    }).catch(()=>{});
+
+    // Flush any buffered ICE candidates (arrived before setRemoteDescription)
+    for (const cand of callIceBuffer) {
+      await callPc.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
+    }
+    callIceBuffer = [];
+
     callUnsub = onSnapshot(callRef, snap => {
       if (!snap.exists()) { endCall(); return; }
       if (snap.data()?.status === 'ended') endCall();
-    });
-    callIceSub = onSnapshot(collection(db,'calls',callId,'callerCands'), snap => {
-      snap.docChanges().forEach(async ch => {
-        if (ch.type === 'added' && callPc)
-          await callPc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{});
-      });
     });
   }
 }
@@ -6148,7 +6566,15 @@ function showCallOverlay(status, video) {
   document.getElementById('call-status').textContent = status;
   document.getElementById('call-timer-el').textContent = '';
   document.getElementById('call-muted-btn').textContent = '🎤';
-  callMuted = false; callVideoOff = false;
+  callMuted = false; callVideoOff = false; callIsSharing = false;
+  // Show/hide video + screen share buttons
+  const showVid = video ? '' : 'none';
+  document.getElementById('call-vid-btn').style.display = showVid;
+  document.getElementById('call-vid-lbl').style.display = showVid;
+  document.getElementById('call-share-btn').style.display = showVid;
+  document.getElementById('call-share-lbl').style.display = showVid;
+  document.getElementById('call-share-btn').textContent = '🖥️';
+  document.getElementById('call-share-btn').classList.remove('active');
   document.getElementById('call-ov').classList.add('on');
 }
 
@@ -6156,6 +6582,9 @@ function hideCallOverlay() {
   document.getElementById('call-ov').classList.remove('on');
   document.getElementById('call-vid-wrap').classList.remove('on');
   document.getElementById('call-vid-btn').style.display = 'none';
+  document.getElementById('call-vid-lbl').style.display = 'none';
+  document.getElementById('call-share-btn').style.display = 'none';
+  document.getElementById('call-share-lbl').style.display = 'none';
 }
 
 function startCallTimer() {
@@ -6169,9 +6598,12 @@ function startCallTimer() {
 }
 
 window.endCall = async () => {
+  _releaseCallWakeLock(); // release wake lock and silent audio
   if (callUnsub) { callUnsub(); callUnsub = null; }
   if (callIceSub) { callIceSub(); callIceSub = null; }
   if (callTimerInt) { clearInterval(callTimerInt); callTimerInt = null; }
+  if (callScreenStream) { callScreenStream.getTracks().forEach(t => t.stop()); callScreenStream = null; }
+  callIsSharing = false;
   if (callPc) { callPc.close(); callPc = null; }
   if (callStreamLocal) { callStreamLocal.getTracks().forEach(t => t.stop()); callStreamLocal = null; }
   callIceBuffer = [];
@@ -6184,6 +6616,49 @@ window.endCall = async () => {
   }
   callDocId = null; callRemoteUid = null; callRole = null;
   hideCallOverlay();
+};
+
+window.toggleScreenShare = async () => {
+  if (!callPc || !callStreamLocal) return toast('Нет активного видеозвонка');
+  if (!callIsSharing) {
+    try {
+      callScreenStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: 'always' }, audio: false });
+      const screenTrack = callScreenStream.getVideoTracks()[0];
+      const sender = callPc.getSenders().find(s => s.track && s.track.kind === 'video');
+      if (sender) {
+        await sender.replaceTrack(screenTrack);
+      }
+      // Show screen in local preview
+      const previewStream = new MediaStream([screenTrack]);
+      const lv = document.getElementById('call-local-vid');
+      lv.srcObject = previewStream;
+      callIsSharing = true;
+      document.getElementById('call-share-btn').textContent = '🛑';
+      document.getElementById('call-share-btn').classList.add('active');
+      document.getElementById('call-share-lbl').textContent = 'Стоп';
+      toast('🖥️ Демонстрация экрана начата');
+      // Stop screen share when user closes the picker
+      screenTrack.onended = () => { if (callIsSharing) toggleScreenShare(); };
+    } catch(e) {
+      callScreenStream = null;
+      if (e.name !== 'NotAllowedError') toast('Не удалось поделиться экраном');
+    }
+  } else {
+    // Revert to camera track
+    if (callScreenStream) { callScreenStream.getTracks().forEach(t => t.stop()); callScreenStream = null; }
+    const cameraTrack = callStreamLocal.getVideoTracks()[0];
+    if (cameraTrack) {
+      const sender = callPc.getSenders().find(s => s.track && s.track.kind === 'video');
+      if (sender) await sender.replaceTrack(cameraTrack);
+    }
+    const lv = document.getElementById('call-local-vid');
+    lv.srcObject = callStreamLocal;
+    callIsSharing = false;
+    document.getElementById('call-share-btn').textContent = '🖥️';
+    document.getElementById('call-share-btn').classList.remove('active');
+    document.getElementById('call-share-lbl').textContent = 'Экран';
+    toast('Демонстрация остановлена');
+  }
 };
 
 window.toggleMute = () => {
@@ -6300,8 +6775,12 @@ window.openNotifCenter = () => {
 };
 
 window.clearAllNotifs = async () => {
-  const snap = await getDocs(query(collection(db, 'notifications'), where('to', '==', ME.uid)));
-  await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+  const snap = await getDocs(query(collection(db, 'notifications'), where('to', '==', ME.uid), limit(100)));
+  if (snap.docs.length) {
+    const wb = writeBatch(db);
+    snap.docs.forEach(d => wb.delete(d.ref));
+    await wb.commit().catch(() => {});
+  }
   document.getElementById('notif-list').innerHTML = '<div class="empty"><div class="ei">🔔</div><div class="et">Нет уведомлений</div></div>';
 };
 
