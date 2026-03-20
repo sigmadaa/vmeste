@@ -439,12 +439,16 @@ button,input,textarea{font-family:inherit;}
 .notif-list{flex:1;overflow-y:auto;}
 .notif-item{display:flex;align-items:flex-start;gap:.7rem;padding:.85rem 1rem;border-bottom:1px solid var(--brd);cursor:pointer;transition:background .15s;position:relative;}
 .notif-item:active{background:var(--bg3);}
+.notif-item.unread{background:color-mix(in srgb,var(--pu) 6%,transparent);}
 .notif-item.unread::after{content:'';position:absolute;left:.3rem;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--pu);}
-.notif-av{width:42px;height:42px;border-radius:50%;background:var(--bg4);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.notif-av{width:44px;height:44px;border-radius:50%;background:var(--bg4);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
 .notif-body{flex:1;min-width:0;}
 .notif-title{font-size:.88rem;font-weight:700;}
-.notif-sub{font-size:.78rem;color:var(--t3);margin-top:.12rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.notif-sub{font-size:.78rem;color:var(--t3);margin-top:.12rem;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
 .notif-time{font-size:.65rem;color:var(--t3);flex-shrink:0;margin-top:.15rem;}
+.notif-del{opacity:0;background:transparent;border:none;color:var(--t3);font-size:.85rem;cursor:pointer;padding:.2rem .4rem;border-radius:8px;margin-top:.2rem;transition:opacity .2s,background .2s;line-height:1;}
+.notif-item:hover .notif-del,.notif-item:active .notif-del{opacity:1;}
+.notif-del:hover{background:var(--bg4);color:var(--rd);}
 /* top banner for in-app notifications */
 #notif-banner{position:fixed;top:.6rem;left:50%;transform:translateX(-50%) translateY(-120%);background:var(--bg4);border:1px solid var(--brd2);border-radius:16px;padding:.7rem 1rem;z-index:600;width:calc(100% - 2rem);max-width:400px;display:flex;align-items:center;gap:.7rem;box-shadow:0 6px 24px #0008;transition:transform .3s cubic-bezier(.4,0,.2,1);}
 #notif-banner.on{transform:translateX(-50%) translateY(0);}
@@ -897,7 +901,6 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
           <span class="srch-ico">🔍</span>
           <input class="srch" placeholder="Найти пользователя..." oninput="frSearch(this.value)"/>
         </div>
-        <button onclick="showAllUsers()" style="margin:.5rem 1rem;width:calc(100% - 2rem);padding:.6rem;border:1px dashed var(--brd2);border-radius:.75rem;background:transparent;color:var(--tx2);font-size:.9rem;cursor:pointer">👥 Показать всех пользователей</button>
       </div>
       <div id="fr-sr-res"></div>
       <div id="fr-reqs-sec"></div>
@@ -2287,8 +2290,9 @@ function listenMessages(target) {
       } else if (m.type === 'videocircle') {
         imgCache[mid] = m.url;
         const fmtDur2 = d => { const s=Math.round(d||0); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+        // NOTE: src is set programmatically after innerHTML to avoid base64 sanitization
         content = `<div class="vc-wrap"><div class="vc-outer" id="vco-${mid}" onclick="event.stopPropagation();vcToggle('${mid}')">
-          <video id="vcv-${mid}" src="${m.url}" playsinline loop style="width:100%;height:100%;object-fit:cover;display:block"></video>
+          <video id="vcv-${mid}" data-mid="${mid}" playsinline loop style="width:100%;height:100%;object-fit:cover;display:block"></video>
           <div class="vc-play-ico">▶️</div>
           <div class="vc-dur">${fmtDur2(m.duration)}</div>
         </div></div>`;
@@ -2337,6 +2341,11 @@ function listenMessages(target) {
     }).join('');
     const wasBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
     el.innerHTML = html;
+    // Set video circle src programmatically — base64 data URLs break when set via innerHTML
+    el.querySelectorAll('video[data-mid]').forEach(v => {
+      const id = v.dataset.mid;
+      if (imgCache[id]) v.src = imgCache[id];
+    });
     if (!isGroup) ensureTypingEl(el);
     if (firstLoad || wasBottom) el.scrollTop = el.scrollHeight;
     firstLoad = false;
@@ -6680,6 +6689,7 @@ window.toggleCallVideo = () => {
 // ══════════════════════════════
 let notifUnsub = null;
 let notifBannerTimer = null;
+let _notifItems = []; // cached notification list
 
 function listenNotifications() {
   if (!ME) return;
@@ -6692,6 +6702,7 @@ function listenNotifications() {
   );
   notifUnsub = onSnapshot(q2, snap => {
     const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    _notifItems = items; // keep cache up to date
     const unread = items.filter(n => !n.read).length;
     setBadge('tb-notif-bdg', unread);
     // Show banner for latest if it just arrived (within 8s)
@@ -6732,16 +6743,20 @@ function renderNotifList(items) {
     el.innerHTML = '<div class="empty"><div class="ei">🔔</div><div class="et">Нет уведомлений</div></div>';
     return;
   }
+  const typeIcon = { message:'💬', friend_req:'👥', game_invite:'🎮', call:'📞', group_call:'📞', mention:'@', like:'❤️', system:'🔔' };
   el.innerHTML = items.map(n => {
-    const ico = n.type === 'message' ? '💬' : n.type === 'friend_req' ? '👥' : n.type === 'game_invite' ? '🎮' : '🔔';
+    const ico = n.fromAv || typeIcon[n.type] || '🔔';
     const tsStr = n.ts ? fmtAgo(n.ts.toDate()) : '';
     return `<div class="notif-item${n.read ? '' : ' unread'}" onclick="handleNotifClick('${n.id}','${n.type||''}','${esc(n.payload||'')}')">
-      <div class="notif-av">${esc(n.fromAv || ico)}</div>
+      <div class="notif-av">${esc(ico)}</div>
       <div class="notif-body">
         <div class="notif-title">${esc(n.title || '')}</div>
-        <div class="notif-sub">${esc(n.body || '')}</div>
+        ${n.body ? `<div class="notif-sub">${esc(n.body)}</div>` : ''}
       </div>
-      <div class="notif-time">${tsStr}</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;flex-shrink:0;gap:.2rem">
+        <div class="notif-time">${tsStr}</div>
+        <button class="notif-del" onclick="event.stopPropagation();deleteNotif('${n.id}')">✕</button>
+      </div>
     </div>`;
   }).join('');
 }
@@ -6764,14 +6779,17 @@ function showNotifBanner(n) {
 
 window.openNotifCenter = () => {
   document.getElementById('notif-ov').classList.add('on');
-  // Load and render current notifs
-  getDocs(query(collection(db, 'notifications'), where('to', '==', ME.uid), orderBy('ts', 'desc'), limit(50))).then(snap => {
-    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderNotifList(items);
-    // Mark all read
-    snap.docs.filter(d => !d.data().read).forEach(d => updateDoc(d.ref, { read: true }).catch(() => {}));
+  // Use cached items — no extra Firestore read
+  renderNotifList(_notifItems);
+  // Mark all unread as read in one batch
+  const unreadItems = _notifItems.filter(n => !n.read);
+  if (unreadItems.length) {
+    const wb = writeBatch(db);
+    unreadItems.forEach(n => wb.update(doc(db, 'notifications', n.id), { read: true }));
+    wb.commit().catch(() => {});
+    _notifItems = _notifItems.map(n => ({ ...n, read: true }));
     setBadge('tb-notif-bdg', 0);
-  });
+  }
 };
 
 window.clearAllNotifs = async () => {
@@ -6781,7 +6799,16 @@ window.clearAllNotifs = async () => {
     snap.docs.forEach(d => wb.delete(d.ref));
     await wb.commit().catch(() => {});
   }
+  _notifItems = [];
   document.getElementById('notif-list').innerHTML = '<div class="empty"><div class="ei">🔔</div><div class="et">Нет уведомлений</div></div>';
+  setBadge('tb-notif-bdg', 0);
+};
+
+window.deleteNotif = async nid => {
+  _notifItems = _notifItems.filter(n => n.id !== nid);
+  renderNotifList(_notifItems);
+  setBadge('tb-notif-bdg', _notifItems.filter(n => !n.read).length);
+  await deleteDoc(doc(db, 'notifications', nid)).catch(() => {});
 };
 
 window.handleNotifClick = (nid, type, payload) => {
