@@ -1753,16 +1753,14 @@ async function initFCM() {
     const swReg = await navigator.serviceWorker.ready;
     const token = await getToken(messaging, { vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: swReg });
     if (token && ME?.uid) {
-      const stored = localStorage.getItem('fcmToken');
-      if (stored !== token) {
-        const uRef = doc(db, 'users', ME.uid);
-        const uSnap = await getDoc(uRef);
-        const existing = uSnap.data()?.fcmTokens || [];
-        if (!existing.includes(token)) {
-          await updateDoc(uRef, { fcmTokens: [...existing, token] }).catch(() => {});
-        }
-        localStorage.setItem('fcmToken', token);
+      const uRef = doc(db, 'users', ME.uid);
+      const uSnap = await getDoc(uRef);
+      const existing = uSnap.data()?.fcmTokens || [];
+      if (!existing.includes(token)) {
+        await updateDoc(uRef, { fcmTokens: [...existing, token] }).catch(e => console.warn('FCM token save error:', e));
+        console.log('FCM token saved');
       }
+      localStorage.setItem('fcmToken', token);
     }
   } catch(e) {
     // VAPID key not set yet or permission denied — silent
