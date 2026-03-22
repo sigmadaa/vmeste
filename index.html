@@ -978,6 +978,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
         <div class="pmi" onclick="openQrCode()"><span class="pmi-ic">🔲</span><span class="pmi-tx">Мой QR-код</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openOv('download-ov')"><span class="pmi-ic">📲</span><span class="pmi-tx">Скачать приложение</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="toggleTheme()"><span class="pmi-ic" id="theme-ic">🌙</span><span class="pmi-tx" id="theme-tx">Светлая тема</span><span class="pmi-ar">›</span></div>
+        <div class="pmi" id="notif-toggle-btn" onclick="toggleNotifPerm()"><span class="pmi-ic">🔔</span><span class="pmi-tx" id="notif-toggle-tx">Уведомления: проверяю...</span><span class="pmi-ar">›</span></div>
       </div>
       <div id="pr-act"></div>
       <div class="pr-menu" style="margin-top:0">
@@ -3210,6 +3211,7 @@ function renderProfile() {
   const vmtx = document.getElementById('verify-menu-tx');
   if (vmtx) vmtx.textContent = ME.verified ? 'Верифицирован ✔' : 'Запросить верификацию';
   loadAdminVerifyBadge();
+  updateNotifToggleTx();
 }
 
 window.openAvModal = () => {
@@ -6440,6 +6442,29 @@ window.toggleTheme = () => {
   document.querySelector('meta[name="theme-color"]').content = isLight ? '#ffffff' : '#a855f7';
 };
 
+function updateNotifToggleTx() {
+  const tx = document.getElementById('notif-toggle-tx');
+  if (!tx) return;
+  const p = Notification.permission;
+  if (p === 'granted') tx.textContent = 'Уведомления: Включены ✔';
+  else if (p === 'denied') tx.textContent = 'Уведомления: Заблокированы ✖ (разреши в браузере)';
+  else tx.textContent = 'Уведомления: Нажми чтобы включить';
+}
+window.toggleNotifPerm = async () => {
+  const p = Notification.permission;
+  if (p === 'denied') {
+    toast('Разреши уведомления в настройках браузера (🔒 рядом с адресной строкой)');
+    return;
+  }
+  if (p === 'granted') {
+    toast('Уведомления уже включены ✔');
+    return;
+  }
+  await Notification.requestPermission().catch(() => {});
+  updateNotifToggleTx();
+  if (Notification.permission === 'granted') toast('Уведомления включены! 🔔');
+};
+
 // ══════════════════════════════
 // ADD TO GROUP
 // ══════════════════════════════
@@ -6720,6 +6745,11 @@ function listenIncomingCalls() {
         });
         _cn.onclick = () => { window.focus(); _cn.close(); };
       } catch(_) {}
+    } else if (Notification.permission === 'default') {
+      // Попроси разрешение прямо во время звонка
+      Notification.requestPermission().then(p => {
+        updateNotifToggleTx();
+      }).catch(() => {});
     }
   });
 }
@@ -6730,8 +6760,9 @@ window.callUser = async (withVideo = false) => {
   callIsVideo = withVideo;
   callRemoteUid = chatWith;
   // Create the call doc first
+  const callerName = ME.displayName || ME.username;
   const callRef = await addDoc(collection(db,'calls'), {
-    from: ME.uid, fromName: ME.username, fromAv: ME.av||'👤',
+    from: ME.uid, fromName: callerName, fromAv: ME.av||'👤',
     to: chatWith, status: 'calling', video: withVideo, ts: serverTimestamp()
   });
   callDocId = callRef.id;
