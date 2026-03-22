@@ -1725,6 +1725,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, RecaptchaVerifier, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, limit, onSnapshot, addDoc, serverTimestamp, getDocs, arrayUnion, arrayRemove, deleteDoc, deleteField, increment, writeBatch, getCountFromServer } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-messaging.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwDwvEmDyrXoR3DAGesHmxpJsflWV6Wng",
@@ -1739,6 +1740,39 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const messaging = getMessaging(app);
+
+// ── FCM: получить токен и сохранить в Firestore ──────────────────────────────
+// ЗАМЕНИ НА СВОЙ КЛЮЧ: Firebase Console → Project Settings → Cloud Messaging → Web Push certificates → Generate key pair
+const FCM_VAPID_KEY = 'BHQgzc9zKHlZgeV3u3idA4YFcC9niVZJ8_jGC19hbAiweFDnX8VA2PLPt8Sgs50nXZKP48WeoFOBNIjPDGwUf-Y';
+
+async function initFCM() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const swReg = await navigator.serviceWorker.ready;
+    const token = await getToken(messaging, { vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: swReg });
+    if (token && ME?.uid) {
+      const stored = localStorage.getItem('fcmToken');
+      if (stored !== token) {
+        await updateDoc(doc(db, 'users', ME.uid), { fcmToken: token }).catch(() => {});
+        localStorage.setItem('fcmToken', token);
+      }
+    }
+  } catch(e) {
+    // VAPID key not set yet or permission denied — silent
+    if (!e.message?.includes('REPLACE_WITH_YOUR_VAPID_KEY')) console.warn('FCM init:', e.message);
+  }
+}
+
+// Уведомления когда приложение открыто (foreground)
+onMessage(messaging, payload => {
+  // Если уже есть внутренний баннер через Firestore listener — не дублируем
+  // Просто обновляем счётчик если нужно
+  const data = payload.data || {};
+  if (data.type === 'message' && data.payload && chatWith === data.payload) return; // уже в этом чате
+  // иначе браузер сам не покажет foreground push — показываем через внутренний механизм Firestore
+});
 
 // ══════════════════════════════
 // STATE
@@ -2119,7 +2153,11 @@ function launchApp() {
   listenBroadcasts();
   // Request OS notification permission (once, with short delay for better UX)
   if ('Notification' in window && Notification.permission === 'default') {
-    setTimeout(() => Notification.requestPermission().catch(() => {}), 2500);
+    setTimeout(() => Notification.requestPermission().then(p => {
+      if (p === 'granted') initFCM();
+    }).catch(() => {}), 2500);
+  } else if (Notification.permission === 'granted') {
+    initFCM();
   }
   // Show download screen once on first login
   if (!localStorage.getItem('dlShown')) {
@@ -2726,6 +2764,17 @@ window.sendMsg = async () => {
     const upd = { lastMsg: txt, lastTs: serverTimestamp(), lastFrom: ME.uid };
     _groupMembers.filter(u => u !== ME.uid).forEach(u => { upd['unread_'+u] = increment(1); });
     await updateDoc(doc(db,'groups',target), upd);
+    // Уведомления участникам группы
+    const groupName = document.getElementById('cd-name')?.textContent || 'Группа';
+    _groupMembers.filter(u => u !== ME.uid).forEach(u => {
+      const isMentioned = (msgData.mentions||[]).includes(u);
+      sendNotif(u, 'message',
+        isMentioned ? `@${ME.username} упомянул тебя` : `${ME.username} в «${groupName}»`,
+        txt.substring(0, 80),
+        ME.av || '👤',
+        target
+      );
+    });
   } else {
     const key = chatKey(ME.uid, target);
     await addDoc(collection(db,'chats',key,'messages'), msgData);
@@ -2736,6 +2785,13 @@ window.sendMsg = async () => {
       lastFrom: ME.uid,
       ['unread_'+target]: increment(1)
     }, { merge: true });
+    // Уведомление собеседнику
+    sendNotif(target, 'message',
+      ME.displayName || ME.username,
+      txt.substring(0, 80),
+      ME.av || '👤',
+      ME.uid
+    );
   }
 };
 
@@ -3226,8 +3282,15 @@ async function renderFrList() {
 
 window.sendFr = async uid => {
   await updateDoc(doc(db,'users',ME.uid), { sentReq: arrayUnion(uid) });
-  await updateDoc(doc(db,'users',uid), { recvReq: arrayUnion(ME.uid) });
+  await updateDoc(doc(db,'users',uid), { recvReq: arrayUnion(ME.uid) }).catch(()=>{});
   ME.sentReq = [...(ME.sentReq||[]), uid];
+  // Уведомление о запросе в друзья
+  sendNotif(uid, 'friend_req',
+    `${ME.displayName || ME.username} хочет дружить`,
+    'Нажми чтобы принять запрос',
+    ME.av || '👤',
+    ME.uid
+  );
   toast('Запрос отправлен 📨'); renderFriends(); frSearch(document.querySelector('#tp-friends .srch').value);
 };
 window.acceptFr = async uid => {
@@ -5449,19 +5512,20 @@ let _chanPosts = []; // current channel posts cache (for chanReact without re-re
 const CHAN_EMOJIS = ['📢','📰','🎵','🎮','🏀','⚽','🎨','📸','🍕','✈️','🚀','💡','🔥','💎','🌍','🎬','📚','💪','🎯','🦁','🐱','🐶','🌸','🍀','⚡','🌈','👑','🛡️','🎭','🎪'];
 
 // ─── Channel list in chats tab ────────────────────────────────────────────────
+let _myChannelsOwned = []; // owned channels from second query
 function listenMyChannels() {
   if (!ME) return;
   const el = document.getElementById('channel-list');
-  // Listen to channels where user is subscriber or creator
-  const q1 = query(collection(db,'channels'), where('subscribers','array-contains',ME.uid), limit(30));
-  channelUnsub = onSnapshot(q1, snap => {
-    const channels = snap.docs.map(d=>({id:d.id,...d.data()}));
-    channels.sort((a,b)=>(b.lastPostTs?.seconds||0)-(a.lastPostTs?.seconds||0));
-    if (!channels.length) {
+  function renderChanList(subscribed) {
+    // merge subscribed + owned, deduplicate by id
+    const all = [...subscribed];
+    _myChannelsOwned.forEach(ch => { if (!all.find(c=>c.id===ch.id)) all.push(ch); });
+    all.sort((a,b)=>(b.lastPostTs?.seconds||0)-(a.lastPostTs?.seconds||0));
+    if (!all.length) {
       el.innerHTML = '<div class="empty" style="padding:1.5rem 0"><div class="ei">📢</div><div class="et">Нет каналов<br><small style="font-size:.75rem;color:var(--t3)">Найди или создай</small></div></div>';
       return;
     }
-    el.innerHTML = channels.map(ch => {
+    el.innerHTML = all.map(ch => {
       const isAdmin = ch.createdBy === ME.uid;
       const subs = (ch.subscribers||[]).length;
       const lastTxt = ch.lastPost ? ch.lastPost.substring(0,55)+(ch.lastPost.length>55?'…':'') : 'Нажми чтобы открыть';
@@ -5477,6 +5541,19 @@ function listenMyChannels() {
         </div>
       </div>`;
     }).join('');
+  }
+  // Query 1: subscribed channels
+  const q1 = query(collection(db,'channels'), where('subscribers','array-contains',ME.uid), limit(30));
+  let _latestSubscribed = [];
+  channelUnsub = onSnapshot(q1, snap => {
+    _latestSubscribed = snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderChanList(_latestSubscribed);
+  });
+  // Query 2: owned channels (creator may not be in subscribers)
+  const q2own = query(collection(db,'channels'), where('createdBy','==',ME.uid), limit(20));
+  onSnapshot(q2own, snap => {
+    _myChannelsOwned = snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderChanList(_latestSubscribed);
   });
 }
 
@@ -5870,17 +5947,24 @@ window.searchChannels = async q => {
   const resultsEl = document.getElementById('chan-disc-results');
   if (!resultsEl) return;
   resultsEl.innerHTML = '<div style="color:var(--t3);font-size:.82rem;padding:.5rem 0">Поиск...</div>';
-  const snap = await getDocs(query(collection(db,'channels'), where('isPublic','==',true), limit(30)));
-  const all = snap.docs.map(d=>({id:d.id,...d.data()})).filter(ch=>!ch.deleted);
+  // Fetch public channels + own channels (deduplicated)
+  const [snapPublic, snapOwn] = await Promise.all([
+    getDocs(query(collection(db,'channels'), where('isPublic','==',true), limit(40))).catch(()=>({docs:[]})),
+    getDocs(query(collection(db,'channels'), where('createdBy','==',ME.uid), limit(20))).catch(()=>({docs:[]}))
+  ]);
+  const map = new Map();
+  [...snapPublic.docs, ...snapOwn.docs].forEach(d => { if (!map.has(d.id)) map.set(d.id, {id:d.id,...d.data()}); });
+  const all = [...map.values()].filter(ch=>!ch.deleted);
   const term = q.trim().toLowerCase();
-  const filtered = term ? all.filter(ch=>ch.name.toLowerCase().includes(term)) : all;
+  const filtered = term ? all.filter(ch=>(ch.name||'').toLowerCase().includes(term)) : all;
   if (!filtered.length) { resultsEl.innerHTML = '<div style="color:var(--t3);font-size:.82rem;padding:.5rem 0">Ничего не найдено</div>'; return; }
   resultsEl.innerHTML = filtered.map(ch => {
-    const isJoined = (ch.subscribers||[]).includes(ME.uid);
+    const isJoined = (ch.subscribers||[]).includes(ME.uid) || ch.createdBy === ME.uid;
+    const verBadge = ch.verified ? ' <span class="vbadge"></span>' : '';
     return `<div class="chan-disc-item">
       <div class="chi-av" ${ch.av&&ch.av.startsWith('data')?`style="background-image:url(${ch.av});background-size:cover;background-position:center"`:''}>${ch.av&&!ch.av.startsWith('data')?ch.av:''}</div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:.9rem;font-weight:700">${esc(ch.name)}</div>
+        <div style="font-size:.9rem;font-weight:700">${esc(ch.name)}${verBadge}</div>
         <div style="font-size:.75rem;color:var(--t3)">${esc(ch.description||'')}</div>
         <div style="font-size:.7rem;color:var(--t3)">👥 ${(ch.subscribers||[]).length}</div>
       </div>
@@ -6744,7 +6828,10 @@ window.toggleNotifPerm = async () => {
   }
   await Notification.requestPermission().catch(() => {});
   updateNotifToggleTx();
-  if (Notification.permission === 'granted') toast('Уведомления включены! 🔔');
+  if (Notification.permission === 'granted') {
+    toast('Уведомления включены! 🔔');
+    initFCM();
+  }
 };
 
 // ══════════════════════════════
@@ -7620,6 +7707,8 @@ window.handleNotifClick = (nid, type, payload) => {
   else if (type === 'game_invite' && payload) acceptGameInviteById(payload);
 };
 
+const CF_WORKER_URL = 'https://throbbing-fog-6b92fcm-push.boblenok4556.workers.dev';
+
 async function sendNotif(toUid, type, title, body, fromAv, payload) {
   if (!toUid || toUid === ME.uid) return;
   await addDoc(collection(db, 'notifications'), {
@@ -7629,6 +7718,24 @@ async function sendNotif(toUid, type, title, body, fromAv, payload) {
     read: false,
     ts: serverTimestamp()
   }).catch(() => {});
+
+  // Send FCM push via Cloudflare Worker
+  try {
+    const uSnap = await getDoc(doc(db, 'users', toUid));
+    const fcmToken = uSnap.data()?.fcmToken;
+    if (!fcmToken) return;
+    fetch(CF_WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: fcmToken,
+        title: title,
+        body: body,
+        icon: fromAv?.startsWith('http') ? fromAv : 'https://sigmadaa.github.io/vn/icon.svg',
+        data: { type, payload: String(payload || '') }
+      })
+    }).catch(() => {});
+  } catch(e) {}
 }
 
 // ══════════════════════════════
