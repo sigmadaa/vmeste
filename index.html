@@ -1755,7 +1755,12 @@ async function initFCM() {
     if (token && ME?.uid) {
       const stored = localStorage.getItem('fcmToken');
       if (stored !== token) {
-        await updateDoc(doc(db, 'users', ME.uid), { fcmToken: token }).catch(() => {});
+        const uRef = doc(db, 'users', ME.uid);
+        const uSnap = await getDoc(uRef);
+        const existing = uSnap.data()?.fcmTokens || [];
+        if (!existing.includes(token)) {
+          await updateDoc(uRef, { fcmTokens: [...existing, token] }).catch(() => {});
+        }
         localStorage.setItem('fcmToken', token);
       }
     }
@@ -7722,19 +7727,21 @@ async function sendNotif(toUid, type, title, body, fromAv, payload) {
   // Send FCM push via Cloudflare Worker
   try {
     const uSnap = await getDoc(doc(db, 'users', toUid));
-    const fcmToken = uSnap.data()?.fcmToken;
-    if (!fcmToken) return;
-    fetch(CF_WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        token: fcmToken,
-        title: title,
-        body: body,
-        icon: fromAv?.startsWith('http') ? fromAv : 'https://sigmadaa.github.io/vn/icon.svg',
-        data: { type, payload: String(payload || '') }
-      })
-    }).catch(() => {});
+    const tokens = uSnap.data()?.fcmTokens || (uSnap.data()?.fcmToken ? [uSnap.data().fcmToken] : []);
+    if (!tokens.length) return;
+    tokens.forEach(fcmToken => {
+      fetch(CF_WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: fcmToken,
+          title: title,
+          body: body,
+          icon: fromAv?.startsWith('http') ? fromAv : 'https://sigmadaa.github.io/vn/icon.svg',
+          data: { type, payload: String(payload || '') }
+        })
+      }).catch(() => {});
+    });
   } catch(e) {}
 }
 
