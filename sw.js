@@ -16,8 +16,8 @@ const messaging = firebase.messaging();
 // Показывать уведомление когда приложение свёрнуто / закрыто
 messaging.onBackgroundMessage(payload => {
   const { title, body } = payload.notification || {};
-  self.registration.showNotification(title || 'Вместе', {
-    body: body || '',
+  self.registration.showNotification('Вместе', {
+    body: title ? (title + (body ? ': ' + body : '')) : (body || ''),
     icon: './icon.svg',
     badge: './icon.svg',
     data: payload.data || {},
