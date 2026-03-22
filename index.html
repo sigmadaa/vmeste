@@ -19,6 +19,8 @@
   --nav-h:58px;--top-h:52px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+img{-webkit-touch-callout:none;-webkit-user-drag:none;user-select:none;pointer-events:none;}
+canvas{-webkit-touch-callout:none;-webkit-user-drag:none;user-select:none;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--t1);font-size:16px;}
 button,input,textarea{font-family:inherit;}
@@ -75,7 +77,12 @@ button,input,textarea{font-family:inherit;}
 /* OVERLAY */
 .ov{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);}
 .ov.on{transform:translateX(0);}
-.ov-head{height:var(--top-h);background:var(--bg3);border-bottom:1px solid var(--brd);display:flex;align-items:center;padding:0 .5rem;gap:.5rem;flex-shrink:0;}
+.ov-head{height:var(--top-h);background:var(--bg3);border-bottom:1px solid var(--brd);display:flex;align-items:center;padding:0 .5rem;gap:.5rem;flex-shrink:0;position:relative;}
+#cd-more-menu{position:absolute;top:var(--top-h);right:0;min-width:190px;background:var(--bg2);border:1px solid var(--brd);border-radius:0 0 .9rem .9rem;z-index:50;display:none;flex-direction:column;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.45);}
+#cd-more-menu.on{display:flex;}
+.cd-menu-item{display:flex;gap:.75rem;align-items:center;padding:.72rem 1rem;background:none;border:none;color:var(--t1);font-size:.9rem;cursor:pointer;width:100%;text-align:left;border-bottom:1px solid var(--brd);}
+.cd-menu-item:last-child{border-bottom:none;}
+.cd-menu-item:active{background:var(--bg3);}
 .ov-info{flex:1;min-width:0;}
 .ov-name{font-size:.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ov-status{font-size:.7rem;color:var(--gn);}
@@ -393,6 +400,7 @@ button,input,textarea{font-family:inherit;}
 .mic-btn{width:36px;height:36px;background:transparent;border:1px solid var(--brd2);border-radius:50%;color:var(--t2);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
 .mic-btn.recording{background:var(--rd);border-color:var(--rd);color:#fff;animation:pulse-rec .8s infinite;}
 @keyframes pulse-rec{0%,100%{box-shadow:0 0 0 0 #ef444460}50%{box-shadow:0 0 0 8px #ef444400}}
+@keyframes pulse-ring{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.08)}}
 #voice-bar{background:var(--bg3);border-top:1px solid var(--brd);padding:.5rem .75rem;display:none;align-items:center;gap:.75rem;}
 #voice-bar.on{display:flex;}
 .vb-timer{font-size:.95rem;font-weight:700;color:var(--rd);min-width:42px;font-variant-numeric:tabular-nums;}
@@ -540,6 +548,8 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 .call-cta.vid-c{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);}
 .call-cta.share-c{background:rgba(59,130,246,.35);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.5);}
 .call-cta.share-c.active{background:rgba(59,130,246,.7);border-color:var(--bl);}
+.call-cta.spk-c{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);}
+.call-cta.spk-c.active{background:rgba(34,197,94,.35);border:1px solid rgba(34,197,94,.5);}
 
 /* ══════════════ INCOMING CALL ══════════════ */
 #incoming-call{position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateY(-140%);background:rgba(30,30,50,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(168,85,247,.3);border-radius:20px;padding:1rem 1.25rem;z-index:450;width:calc(100% - 2rem);max-width:380px;transition:transform .32s cubic-bezier(.4,0,.2,1);box-shadow:0 12px 40px rgba(0,0,0,.6);}
@@ -819,6 +829,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <div class="atabs">
       <button class="atab on" onclick="aSwitch('in')">Войти</button>
       <button class="atab" onclick="aSwitch('up')">Регистрация</button>
+      <button class="atab" onclick="aSwitch('ph')">📱 Телефон</button>
     </div>
     <div id="af-in">
       <input class="af" id="li-u" placeholder="Имя пользователя"/>
@@ -846,10 +857,39 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
       <div class="aerr" id="re-e"></div>
       <button class="abtn" id="re-btn" onclick="doReg()">Создать аккаунт →</button>
     </div>
+    <div id="af-ph" style="display:none">
+      <div id="ph-step1">
+        <div style="font-size:.82rem;color:var(--t2);margin-bottom:.8rem;text-align:center">Введи номер с кодом страны</div>
+        <input class="af" id="ph-num" type="tel" autocomplete="tel" placeholder="+7 900 000 0000"/>
+        <div class="aerr" id="ph-e"></div>
+        <button class="abtn" id="ph-send-btn" onclick="doPhoneSendCode()">Получить SMS →</button>
+        <div id="phone-recaptcha"></div>
+      </div>
+      <div id="ph-step2" style="display:none">
+        <div style="font-size:.82rem;color:var(--t2);margin-bottom:.8rem;text-align:center" id="ph-sent-lbl">Код отправлен</div>
+        <input class="af" id="ph-code" type="number" placeholder="6-значный код"/>
+        <div class="aerr" id="ph-e2"></div>
+        <button class="abtn" id="ph-verify-btn" onclick="doPhoneVerify()">Войти →</button>
+        <div style="text-align:center;margin-top:.6rem">
+          <button onclick="phBack()" style="background:none;border:none;color:var(--t3);font-size:.84rem;cursor:pointer">← Другой номер</button>
+        </div>
+      </div>
+    </div>
   </div>
   <div style="margin-top:1.2rem;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
     <a href="https://sigmadaa.github.io/vmeste/app.apk" download style="display:flex;align-items:center;gap:.4rem;padding:.5rem 1rem;background:#22c55e;color:#fff;border-radius:2rem;font-size:.82rem;font-weight:600;text-decoration:none">🤖 Скачать для Android</a>
     <a href="https://sigmadaa.github.io/vmeste/vmeste.msix.zip" download style="display:flex;align-items:center;gap:.4rem;padding:.5rem 1rem;background:#0078d4;color:#fff;border-radius:2rem;font-size:.82rem;font-weight:600;text-decoration:none">🪟 Скачать для Windows</a>
+  </div>
+</div>
+
+<!-- Phone new-user username setup -->
+<div id="phone-setup-ov" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:1.5rem">
+  <div style="background:var(--bg2);border-radius:1.2rem;padding:1.5rem 1.5rem 1.8rem;width:100%;max-width:360px">
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:.4rem">📱 Почти готово!</div>
+    <div style="font-size:.82rem;color:var(--t2);margin-bottom:1rem">Придумай имя пользователя — оно будет видно другим людям</div>
+    <input class="af" id="ps-username" placeholder="Имя пользователя (без пробелов)" autocomplete="username"/>
+    <div class="aerr" id="ps-e"></div>
+    <button class="abtn" id="ps-btn" onclick="doPhoneSetupUsername()">Продолжить →</button>
   </div>
 </div>
 
@@ -881,25 +921,28 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
       </div>
       <div id="chat-list"></div>
       <div id="archive-section"></div>
-      <!-- CHANNELS SECTION inside chats tab -->
-      <div class="ch-sep">📢 Каналы<button class="ch-sep-btn" onclick="openChannelDiscover()">Найти</button></div>
-      <div id="channel-list"><div class="empty" style="padding:1.5rem 0"><div class="ei">📢</div><div class="et">Нет каналов<br><small style="font-size:.75rem;color:var(--t3)">Найди или создай</small></div></div></div>
     </div>
-    <!-- FEED -->
-    <div class="tp" id="tp-feed">
-      <div class="compose">
-        <div class="cav" id="feed-av">💬</div>
-        <button class="cprompt" onclick="openWritePost()">Что нового?</button>
+    <!-- CHANNELS TAB -->
+    <div class="tp" id="tp-channels">
+      <div class="srch-wrap">
+        <div class="srch-inner">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="chan-tab-search" placeholder="Найти канал..." oninput="chanTabSearch(this.value)"/>
+        </div>
+        <button onclick="openChannelDiscover()" style="margin-top:.45rem;width:100%;padding:.5rem;border:1px dashed var(--brd2);border-radius:.75rem;background:transparent;color:var(--t2);font-size:.82rem;cursor:pointer;">➕ Создать канал</button>
       </div>
-      <div class="stories-row" id="stories-row"></div>
-      <div id="feed-list"></div>
+      <div style="padding:.35rem 1rem 0;font-size:.7rem;color:var(--t3);font-weight:600;text-transform:uppercase">Подписки</div>
+      <div id="channel-list"><div class="empty" style="padding:1.5rem 0"><div class="ei">📢</div><div class="et">Нет каналов<br><small style="font-size:.75rem;color:var(--t3)">Найди или создай</small></div></div></div>
+      <div id="chan-tab-results"></div>
     </div>
+    <!-- FEED (hidden, kept for data compat) -->
+    <div class="tp" id="tp-feed" style="display:none"></div>
     <!-- FRIENDS -->
     <div class="tp" id="tp-friends">
       <div class="fr-top">
         <div class="srch-inner">
           <span class="srch-ico">🔍</span>
-          <input class="srch" placeholder="Найти пользователя..." oninput="frSearch(this.value)"/>
+          <input class="srch" placeholder="Ник, @юз или +номер..." oninput="frSearch(this.value)"/>
         </div>
       </div>
       <div id="fr-sr-res"></div>
@@ -925,6 +968,9 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
       <div class="pr-menu">
         <div class="pmi" onclick="openBioModal()"><span class="pmi-ic">✏️</span><span class="pmi-tx">Изменить описание</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openAvModal()"><span class="pmi-ic">😊</span><span class="pmi-tx">Сменить аватар</span><span class="pmi-ar">›</span></div>
+        <div class="pmi" onclick="openNicknameModal()"><span class="pmi-ic">📝</span><span class="pmi-tx">Изменить ник</span><span class="pmi-ar">›</span></div>
+        <div class="pmi" onclick="openStoryCreate()"><span class="pmi-ic">📸</span><span class="pmi-tx">Опубликовать статус</span><span class="pmi-ar">›</span></div>
+        <div class="pmi" onclick="openLinkPhone()"><span class="pmi-ic">📱</span><span class="pmi-tx" id="pr-phone-tx">Привязать номер</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="goTab('friends')"><span class="pmi-ic">👥</span><span class="pmi-tx">Мои друзья</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openVerifyPanel()"><span class="pmi-ic">✔️</span><span class="pmi-tx" id="verify-menu-tx">Запросить верификацию</span><span class="pmi-ar" id="verify-menu-badge">›</span></div>
         <div class="pmi" id="admin-panel-btn" style="display:none" onclick="openAdminPanel()"><span class="pmi-ic">🛡️</span><span class="pmi-tx">Панель администратора</span><span class="pmi-ar" id="adm-menu-badge">›</span></div>
@@ -969,11 +1015,11 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <button class="install-banner-x" onclick="hideBanner()">✕</button>
   </div>
   <nav id="nav">
-    <button class="nb on" id="nb-chats" onclick="goTab('chats')"><span class="ni">💬</span><span class="nl">Чаты</span><span class="nbadge" id="nbd-chats"></span></button>
-    <button class="nb" id="nb-feed" onclick="goTab('feed')"><span class="ni">🏠</span><span class="nl">Лента</span></button>
-    <button class="nb" id="nb-friends" onclick="goTab('friends')"><span class="ni">👥</span><span class="nl">Друзья</span><span class="nbadge" id="nbd-fr"></span></button>
-    <button class="nb" id="nb-games" onclick="goTab('games')"><span class="ni">🎮</span><span class="nl">Игры</span></button>
-    <button class="nb" id="nb-profile" onclick="goTab('profile')"><span class="ni">👤</span><span class="nl">Профиль</span></button>
+    <button class="nb on" id="nb-chats"    onclick="goTab('chats')"   ><span class="ni">💬</span><span class="nl">Чаты</span>    <span class="nbadge" id="nbd-chats"></span></button>
+    <button class="nb"    id="nb-channels" onclick="goTab('channels')"><span class="ni">📢</span><span class="nl">Каналы</span></button>
+    <button class="nb"    id="nb-friends"  onclick="goTab('friends')" ><span class="ni">👥</span><span class="nl">Друзья</span>   <span class="nbadge" id="nbd-fr"></span></button>
+    <button class="nb"    id="nb-games"    onclick="goTab('games')"   ><span class="ni">🎮</span><span class="nl">Игры</span></button>
+    <button class="nb"    id="nb-profile"  onclick="goTab('profile')" ><span class="ni">👤</span><span class="nl">Профиль</span></button>
   </nav>
 </div>
 
@@ -981,17 +1027,23 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 <div class="ov" id="chat-detail">
   <div class="ov-head">
     <button class="ibtn" onclick="closeChatOv()">←</button>
-    <div style="width:38px;height:38px;border-radius:50%;border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;background:var(--bg3)" id="cd-av">👤</div>
+    <div style="position:relative;cursor:pointer" onclick="openPartnerStatus()" title="Статус">
+      <div style="width:38px;height:38px;border-radius:50%;border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;background:var(--bg3)" id="cd-av">👤</div>
+      <div id="cd-story-ring" style="display:none;position:absolute;inset:-3px;border-radius:50%;border:2.5px solid #a855f7;animation:pulse-ring 1.5s ease-in-out infinite;"></div>
+    </div>
     <div class="ov-info"><div class="ov-name" id="cd-name">—</div><div class="ov-status" id="cd-st"><span class="ov-online" id="cd-dot"></span>онлайн</div></div>
     <button class="ibtn" id="cd-call-btn" onclick="callUser(false)" style="display:none" title="Голосовой звонок">📞</button>
     <button class="ibtn" id="cd-vcall-btn" onclick="callUser(true)" style="display:none" title="Видеозвонок">📹</button>
-    <button class="ibtn" id="cd-atg-btn" onclick="openAddToGroup()" style="display:none" title="Добавить в группу">👥</button>
-    <button class="ibtn" id="cd-grp-add-btn" onclick="openGrpAddMember()" style="display:none" title="Добавить участника">👤➕</button>
     <button class="ibtn" id="cd-grp-call-btn" onclick="startGroupCall()" style="display:none" title="Групповой звонок">📞</button>
-    <button class="ibtn" id="cd-grp-settings-btn" onclick="openGrpSettings()" style="display:none" title="Настройки группы">⚙️</button>
-    <button class="ibtn" id="cd-search-btn" onclick="toggleMsgSearch()" style="display:none" title="Поиск в чате">🔍</button>
-    <button class="ibtn" id="cd-wallpaper-btn" onclick="openWallpaperPicker()" style="display:none" title="Обои">🎨</button>
-    <button class="ibtn" id="cd-favs-btn" onclick="openFavorites()" style="display:none" title="Избранное">⭐</button>
+    <button class="ibtn" id="cd-more-btn" onclick="toggleChatMenu(event)" style="display:none;font-size:1.3rem;font-weight:700;letter-spacing:1px">⋮</button>
+    <div id="cd-more-menu">
+      <button class="cd-menu-item" id="cd-search-btn" onclick="toggleMsgSearch();closeChatMenu()" style="display:none">🔍 Поиск</button>
+      <button class="cd-menu-item" id="cd-wallpaper-btn" onclick="openWallpaperPicker();closeChatMenu()" style="display:none">🎨 Обои</button>
+      <button class="cd-menu-item" id="cd-favs-btn" onclick="openFavorites();closeChatMenu()" style="display:none">⭐ Избранное</button>
+      <button class="cd-menu-item" id="cd-atg-btn" onclick="openAddToGroup();closeChatMenu()" style="display:none">👥 Добавить в группу</button>
+      <button class="cd-menu-item" id="cd-grp-add-btn" onclick="openGrpAddMember();closeChatMenu()" style="display:none">👤➕ Добавить участника</button>
+      <button class="cd-menu-item" id="cd-grp-settings-btn" onclick="openGrpSettings();closeChatMenu()" style="display:none">⚙️ Настройки группы</button>
+    </div>
   </div>
   <div id="pinned-bar" class="pin-bar"><span class="pin-bar-ico">📌</span><span class="pin-bar-txt" id="pinned-txt"></span><span class="pin-bar-close" onclick="unpinMessage()">✕</span></div>
   <div id="chat-search-bar" class="chat-search-bar"><button class="ibtn" onclick="toggleMsgSearch()">←</button><input class="chat-srch-inp" id="chat-srch-inp" placeholder="Поиск..." oninput="searchMessages(this.value)"/><span id="srch-count" style="font-size:.75rem;color:var(--t3)"></span></div>
@@ -1134,7 +1186,11 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
     <div class="call-actions" style="margin-top:2.5rem">
       <div class="call-cta-wrap">
         <button class="call-cta mute-c" id="call-muted-btn" onclick="toggleMute()">🎤</button>
-        <span class="call-cta-lbl">Звук</span>
+        <span class="call-cta-lbl">Микрофон</span>
+      </div>
+      <div class="call-cta-wrap">
+        <button class="call-cta spk-c" id="call-spk-btn" onclick="toggleSpeaker()">🔈</button>
+        <span class="call-cta-lbl" id="call-spk-lbl">Наушник</span>
       </div>
       <div class="call-cta-wrap">
         <button class="call-cta share-c" id="call-share-btn" style="display:none" onclick="toggleScreenShare()" title="Показать экран">🖥️</button>
@@ -1623,7 +1679,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, RecaptchaVerifier, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, orderBy, limit, onSnapshot, addDoc, serverTimestamp, getDocs, arrayUnion, arrayRemove, deleteDoc, deleteField, increment, writeBatch, getCountFromServer } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -1683,9 +1739,23 @@ onAuthStateChanged(auth, async user => {
         updateDoc(doc(db,'users',user.uid), { usernameLower: ME.username.toLowerCase() }).catch(()=>{});
         ME.usernameLower = ME.username.toLowerCase();
       }
+      // backfill displayName for old accounts (displayName = username)
+      if (!ME.displayName && ME.username) {
+        updateDoc(doc(db,'users',user.uid), { displayName: ME.username, displayNameLower: ME.username.toLowerCase() }).catch(()=>{});
+        ME.displayName = ME.username;
+        ME.displayNameLower = ME.username.toLowerCase();
+      }
     } else {
-      // First time — create profile
-      ME = { uid: user.uid, username: user.displayName || 'user', av: '💬', bio: '', stats: { played: 0, wins: 0 }, friends: [], sentReq: [], recvReq: [] };
+      // Phone auth new user — ask for username first
+      if (user.phoneNumber && !user.displayName) {
+        _phoneNewUser = user;
+        document.getElementById('auth').classList.add('on');
+        const ov = document.getElementById('phone-setup-ov');
+        ov.style.display = 'flex';
+        return;
+      }
+      // First time email user — create profile
+      ME = { uid: user.uid, username: user.displayName || 'user', usernameLower: (user.displayName||'user').toLowerCase(), displayName: user.displayName||'user', displayNameLower: (user.displayName||'user').toLowerCase(), av: '💬', bio: '', stats: { played: 0, wins: 0 }, friends: [], sentReq: [], recvReq: [] };
       await setDoc(doc(db, 'users', user.uid), ME);
     }
     // Ban check
@@ -1711,9 +1781,11 @@ onAuthStateChanged(auth, async user => {
 // AUTH
 // ══════════════════════════════
 window.aSwitch = t => {
-  document.querySelectorAll('.atab').forEach((el,i) => el.classList.toggle('on', i===(t==='in'?0:1)));
-  document.getElementById('af-in').style.display = t==='in' ? '' : 'none';
-  document.getElementById('af-up').style.display = t==='up' ? '' : 'none';
+  const idx = t === 'in' ? 0 : t === 'up' ? 1 : 2;
+  document.querySelectorAll('.atab').forEach((el, i) => el.classList.toggle('on', i === idx));
+  document.getElementById('af-in').style.display = t === 'in' ? '' : 'none';
+  document.getElementById('af-up').style.display = t === 'up' ? '' : 'none';
+  document.getElementById('af-ph').style.display = t === 'ph' ? '' : 'none';
   document.getElementById('af-fp').style.display = 'none';
   document.querySelector('.atabs').style.display = '';
 };
@@ -1721,6 +1793,7 @@ window.aSwitch = t => {
 window.openForgotPass = () => {
   document.getElementById('af-in').style.display = 'none';
   document.getElementById('af-up').style.display = 'none';
+  document.getElementById('af-ph').style.display = 'none';
   document.getElementById('af-fp').style.display = '';
   document.querySelector('.atabs').style.display = 'none';
   document.getElementById('fp-u').value = '';
@@ -1806,7 +1879,7 @@ window.doReg = async () => {
     const cred = await createUserWithEmailAndPassword(auth, u, p);
     await updateProfile(cred.user, { displayName: n });
     await setDoc(doc(db, 'users', cred.user.uid), {
-      uid: cred.user.uid, username: n, usernameLower: n.toLowerCase(), email: u, av: '💬', bio: '',
+      uid: cred.user.uid, username: n, usernameLower: n.toLowerCase(), displayName: n, displayNameLower: n.toLowerCase(), email: u, av: '💬', bio: '',
       stats: { played: 0, wins: 0 }, friends: [], sentReq: [], recvReq: []
     });
     e.textContent = '';
@@ -1815,6 +1888,90 @@ window.doReg = async () => {
     else e.textContent = 'Ошибка: ' + err.message;
   } finally {
     btn.disabled = false; btn.innerHTML = 'Создать аккаунт →';
+  }
+};
+
+// ── Phone Auth ──────────────────────────────────────────────────────
+let _phoneConfirm = null;
+let _phoneNewUser = null;
+
+window.doPhoneSendCode = async () => {
+  const phone = document.getElementById('ph-num').value.trim();
+  const eEl = document.getElementById('ph-e');
+  const btn = document.getElementById('ph-send-btn');
+  eEl.textContent = '';
+  if (!phone || phone.replace(/\D/g,'').length < 7) return eEl.textContent = 'Введи номер телефона с кодом страны';
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Отправляю...';
+  try {
+    if (!window._phoneReCaptcha) {
+      window._phoneReCaptcha = new RecaptchaVerifier(auth, 'phone-recaptcha', { size: 'invisible' });
+    }
+    _phoneConfirm = await signInWithPhoneNumber(auth, phone, window._phoneReCaptcha);
+    document.getElementById('ph-step1').style.display = 'none';
+    document.getElementById('ph-step2').style.display = '';
+    document.getElementById('ph-sent-lbl').textContent = `Код отправлен на ${phone}`;
+    document.getElementById('ph-code').value = '';
+    document.getElementById('ph-e2').textContent = '';
+  } catch(e) {
+    if (e.code === 'auth/invalid-phone-number') eEl.textContent = 'Неверный формат номера';
+    else if (e.code === 'auth/too-many-requests') eEl.textContent = 'Слишком много попыток, подожди';
+    else eEl.textContent = 'Ошибка: ' + (e.message || e.code);
+    // Reset recaptcha on error so next attempt works
+    if (window._phoneReCaptcha) { try { window._phoneReCaptcha.clear(); } catch(_) {} window._phoneReCaptcha = null; }
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Получить SMS →';
+  }
+};
+
+window.doPhoneVerify = async () => {
+  const code = document.getElementById('ph-code').value.trim();
+  const eEl = document.getElementById('ph-e2');
+  const btn = document.getElementById('ph-verify-btn');
+  eEl.textContent = '';
+  if (!_phoneConfirm) return eEl.textContent = 'Сначала запроси код';
+  if (code.length !== 6) return eEl.textContent = 'Код — 6 цифр';
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Проверяю...';
+  try {
+    await _phoneConfirm.confirm(code);
+    // onAuthStateChanged fires automatically and opens the app
+  } catch(e) {
+    if (e.code === 'auth/invalid-verification-code') eEl.textContent = 'Неверный код';
+    else if (e.code === 'auth/code-expired') eEl.textContent = 'Код истёк, запроси новый';
+    else eEl.textContent = 'Ошибка: ' + (e.message || e.code);
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Войти →';
+  }
+};
+
+window.phBack = () => {
+  document.getElementById('ph-step1').style.display = '';
+  document.getElementById('ph-step2').style.display = 'none';
+  document.getElementById('ph-e').textContent = '';
+  _phoneConfirm = null;
+};
+
+window.doPhoneSetupUsername = async () => {
+  const un = document.getElementById('ps-username').value.trim();
+  const eEl = document.getElementById('ps-e');
+  const btn = document.getElementById('ps-btn');
+  eEl.textContent = '';
+  if (!un || un.length < 2) return eEl.textContent = 'Мин 2 символа';
+  if (/\s/.test(un)) return eEl.textContent = 'Без пробелов';
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Сохраняю...';
+  try {
+    const q2 = query(collection(db,'users'), where('username','==',un), limit(1));
+    const snap = await getDocs(q2);
+    if (!snap.empty) { eEl.textContent = 'Имя уже занято'; return; }
+    const user = _phoneNewUser;
+    ME = { uid: user.uid, username: un, usernameLower: un.toLowerCase(), displayName: un, displayNameLower: un.toLowerCase(), av: '💬', bio: '', stats: { played:0, wins:0 }, friends: [], sentReq: [], recvReq: [] };
+    await setDoc(doc(db,'users',user.uid), ME);
+    _phoneNewUser = null;
+    document.getElementById('phone-setup-ov').style.display = 'none';
+    launchApp();
+  } catch(e) {
+    eEl.textContent = 'Ошибка: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Продолжить →';
   }
 };
 
@@ -1832,9 +1989,9 @@ window.doLogout = async () => {
 // ══════════════════════════════
 // APP
 // ══════════════════════════════
-const TABS = ['chats','feed','friends','games','profile'];
-const TAB_T = {chats:'Вместе',feed:'Лента',friends:'Друзья',games:'Игры',draw:'Рисуй',profile:'Профиль'};
-const TAB_IC = {chats:'💬',feed:'🏠',friends:'👥',games:'🎮',draw:'🎨',profile:'👤'};
+const TABS = ['chats','channels','friends','games','profile'];
+const TAB_T = {chats:'Вместе',channels:'Каналы',friends:'Друзья',games:'Игры',draw:'Рисуй',profile:'Профиль',feed:'Лента'};
+const TAB_IC = {chats:'💬',channels:'📢',friends:'👥',games:'🎮',draw:'🎨',profile:'👤',feed:'🏠'};
 
 function launchApp() {
   document.getElementById('auth').classList.remove('on');
@@ -1857,6 +2014,10 @@ function launchApp() {
   listenGameInvites();
   loadArchivedChats().then(() => renderArchiveSection());
   listenBroadcasts();
+  // Request OS notification permission (once, with short delay for better UX)
+  if ('Notification' in window && Notification.permission === 'default') {
+    setTimeout(() => Notification.requestPermission().catch(() => {}), 2500);
+  }
   // Show download screen once on first login
   if (!localStorage.getItem('dlShown')) {
     setTimeout(() => openOv('download-ov'), 900);
@@ -2052,7 +2213,7 @@ window.openChat = async uid => {
   if (!snap.exists()) return;
   const p = snap.data();
   setAvEl(document.getElementById('cd-av'), p.av||'👤');
-  document.getElementById('cd-name').textContent = p.username;
+  document.getElementById('cd-name').textContent = p.displayName || p.username;
   document.getElementById('cd-st').innerHTML = '<span class="ov-offline" id="cd-dot"></span>не в сети';
   // show add-friend button if not yet friends
   const isFr = (ME.friends||[]).includes(uid);
@@ -2069,11 +2230,15 @@ window.openChat = async uid => {
   else { addBtn.style.display = ''; addBtn.textContent = '+ Друг'; addBtn.disabled = false; addBtn.onclick = () => sendFr(uid).then(() => { addBtn.textContent = '✓ Отправлено'; addBtn.disabled = true; }); }
   chatMode = 'dm'; chatGroupId = null; chatWith = uid;
   cancelReply(); openOv('chat-detail');
+  // check if partner has stories
+  document.getElementById('cd-story-ring').style.display = 'none';
+  listenStoryRing(uid);
   document.getElementById('cd-call-btn').style.display = '';
   document.getElementById('cd-vcall-btn').style.display = '';
+  document.getElementById('cd-grp-call-btn').style.display = 'none';
+  document.getElementById('cd-more-btn').style.display = '';
   document.getElementById('cd-atg-btn').style.display = '';
   document.getElementById('cd-grp-add-btn').style.display = 'none';
-  document.getElementById('cd-grp-call-btn').style.display = 'none';
   document.getElementById('cd-grp-settings-btn').style.display = 'none';
   document.getElementById('cd-search-btn').style.display = '';
   document.getElementById('cd-wallpaper-btn').style.display = '';
@@ -2099,6 +2264,7 @@ window.openGroup = async gid => {
   document.getElementById('cd-grp-add-btn').style.display = '';
   document.getElementById('cd-grp-call-btn').style.display = '';
   document.getElementById('cd-grp-settings-btn').style.display = '';
+  document.getElementById('cd-more-btn').style.display = '';
   document.getElementById('cd-search-btn').style.display = '';
   document.getElementById('cd-wallpaper-btn').style.display = '';
   document.getElementById('cd-favs-btn').style.display = '';
@@ -2122,12 +2288,24 @@ window.closeChatOv = () => {
   document.getElementById('cd-search-btn').style.display = 'none';
   document.getElementById('cd-wallpaper-btn').style.display = 'none';
   document.getElementById('cd-favs-btn').style.display = 'none';
+  document.getElementById('cd-more-btn').style.display = 'none';
+  closeChatMenu();
   chatMode = 'dm'; chatGroupId = null; chatWith = null;
   const pb = document.getElementById('pinned-bar'); if(pb) pb.classList.remove('on');
   const csb = document.getElementById('chat-search-bar'); if(csb) csb.classList.remove('on');
   const mi = document.querySelector('.mlist'); if(mi) mi.removeAttribute('style');
   const ci = document.querySelector('#chat-detail .chat-inner'); if(ci) ci.style.background='';
 };
+
+window.toggleChatMenu = e => {
+  if (e) e.stopPropagation();
+  document.getElementById('cd-more-menu').classList.toggle('on');
+};
+window.closeChatMenu = () => { document.getElementById('cd-more-menu').classList.remove('on'); };
+document.addEventListener('click', e => {
+  const m = document.getElementById('cd-more-menu');
+  if (m && m.classList.contains('on') && !m.contains(e.target) && e.target.id !== 'cd-more-btn') m.classList.remove('on');
+});
 
 // ━━━━ PRESENCE ━━━━
 async function updatePresence() {
@@ -2164,6 +2342,55 @@ window.addEventListener('beforeunload', () => { if (ME) setOffline(); });
 // iOS Safari fires pagehide instead of beforeunload reliably
 window.addEventListener('pagehide', () => { if (ME) setOffline(); });
 
+// ── Story ring in chat header ─────────────────────────────────────────────
+let _storyRingUnsub = null;
+function listenStoryRing(uid) {
+  if (_storyRingUnsub) { _storyRingUnsub(); _storyRingUnsub = null; }
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const q = query(
+    collection(db, 'stories'),
+    where('uid', '==', uid),
+    where('ts', '>=', since),
+    limit(1)
+  );
+  _storyRingUnsub = onSnapshot(q, snap => {
+    const ring = document.getElementById('cd-story-ring');
+    if (!ring) return;
+    ring.style.display = snap.empty ? 'none' : '';
+  }, () => {});
+}
+window.openPartnerStatus = () => {
+  if (!chatWith) return;
+  const stories = storyList.filter(s => s.uid === chatWith);
+  if (stories.length) {
+    openStoryView(chatWith);
+  } else {
+    toast('Нет активных статусов');
+  }
+};
+// ── Channel tab search ─────────────────────────────────────────────────
+let _chanTabSearchTs = 0;
+window.chanTabSearch = async val => {
+  const now = Date.now();
+  if (now - _chanTabSearchTs < 600) return;
+  _chanTabSearchTs = now;
+  const el = document.getElementById('chan-tab-results');
+  if (!el) return;
+  val = (val||'').trim();
+  if (!val) { el.innerHTML = ''; return; }
+  const vl = val.toLowerCase();
+  const snap = await getDocs(query(collection(db,'channels'), where('titleLower','>=',vl), where('titleLower','<=',vl+'\uf8ff'), limit(15)));
+  if (snap.empty) { el.innerHTML = '<div class="empty" style="padding:1rem"><div class="ei">📢</div><div class="et">Не найдено</div></div>'; return; }
+  el.innerHTML = '<div style="padding:.35rem 1rem 0;font-size:.7rem;color:var(--t3);font-weight:600;text-transform:uppercase">Результаты</div>' +
+    snap.docs.map(d => {
+      const c = d.data();
+      const subbed = (c.subscribers||[]).includes(ME?.uid);
+      return `<div class="channel-row" style="padding:.7rem 1rem;display:flex;align-items:center;gap:.7rem;cursor:pointer" onclick="openChannel('${d.id}')">
+        <div class="chn-logo">${esc(c.title?.[0]||'📢')}</div>
+        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:.9rem">${esc(c.title||'')} ${subbed?'<span style="font-size:.7rem;color:#7c3aed">✔ Подписка</span>':''}</div><div style="font-size:.75rem;color:var(--t3)">${(c.subscribers||[]).length} подписчиков</div></div>
+      </div>`;
+    }).join('');
+};
 function listenPresence(uid) {
   if (presenceUnsub) presenceUnsub();
   try {
@@ -2818,24 +3045,41 @@ window.handleFileAttach = async input => {
   } catch(e) { console.error(e); toast('Ошибка при отправке'); }
 };
 
+let _frSearchTs = 0;
 window.frSearch = async q => {
-  q = q.trim();
+  const now = Date.now();
+  if (now - _frSearchTs < 500) return; // rate limit: max 2 searches/sec
+  _frSearchTs = now;
+  q = (q || '').trim();
   const res = document.getElementById('fr-sr-res');
-  if (!q) { res.innerHTML=''; return; }
-  const ql = q.toLowerCase();
-  // Search by original username (case-sensitive prefix) AND by usernameLower (case-insensitive)
-  const [snap1, snap2] = await Promise.all([
-    getDocs(query(collection(db,'users'), where('username','>=',q), where('username','<=',q+'\uf8ff'), limit(10))),
-    getDocs(query(collection(db,'users'), where('usernameLower','>=',ql), where('usernameLower','<=',ql+'\uf8ff'), limit(10)))
-  ]);
+  if (!q) { res.innerHTML = ''; return; }
   const seen = new Set();
   const matches = [];
-  for (const d of [...snap1.docs, ...snap2.docs]) {
-    if (d.id !== ME.uid && !seen.has(d.id)) { seen.add(d.id); matches.push(d); }
+  const isPhone = /^\+?[\d\s\-]{6,}$/.test(q);
+  const isHandle = q.startsWith('@');
+  const ql = (isHandle ? q.slice(1) : q).toLowerCase();
+  const qw = isHandle ? q.slice(1) : q;
+  if (isPhone) {
+    const normPhone = '+' + q.replace(/\D/g, '');
+    const [s1, s2] = await Promise.all([
+      getDocs(query(collection(db,'users'), where('phone','==',normPhone), limit(5))),
+      getDocs(query(collection(db,'users'), where('phone','==',q.trim()), limit(5)))
+    ]);
+    for (const d of [...s1.docs, ...s2.docs])
+      if (d.id !== ME.uid && !seen.has(d.id)) { seen.add(d.id); matches.push(d); }
+  } else {
+    const [s1, s2, s3] = await Promise.all([
+      getDocs(query(collection(db,'users'), where('usernameLower','>=',ql), where('usernameLower','<=',ql+'\uf8ff'), limit(10))),
+      getDocs(query(collection(db,'users'), where('username','>=',qw),      where('username','<=',qw+'\uf8ff'),      limit(10))),
+      isHandle ? Promise.resolve({docs:[]}) :
+        getDocs(query(collection(db,'users'), where('displayNameLower','>=',ql), where('displayNameLower','<=',ql+'\uf8ff'), limit(8)))
+    ]);
+    for (const d of [...s1.docs, ...s2.docs, ...s3.docs])
+      if (d.id !== ME.uid && !seen.has(d.id)) { seen.add(d.id); matches.push(d); }
   }
   res.innerHTML = matches.length
-    ? '<div class="slbl">Поиск</div>' + matches.map(d => urRow(d.id, d.data())).join('')
-    : '<div class="empty" style="padding:1.5rem"><div class="ei">🔍</div><div class="et">Никого не найдено</div></div>';
+    ? '<div class="slbl">' + (isPhone ? 'По номеру' : isHandle ? 'По @юзу' : 'По имени') + '</div>' + matches.map(d => urRow(d.id, d.data())).join('')
+    : '<div class="empty" style="padding:1.5rem"><div class="ei">🔍</div><div class="et">Никого не найдено<br><small style="font-size:.76rem;color:var(--t3)">Попробуй @юз или +номер</small></div></div>';
 };
 
 function urRow(uid, p) {
@@ -2847,7 +3091,9 @@ function urRow(uid, p) {
     : got ? `<button class="sb sb-acc" onclick="acceptFr('${uid}')">Принять</button><button class="sb sb-dec" onclick="declineFr('${uid}')">✕</button>`
     : sent ? `<button class="sb sb-sent">Отправлено ✓</button>`
     : `<button class="sb sb-add" onclick="sendFr('${uid}')">+ Добавить</button>`;
-  return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(p.username)}${vBadge(p.verified)}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns">${btns}</div></div>`;
+  const dispN = p.displayName || p.username;
+  const handleLine = p.username ? `<span style="font-size:.72rem;color:var(--t3)">@${esc(p.username)}</span>` : '';
+  return `<div class="urow"><div class="ur-av" ${avHtml(p.av,'👤')}>${avText(p.av,'👤')}</div><div class="ur-info"><div class="ur-name">${esc(dispN)}${vBadge(p.verified)} ${handleLine}</div><div class="ur-sub">${esc(p.bio||'')}</div></div><div class="ur-btns">${btns}</div></div>`;
 }
 
 async function renderFrReqs() {
@@ -2887,6 +3133,7 @@ window.acceptFr = async uid => {
   ME.recvReq = (ME.recvReq||[]).filter(x=>x!==uid);
   ME.friends = [...(ME.friends||[]), uid];
   toast('Теперь вы друзья! 🎉'); renderFriends();
+  listenChats(); // refresh chat list so new friend appears immediately
 };
 window.declineFr = async uid => {
   await updateDoc(doc(db,'users',ME.uid), { recvReq: arrayRemove(uid) });
@@ -2941,13 +3188,25 @@ function setAvEl(el, av) {
 
 function renderProfile() {
   setAvEl(document.getElementById('pr-av'), ME.av);
-  document.getElementById('pr-name').innerHTML = esc(ME.username) + vBadge(ME.verified, true);
+  const dispName = ME.displayName || ME.username;
+  document.getElementById('pr-name').innerHTML = esc(dispName) + vBadge(ME.verified, true);
+  // Show @handle below name
+  let handleEl = document.getElementById('pr-handle');
+  if (!handleEl) {
+    handleEl = document.createElement('div');
+    handleEl.id = 'pr-handle';
+    handleEl.style.cssText = 'font-size:.78rem;color:var(--t3);margin-top:.15rem;';
+    document.getElementById('pr-name').insertAdjacentElement('afterend', handleEl);
+  }
+  handleEl.textContent = '@' + ME.username;
+  // Phone indicator
+  const phTx = document.getElementById('pr-phone-tx');
+  if (phTx) phTx.textContent = ME.phone ? 'Телефон: ' + ME.phone : 'Привязать номер';
   document.getElementById('pr-bio').textContent = ME.bio||'Нет описания';
   document.getElementById('ps-g').textContent = ME.stats?.played||0;
   document.getElementById('ps-w').textContent = ME.stats?.wins||0;
   document.getElementById('ps-f').textContent = (ME.friends||[]).length;
   document.getElementById('pr-act').innerHTML = '';
-  // Verification menu label
   const vmtx = document.getElementById('verify-menu-tx');
   if (vmtx) vmtx.textContent = ME.verified ? 'Верифицирован ✔' : 'Запросить верификацию';
   loadAdminVerifyBadge();
@@ -3018,6 +3277,124 @@ window.setAv = async a => {
   setAvEl(document.getElementById('feed-av'), a);
 };
 window.openBioModal = () => { document.getElementById('bio-ta').value=ME.bio||''; document.getElementById('bio-modal').classList.add('on'); };
+
+// ── Nickname modal (displayName) ───────────────────────────────────────
+window.openNicknameModal = () => {
+  let modal = document.getElementById('nn-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'nn-modal';
+    modal.className = 'modal on';
+    modal.innerHTML = `
+      <div class="modal-box">
+        <div class="modal-title">Изменить ник</div>
+        <div style="font-size:.8rem;color:var(--t3);margin-bottom:.75rem">Ник может быть любым, даже если он уже занят. Ваш @юз — уникальный идентификатор.</div>
+        <input class="bio-ta" id="nn-inp" placeholder="Новый ник" style="height:auto;padding:.7rem;" maxlength="40"/>
+        <div class="aerr" id="nn-e"></div>
+        <div style="display:flex;gap:.6rem;margin-top:.75rem">
+          <button class="modal-close" onclick="document.getElementById('nn-modal').classList.remove('on')">✕ Отмена</button>
+          <button class="abtn" style="flex:1;padding:.55rem" onclick="saveNickname()">Сохранить</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('nn-inp').value = ME.displayName || ME.username;
+  document.getElementById('nn-e').textContent = '';
+  modal.classList.add('on');
+};
+
+window.saveNickname = async () => {
+  const val = document.getElementById('nn-inp').value.trim();
+  const eEl = document.getElementById('nn-e');
+  if (!val || val.length < 1) return eEl.textContent = 'Введи ник';
+  if (val.length > 40) return eEl.textContent = 'Макс 40 символов';
+  await updateDoc(doc(db, 'users', ME.uid), { displayName: val, displayNameLower: val.toLowerCase() }).catch(() => {});
+  ME.displayName = val;
+  ME.displayNameLower = val.toLowerCase();
+  document.getElementById('nn-modal').classList.remove('on');
+  renderProfile();
+  toast('Ник изменён!');
+};
+
+// ── Link phone to account ──────────────────────────────────────────────
+window.openLinkPhone = () => {
+  let modal = document.getElementById('link-phone-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'link-phone-modal';
+    modal.className = 'modal on';
+    modal.innerHTML = `
+      <div class="modal-box">
+        <div class="modal-title">📱 Привязать номер</div>
+        <div id="lp-step1">
+          <input class="bio-ta" id="lp-num" type="tel" placeholder="+7 900 000 0000" style="height:auto;padding:.7rem;"/>
+          <div class="aerr" id="lp-e"></div>
+          <div id="lp-recaptcha"></div>
+          <div style="display:flex;gap:.6rem;margin-top:.75rem">
+            <button class="modal-close" onclick="document.getElementById('link-phone-modal').classList.remove('on')">✕</button>
+            <button class="abtn" style="flex:1;padding:.55rem" id="lp-send-btn" onclick="lpSendCode()">Получить код</button>
+          </div>
+        </div>
+        <div id="lp-step2" style="display:none">
+          <input class="bio-ta" id="lp-code" type="number" placeholder="6-значный код" style="height:auto;padding:.7rem;"/>
+          <div class="aerr" id="lp-e2"></div>
+          <div style="display:flex;gap:.6rem;margin-top:.75rem">
+            <button class="modal-close" onclick="document.getElementById('lp-step1').style.display='';document.getElementById('lp-step2').style.display='none'">←</button>
+            <button class="abtn" style="flex:1;padding:.55rem" id="lp-verify-btn" onclick="lpVerify()">Подтвердить</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('lp-step1').style.display = '';
+  document.getElementById('lp-step2').style.display = 'none';
+  document.getElementById('lp-num').value = ME.phone || '';
+  document.getElementById('lp-e').textContent = '';
+  document.getElementById('lp-e2').textContent = '';
+  modal.classList.add('on');
+};
+
+let _lpConfirm = null;
+window.lpSendCode = async () => {
+  const phone = document.getElementById('lp-num').value.trim();
+  const eEl = document.getElementById('lp-e');
+  eEl.textContent = '';
+  if (!phone || phone.replace(/\D/g,'').length < 7) return eEl.textContent = 'Введи номер с кодом страны';
+  const btn = document.getElementById('lp-send-btn');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    if (!window._lpReCaptcha) {
+      window._lpReCaptcha = new RecaptchaVerifier(auth, 'lp-recaptcha', { size: 'invisible' });
+    }
+    _lpConfirm = await signInWithPhoneNumber(auth, phone, window._lpReCaptcha);
+    document.getElementById('lp-step1').style.display = 'none';
+    document.getElementById('lp-step2').style.display = '';
+    document.getElementById('lp-code').value = '';
+  } catch(e) {
+    eEl.textContent = e.code === 'auth/invalid-phone-number' ? 'Неверный номер' : 'Ошибка: ' + (e.message||e.code);
+    if (window._lpReCaptcha) { try { window._lpReCaptcha.clear(); } catch(_) {} window._lpReCaptcha = null; }
+  } finally { btn.disabled = false; btn.innerHTML = 'Получить код'; }
+};
+window.lpVerify = async () => {
+  const code = document.getElementById('lp-code').value.trim();
+  const eEl = document.getElementById('lp-e2');
+  eEl.textContent = '';
+  if (!_lpConfirm || code.length !== 6) return eEl.textContent = 'Код — 6 цифр';
+  const btn = document.getElementById('lp-verify-btn');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    await _lpConfirm.confirm(code);
+    // Save phone to Firestore user doc
+    const phone = document.getElementById('lp-num').value.trim();
+    await updateDoc(doc(db,'users',ME.uid), { phone }).catch(() => {});
+    ME.phone = phone;
+    document.getElementById('link-phone-modal').classList.remove('on');
+    renderProfile();
+    toast('📱 Номер привязан!');
+  } catch(e) {
+    eEl.textContent = e.code === 'auth/invalid-verification-code' ? 'Неверный код' : 'Ошибка: ' + (e.message||e.code);
+  } finally { btn.disabled = false; btn.innerHTML = 'Подтвердить'; }
+};
 window.closeBioModal = () => document.getElementById('bio-modal').classList.remove('on');
 window.saveBio = async () => {
   const bio = document.getElementById('bio-ta').value.trim();
@@ -5626,9 +6003,10 @@ window.goTab = t => {
   if (tpDraw) tpDraw.classList.toggle('on', t==='draw');
   document.getElementById('tb-tit').textContent = TAB_T[t];
   document.getElementById('tb-ic').textContent = TAB_IC[t];
-  document.getElementById('tb-add').style.display = t==='feed' ? 'flex' : 'none';
-  if (t==='chats') { listenChats(); listenMyChannels(); }
-  if (t==='feed') { listenFeed(); setAvEl(document.getElementById('feed-av'), ME?.av); }
+  document.getElementById('tb-add').style.display = 'none';
+  if (t==='chats') { listenChats(); }
+  if (t==='channels') { listenMyChannels(); }
+  if (t==='feed') { /* kept for compat */ }
   if (t==='friends') renderFriends();
   if (t==='profile') renderProfile();
   if (t==='draw') renderDrawLobby();
@@ -6276,6 +6654,7 @@ let callMuted = false;
 let callVideoOff = false;
 let callIsVideo = false;
 let callIsSharing = false;
+let callSpeaker = false;
 let callScreenStream = null;
 let incomingCallUnsub = null;
 let callIceBuffer = []; // buffer ICE candidates until remote desc is set
@@ -6329,6 +6708,19 @@ function listenIncomingCalls() {
     document.getElementById('incoming-call').dataset.fromUid = call.from;
     document.getElementById('incoming-call').dataset.video = call.video ? '1' : '';
     document.getElementById('incoming-call').classList.add('on');
+    // OS-level notification so user sees the call even if tab is minimized
+    if (Notification.permission === 'granted') {
+      try {
+        const _cn = new Notification(`${call.video ? '📹' : '📞'} ${call.fromName || 'Кто-то'} звонит`, {
+          body: call.video ? 'Входящий видеозвонок' : 'Входящий голосовой звонок',
+          icon: './icon.svg',
+          badge: './icon.svg',
+          tag: 'incoming-call',
+          requireInteraction: true
+        });
+        _cn.onclick = () => { window.focus(); _cn.close(); };
+      } catch(_) {}
+    }
   });
 }
 
@@ -6422,6 +6814,8 @@ async function initCallPeer(callId, role, video) {
   // ── Peer connection ─────────────────────────────────────────────
   callPc = new RTCPeerConnection(ICE_SERVERS);
   callStreamLocal.getTracks().forEach(t => callPc.addTrack(t, callStreamLocal));
+  // Renegotiation state (for screen share starting on an audio call)
+  let _callReady = false, _renegLock = false, _lastReofferTs = 0, _lastReanswerTs = 0;
 
   // Remote track → show video
   callPc.ontrack = e => {
@@ -6445,6 +6839,7 @@ async function initCallPeer(callId, role, video) {
     if (s === 'connected') {
       if (stEl) stEl.textContent = 'В звонке';
       startCallTimer();
+      _callReady = true; // allow renegotiation once connected
       if (_reconnectTimer) { clearTimeout(_reconnectTimer); _reconnectTimer = null; }
     } else if (s === 'connecting') {
       if (stEl) stEl.textContent = 'Соединение...';
@@ -6473,6 +6868,21 @@ async function initCallPeer(callId, role, video) {
 
   const callRef = doc(db,'calls',callId);
 
+  // Renegotiation — fires when addTrack is called (e.g. screen share on audio call)
+  callPc.onnegotiationneeded = async () => {
+    if (!_callReady || _renegLock) return;
+    _renegLock = true;
+    try {
+      const offer = await callPc.createOffer();
+      await callPc.setLocalDescription(offer);
+      await updateDoc(callRef, {
+        reofferSDP: { sdp: callPc.localDescription.sdp, type: callPc.localDescription.type },
+        reofferRole: role, reofferTs: serverTimestamp()
+      }).catch(() => {});
+    } catch(e) {}
+    _renegLock = false;
+  };
+
   if (role === 'caller') {
     // Create offer & set local SDP — ICE candidates trickled via onicecandidate
     const offer = await callPc.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: video });
@@ -6499,6 +6909,24 @@ async function initCallPeer(callId, role, video) {
           await callPc.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
         }
         callIceBuffer = [];
+      }
+      // Renegotiation: other peer sent a new offer (e.g. screen share added to audio call)
+      const rot = d.reofferTs?.seconds || 0;
+      if (d.reofferSDP && d.reofferRole !== role && rot > _lastReofferTs) {
+        _lastReofferTs = rot;
+        try {
+          await callPc.setRemoteDescription(new RTCSessionDescription(d.reofferSDP));
+          const ans = await callPc.createAnswer();
+          await callPc.setLocalDescription(ans);
+          await updateDoc(callRef, { reanswerSDP: { sdp: callPc.localDescription.sdp, type: callPc.localDescription.type }, reanswerRole: role, reanswerTs: serverTimestamp() }).catch(() => {});
+        } catch(e) {}
+      }
+      // Renegotiation: other peer answered our reoffer
+      const rat = d.reanswerTs?.seconds || 0;
+      if (d.reanswerSDP && d.reanswerRole !== role && rat > _lastReanswerTs) {
+        _lastReanswerTs = rat;
+        if (callPc?.signalingState === 'have-local-offer')
+          await callPc.setRemoteDescription(new RTCSessionDescription(d.reanswerSDP)).catch(() => {});
       }
       if (d.status === 'declined') { clearTimeout(_noAnswerTimer); toast('📵 Звонок отклонён'); endCall(); }
       if (d.status === 'ended')  { clearTimeout(_noAnswerTimer); endCall(); }
@@ -6556,9 +6984,28 @@ async function initCallPeer(callId, role, video) {
     }
     callIceBuffer = [];
 
-    callUnsub = onSnapshot(callRef, snap => {
+    callUnsub = onSnapshot(callRef, async snap => {
       if (!snap.exists()) { endCall(); return; }
-      if (snap.data()?.status === 'ended') endCall();
+      const d = snap.data();
+      if (d.status === 'ended') { endCall(); return; }
+      // Renegotiation: other peer sent a new offer
+      const rot = d.reofferTs?.seconds || 0;
+      if (d.reofferSDP && d.reofferRole !== role && rot > _lastReofferTs) {
+        _lastReofferTs = rot;
+        try {
+          await callPc.setRemoteDescription(new RTCSessionDescription(d.reofferSDP));
+          const ans = await callPc.createAnswer();
+          await callPc.setLocalDescription(ans);
+          await updateDoc(callRef, { reanswerSDP: { sdp: callPc.localDescription.sdp, type: callPc.localDescription.type }, reanswerRole: role, reanswerTs: serverTimestamp() }).catch(() => {});
+        } catch(e) {}
+      }
+      // Renegotiation: other peer answered our reoffer
+      const rat = d.reanswerTs?.seconds || 0;
+      if (d.reanswerSDP && d.reanswerRole !== role && rat > _lastReanswerTs) {
+        _lastReanswerTs = rat;
+        if (callPc?.signalingState === 'have-local-offer')
+          await callPc.setRemoteDescription(new RTCSessionDescription(d.reanswerSDP)).catch(() => {});
+      }
     });
   }
 }
@@ -6575,15 +7022,19 @@ function showCallOverlay(status, video) {
   document.getElementById('call-status').textContent = status;
   document.getElementById('call-timer-el').textContent = '';
   document.getElementById('call-muted-btn').textContent = '🎤';
-  callMuted = false; callVideoOff = false; callIsSharing = false;
-  // Show/hide video + screen share buttons
+  callMuted = false; callVideoOff = false; callIsSharing = false; callSpeaker = false;
+  // Show/hide video button (depends on call type); screen share always visible
   const showVid = video ? '' : 'none';
   document.getElementById('call-vid-btn').style.display = showVid;
   document.getElementById('call-vid-lbl').style.display = showVid;
-  document.getElementById('call-share-btn').style.display = showVid;
-  document.getElementById('call-share-lbl').style.display = showVid;
+  document.getElementById('call-share-btn').style.display = '';
+  document.getElementById('call-share-lbl').style.display = '';
   document.getElementById('call-share-btn').textContent = '🖥️';
+  document.getElementById('call-share-lbl').textContent = 'Экран';
   document.getElementById('call-share-btn').classList.remove('active');
+  document.getElementById('call-spk-btn').textContent = '🔈';
+  document.getElementById('call-spk-btn').classList.remove('active');
+  document.getElementById('call-spk-lbl').textContent = 'Наушник';
   document.getElementById('call-ov').classList.add('on');
 }
 
@@ -6607,6 +7058,9 @@ function startCallTimer() {
 }
 
 window.endCall = async () => {
+  callSpeaker = false;
+  const _rv = document.getElementById('call-remote-vid');
+  if (_rv && typeof _rv.setSinkId === 'function') _rv.setSinkId('').catch(() => {});
   _releaseCallWakeLock(); // release wake lock and silent audio
   if (callUnsub) { callUnsub(); callUnsub = null; }
   if (callIceSub) { callIceSub(); callIceSub = null; }
@@ -6628,40 +7082,44 @@ window.endCall = async () => {
 };
 
 window.toggleScreenShare = async () => {
-  if (!callPc || !callStreamLocal) return toast('Нет активного видеозвонка');
+  if (!callPc || !callStreamLocal) return toast('Нет активного звонка');
   if (!callIsSharing) {
     try {
       callScreenStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: 'always' }, audio: false });
       const screenTrack = callScreenStream.getVideoTracks()[0];
       const sender = callPc.getSenders().find(s => s.track && s.track.kind === 'video');
       if (sender) {
+        // Video call — replace existing video track with screen
         await sender.replaceTrack(screenTrack);
+      } else {
+        // Audio call — add screen as new video track; onnegotiationneeded triggers renegotiation
+        callPc.addTrack(screenTrack, callScreenStream);
+        document.getElementById('call-vid-wrap').classList.add('on');
       }
-      // Show screen in local preview
-      const previewStream = new MediaStream([screenTrack]);
-      const lv = document.getElementById('call-local-vid');
-      lv.srcObject = previewStream;
+      document.getElementById('call-local-vid').srcObject = new MediaStream([screenTrack]);
       callIsSharing = true;
       document.getElementById('call-share-btn').textContent = '🛑';
       document.getElementById('call-share-btn').classList.add('active');
       document.getElementById('call-share-lbl').textContent = 'Стоп';
       toast('🖥️ Демонстрация экрана начата');
-      // Stop screen share when user closes the picker
       screenTrack.onended = () => { if (callIsSharing) toggleScreenShare(); };
     } catch(e) {
       callScreenStream = null;
       if (e.name !== 'NotAllowedError') toast('Не удалось поделиться экраном');
     }
   } else {
-    // Revert to camera track
     if (callScreenStream) { callScreenStream.getTracks().forEach(t => t.stop()); callScreenStream = null; }
     const cameraTrack = callStreamLocal.getVideoTracks()[0];
-    if (cameraTrack) {
-      const sender = callPc.getSenders().find(s => s.track && s.track.kind === 'video');
-      if (sender) await sender.replaceTrack(cameraTrack);
+    const sender = callPc.getSenders().find(s => s.track && s.track.kind === 'video');
+    if (cameraTrack && sender) {
+      // Video call — restore camera
+      await sender.replaceTrack(cameraTrack);
+      document.getElementById('call-local-vid').srcObject = callStreamLocal;
+    } else if (!cameraTrack) {
+      // Audio call — remove the video sender that was added for screen share
+      callPc.getSenders().filter(s => s.track?.kind === 'video').forEach(s => callPc.removeTrack(s));
+      document.getElementById('call-vid-wrap').classList.remove('on');
     }
-    const lv = document.getElementById('call-local-vid');
-    lv.srcObject = callStreamLocal;
     callIsSharing = false;
     document.getElementById('call-share-btn').textContent = '🖥️';
     document.getElementById('call-share-btn').classList.remove('active');
@@ -6682,6 +7140,36 @@ window.toggleCallVideo = () => {
   callVideoOff = !callVideoOff;
   callStreamLocal.getVideoTracks().forEach(t => t.enabled = !callVideoOff);
   document.getElementById('call-vid-btn').textContent = callVideoOff ? '📷' : '🎥';
+};
+
+window.toggleSpeaker = async () => {
+  const rv = document.getElementById('call-remote-vid');
+  const btn = document.getElementById('call-spk-btn');
+  const lbl = document.getElementById('call-spk-lbl');
+  if (rv && typeof rv.setSinkId === 'function') {
+    const next = !callSpeaker;
+    try {
+      if (next) {
+        // Try to find a loudspeaker output device; fall back to 'default'
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const spk = devices.find(d => d.kind === 'audiooutput' && /speaker|громк/i.test(d.label));
+        await rv.setSinkId(spk ? spk.deviceId : 'default');
+      } else {
+        await rv.setSinkId(''); // earpiece / system default
+      }
+      callSpeaker = next;
+    } catch(e) {
+      toast('Не удалось переключить динамик');
+      return;
+    }
+  } else {
+    // setSinkId not supported (iOS Safari, some Android browsers)
+    callSpeaker = !callSpeaker;
+    if (callSpeaker) toast('Для переключения динамика используй кнопку громкости на телефоне');
+  }
+  btn.textContent = callSpeaker ? '🔊' : '🔈';
+  btn.classList.toggle('active', callSpeaker);
+  lbl.textContent = callSpeaker ? 'Динамик' : 'Наушник';
 };
 
 // ══════════════════════════════
