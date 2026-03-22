@@ -736,6 +736,25 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 .chan-react-btn{display:flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--t3);background:var(--bg4);border:1px solid var(--brd);border-radius:20px;padding:.25rem .6rem;cursor:pointer;}
 .chan-react-btn.mine{background:var(--pu)20;border-color:var(--pu)70;color:var(--pu);}
 .chan-views{font-size:.72rem;color:var(--t3);margin-left:auto;display:flex;align-items:center;gap:.2rem;}
+/* Comments */
+#post-comments-ov{position:fixed;inset:0;z-index:500;display:flex;flex-direction:column;background:var(--bg);transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+#post-comments-ov.on{transform:translateY(0);}
+.pco-head{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-bottom:1px solid var(--brd);flex-shrink:0;}
+.pco-title{flex:1;font-size:.95rem;font-weight:700;}
+.pco-list{flex:1;overflow-y:auto;padding:.75rem 1rem;display:flex;flex-direction:column;gap:.6rem;}
+.pco-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--t3);font-size:.88rem;gap:.4rem;}
+.pco-row{display:flex;gap:.55rem;align-items:flex-start;}
+.pco-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--pu),#3b82f6);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;overflow:hidden;background-size:cover;background-position:center;}
+.pco-body{background:var(--bg3);border-radius:0 12px 12px 12px;padding:.5rem .75rem;flex:1;min-width:0;}
+.pco-name{font-size:.75rem;font-weight:700;color:var(--pu);margin-bottom:.15rem;}
+.pco-text{font-size:.85rem;color:var(--t1);word-break:break-word;white-space:pre-wrap;}
+.pco-ts{font-size:.68rem;color:var(--t3);margin-top:.2rem;}
+.pco-inp-row{display:flex;gap:.5rem;align-items:center;padding:.6rem .75rem;border-top:1px solid var(--brd);flex-shrink:0;background:var(--bg);}
+.pco-inp{flex:1;background:var(--bg3);border:1px solid var(--brd);border-radius:20px;padding:.5rem .9rem;color:var(--t1);font-size:.88rem;outline:none;}
+.pco-inp:focus{border-color:var(--pu);}
+.pco-send{width:38px;height:38px;border-radius:50%;background:var(--pu);border:none;color:#fff;font-size:1.1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+/* Comment count badge */
+.chan-cmt-btn{display:flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--t3);background:none;border:none;cursor:pointer;padding:.1rem .3rem;}
 /* Admin post composer */
 .chan-composer{background:var(--bg3);border-top:1px solid var(--brd);padding:.6rem .75rem;flex-shrink:0;}
 .chan-comp-inp{width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:12px;padding:.55rem .85rem;color:var(--t1);font-size:.88rem;resize:none;outline:none;min-height:44px;max-height:140px;box-sizing:border-box;}
@@ -1361,6 +1380,23 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
       <div style="flex:1"></div>
       <button class="snd" style="padding:.4rem .9rem;border-radius:10px;font-size:.85rem" onclick="publishChannelPost()">Опубликовать</button>
     </div>
+  </div>
+</div>
+
+<!-- POST COMMENTS OVERLAY -->
+<div id="post-comments-ov">
+  <div class="pco-head">
+    <button class="ibtn" onclick="closePostComments()">←</button>
+    <div class="pco-title">💬 Комментарии</div>
+    <span id="pco-count" style="font-size:.8rem;color:var(--t3)"></span>
+  </div>
+  <div class="pco-list" id="pco-list">
+    <div class="pco-empty"><span style="font-size:2rem">💬</span><span>Нет комментариев.<br>Будь первым!</span></div>
+  </div>
+  <div class="pco-inp-row">
+    <input class="pco-inp" id="pco-inp" placeholder="Написать комментарий..." maxlength="500"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendPostComment();}"/>
+    <button class="pco-send" onclick="sendPostComment()">➤</button>
   </div>
 </div>
 
@@ -5514,7 +5550,9 @@ function renderChannelPosts(posts, ch) {
       `<button class="chan-react-btn${myReact===emoji?' mine':''}" onclick="chanReact('${ch.id}','${p.id}','${emoji}')">${emoji} ${cnt}</button>`
     ).join('');
     const addReactBtn = `<button class="chan-react-btn" onclick="openChanReactPicker('${ch.id}','${p.id}')">😊</button>`;
-    return `<div class="chan-post" id="chpost-${p.id}">
+    const cmtCount = p.commentCount || 0;
+    const cmtBtn = `<button class="chan-cmt-btn" onclick="openPostComments('${ch.id}','${p.id}')">💬 ${cmtCount > 0 ? cmtCount : ''}</button>`;
+    return `<div class="chan-post" id="chpost-${p.id}" data-post-id="${p.id}">
       <div class="chan-post-meta">
         <div class="chan-post-av" ${ch.av&&ch.av.startsWith('data')?`style="background-image:url(${ch.av});background-size:cover;background-position:center"`:''}>${ch.av&&!ch.av.startsWith('data')?ch.av:''}</div>
         <span class="chan-post-name">${esc(ch.name)}</span>
@@ -5524,6 +5562,7 @@ function renderChannelPosts(posts, ch) {
       ${imgHtml}
       <div class="chan-post-acts">
         ${reactsHtml}${addReactBtn}
+        ${cmtBtn}
         <span class="chan-views">👁️ ${views}</span>
       </div>
     </div>`;
@@ -5568,15 +5607,11 @@ window.chanReact = async (chanId, postId, emoji) => {
 let _chanReactTarget = null;
 window.openChanReactPicker = (chanId, postId) => {
   _chanReactTarget = { chanId, postId };
-  // Reuse existing react picker
   const rp = document.getElementById('react-picker');
   if (!rp) return;
-  rp.style.display = 'flex';
-  rp.style.position = 'fixed';
-  rp.style.bottom = '80px';
-  rp.style.left = '50%';
-  rp.style.transform = 'translateX(-50%)';
-  rp.style.zIndex = '700';
+  // Use the same class-based mechanism as the chat react picker
+  rp.style.cssText = '';
+  rp.classList.add('on');
 };
 // Re-use pickReact for channel reactions
 const _origPickReact = window.pickReact;
@@ -5584,10 +5619,88 @@ window.pickReact = emoji => {
   if (_chanReactTarget) {
     const {chanId, postId} = _chanReactTarget;
     _chanReactTarget = null;
-    document.getElementById('react-picker').style.display = '';
+    const rp = document.getElementById('react-picker');
+    rp.style.cssText = '';
+    rp.classList.remove('on');
     chanReact(chanId, postId, emoji);
   } else {
     _origPickReact && _origPickReact(emoji);
+  }
+};
+
+// ─── Comments ─────────────────────────────────────────────────────────────────
+let _cmtChanId = null, _cmtPostId = null, _cmtUnsub = null;
+
+window.openPostComments = (chanId, postId) => {
+  _cmtChanId = chanId; _cmtPostId = postId;
+  document.getElementById('pco-inp').value = '';
+  document.getElementById('pco-list').innerHTML = '<div class="pco-empty"><span>⏳</span><span>Загрузка...</span></div>';
+  document.getElementById('post-comments-ov').classList.add('on');
+
+  if (_cmtUnsub) { _cmtUnsub(); _cmtUnsub = null; }
+  const q = query(
+    collection(db, 'channels', chanId, 'posts', postId, 'comments'),
+    orderBy('ts', 'asc'),
+    limit(200)
+  );
+  _cmtUnsub = onSnapshot(q, snap => {
+    const comments = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    _renderComments(comments);
+    document.getElementById('pco-count').textContent = comments.length ? `${comments.length}` : '';
+  }, () => {});
+};
+
+window.closePostComments = () => {
+  document.getElementById('post-comments-ov').classList.remove('on');
+  if (_cmtUnsub) { _cmtUnsub(); _cmtUnsub = null; }
+  _cmtChanId = null; _cmtPostId = null;
+};
+
+function _renderComments(comments) {
+  const el = document.getElementById('pco-list');
+  if (!comments.length) {
+    el.innerHTML = '<div class="pco-empty"><span style="font-size:2rem">💬</span><span>Нет комментариев.<br>Будь первым!</span></div>';
+    return;
+  }
+  el.innerHTML = comments.map(c => {
+    const ts = c.ts ? fmtAgo(c.ts.toDate()) : '';
+    const avStyle = c.av && c.av.startsWith('data')
+      ? `style="background-image:url(${c.av});background-size:cover;background-position:center"`
+      : '';
+    const avText = c.av && !c.av.startsWith('data') ? c.av : (c.av ? '' : '👤');
+    return `<div class="pco-row">
+      <div class="pco-av" ${avStyle}>${avText}</div>
+      <div class="pco-body">
+        <div class="pco-name">${esc(c.username || 'user')}</div>
+        <div class="pco-text">${esc(c.text)}</div>
+        <div class="pco-ts">${ts}</div>
+      </div>
+    </div>`;
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+window.sendPostComment = async () => {
+  const inp = document.getElementById('pco-inp');
+  const txt = inp.value.trim();
+  if (!txt || !_cmtChanId || !_cmtPostId) return;
+  inp.value = '';
+  try {
+    const cmtRef = collection(db, 'channels', _cmtChanId, 'posts', _cmtPostId, 'comments');
+    await addDoc(cmtRef, {
+      uid: ME.uid,
+      username: ME.username || ME.displayName || 'user',
+      av: ME.av || '👤',
+      text: txt,
+      ts: serverTimestamp()
+    });
+    // Обновляем счётчик на посте
+    updateDoc(doc(db, 'channels', _cmtChanId, 'posts', _cmtPostId), {
+      commentCount: increment(1)
+    }).catch(() => {});
+  } catch(e) {
+    toast('Ошибка: ' + (e.code || e.message));
+    document.getElementById('pco-inp').value = txt; // вернуть текст при ошибке
   }
 };
 
@@ -5610,14 +5723,19 @@ window.publishChannelPost = async () => {
   if (!txt && !chanImgB64) return toast('Добавь текст или фото');
   const postData = { text: txt, uid: ME.uid, ts: serverTimestamp(), views: 0, reactions: {} };
   if (chanImgB64) postData.imageUrl = chanImgB64;
-  await addDoc(collection(db,'channels',currentChannelId,'posts'), postData);
-  await updateDoc(doc(db,'channels',currentChannelId), {
-    lastPost: txt.substring(0,80)||(chanImgB64?'📷 Фото':''),
-    lastPostTs: serverTimestamp()
-  });
-  document.getElementById('ch-post-inp').value = '';
-  chCancelImg();
-  toast('Пост опубликован! 📢');
+  try {
+    await addDoc(collection(db,'channels',currentChannelId,'posts'), postData);
+    await updateDoc(doc(db,'channels',currentChannelId), {
+      lastPost: txt.substring(0,80)||(chanImgB64?'📷 Фото':''),
+      lastPostTs: serverTimestamp()
+    });
+    document.getElementById('ch-post-inp').value = '';
+    chCancelImg();
+    toast('Пост опубликован! 📢');
+  } catch(e) {
+    console.error('publishChannelPost error:', e);
+    toast('Ошибка публикации: ' + (e.code || e.message || 'попробуй ещё раз'));
+  }
 };
 
 // ─── View count increment when post enters viewport ───────────────────────────
@@ -6600,11 +6718,18 @@ window.toggleNotifPerm = async () => {
       modal.innerHTML = `
         <div class="modal-box">
           <div class="modal-title">🔔 Как разрешить уведомления</div>
-          <div style="font-size:.82rem;color:var(--t2);line-height:1.7">
-            🔒 <b>Сафари</b>: Настройки &rarr; Сафари &rarr; Вебсайты &rarr; найди этот сайт &rarr; Уведомления &rarr; Разрешить<br><br>
-            🟣 <b>Chrome Android</b>: в адресной строке нажми ⋮ (три точки) &rarr; <b>Настройки сайта</b> &rarr; <b>Уведомления</b> &rarr; Разрешить<br>
-            <span style="font-size:.75rem;color:var(--t3)">(NOT через значок 🔒 — там Уведомления не показываются)</span><br><br>
-            После разрешения перезагрузи страницу.
+          <div style="font-size:.82rem;color:var(--t2);line-height:1.8">
+            🍎 <b>Safari (iPhone/iPad)</b>:<br>
+            Настройки &rarr; Приложения &rarr; Safari &rarr; Вебсайты &rarr; Уведомления &rarr; найди сайт &rarr; Разрешить<br><br>
+            🤖 <b>Chrome Android</b>:<br>
+            1. Нажми <b>⋮</b> (три точки вверху справа)<br>
+            2. Выбери <b>Настройки</b><br>
+            3. Нажми <b>Настройки сайтов</b><br>
+            4. Нажми <b>Уведомления</b><br>
+            5. В списке найди этот сайт и выбери <b>Разрешить</b><br><br>
+            🌐 <b>Другой браузер Android</b>:<br>
+            Настройки телефона &rarr; Приложения &rarr; найди браузер &rarr; Уведомления &rarr; включи<br><br>
+            <span style="font-size:.78rem;color:var(--t3)">После разрешения перезагрузи страницу.</span>
           </div>
           <button class="abtn" style="margin-top:1rem" onclick="document.getElementById('notif-help-modal').classList.remove('on')">&#x2714; Понятно</button>
         </div>`;
