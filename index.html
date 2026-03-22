@@ -209,7 +209,7 @@ button,input,textarea{font-family:inherit;}
 /* PROFILE */
 .pr-hero{padding:2rem 1rem 1.5rem;text-align:center;background:linear-gradient(180deg,#1a1040,var(--bg) 100%);border-bottom:1px solid var(--brd);}
 .pr-av-wrap{position:relative;display:inline-block;margin-bottom:.75rem;}
-.pr-av{width:86px;height:86px;border-radius:50%;background:linear-gradient(135deg,var(--pu)20,var(--bl)20);border:2.5px solid var(--pu)50;display:flex;align-items:center;justify-content:center;font-size:3rem;cursor:pointer;}
+.pr-av{width:86px;height:86px;border-radius:50%;background:linear-gradient(135deg,var(--pu)20,var(--bl)20);border:2.5px solid var(--pu)50;display:flex;align-items:center;justify-content:center;font-size:3rem;cursor:pointer;overflow:hidden;}
 .pr-av-pen{position:absolute;bottom:0;right:0;width:26px;height:26px;background:var(--pu);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;border:2px solid var(--bg);cursor:pointer;}
 .pr-name{font-size:1.3rem;font-weight:900;margin-bottom:.3rem;}
 .pr-bio{font-size:.83rem;color:var(--t3);margin-bottom:1.25rem;}
@@ -222,8 +222,8 @@ button,input,textarea{font-family:inherit;}
 .pmi:last-child{border-bottom:none;}
 .pmi:active{background:var(--brd);transform:scale(.98);}
 .pmi-ic{font-size:1.15rem;width:22px;text-align:center;flex-shrink:0;}
-.pmi-tx{flex:1;font-size:.9rem;}
-.pmi-ar{color:var(--t3);font-size:.75rem;}
+.pmi-tx{flex:1;font-size:.88rem;min-width:0;word-break:break-word;}
+.pmi-ar{color:var(--t3);font-size:.75rem;flex-shrink:0;}
 
 /* GAMES */
 .g-head{padding:.85rem .85rem .2rem;font-size:1rem;font-weight:700;}
@@ -231,9 +231,9 @@ button,input,textarea{font-family:inherit;}
 .gc{background:var(--bg4);border:1px solid var(--brd2);border-radius:18px;padding:1rem .85rem .75rem;cursor:pointer;text-align:center;transition:all .18s;position:relative;}
 .gc:active{transform:scale(.95);}
 .gc-ic{font-size:2rem;margin-bottom:.25rem;}
-.gc-n{font-size:.85rem;font-weight:700;}
-.gc-d{font-size:.68rem;color:var(--t3);margin-top:.1rem;}
-.gc-inv{display:block;margin:.5rem auto 0;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);color:var(--pu);font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:50px;cursor:pointer;transition:background .15s;}
+.gc-n{font-size:.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.gc-d{font-size:.66rem;color:var(--t3);margin-top:.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.gc-inv{display:block;margin:.5rem auto 0;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);color:var(--pu);font-size:.65rem;font-weight:700;padding:.22rem .5rem;border-radius:50px;cursor:pointer;transition:background .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 .gc-inv:active{background:rgba(168,85,247,.25);}
 
 /* GAME OVERLAY */
@@ -807,6 +807,12 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
 .atg-group-row:active{background:var(--brd);}
 .atg-av-i{font-size:1.5rem;width:44px;height:44px;border-radius:50%;background:var(--bg3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .atg-gname{flex:1;font-size:.9rem;font-weight:600;}
+/* ══════════════ GENERIC MODAL ══════════════ */
+.modal{position:fixed;inset:0;z-index:400;background:#000b;display:none;align-items:center;justify-content:center;padding:1.5rem;}
+.modal.on{display:flex;}
+.modal-box{background:var(--bg4);border:1px solid var(--brd2);border-radius:20px;padding:1.5rem;width:100%;max-width:360px;}
+.modal-title{font-weight:700;margin-bottom:.75rem;font-size:.95rem;}
+.modal-close{background:transparent;border:1px solid var(--brd2);color:var(--t2);padding:.65rem 1rem;border-radius:12px;cursor:pointer;font-size:.88rem;}
 </style>
 </head>
 <body>
@@ -969,6 +975,7 @@ body.light .mdate{background:#e2e8f0;color:#475569;}
         <div class="pmi" onclick="openBioModal()"><span class="pmi-ic">✏️</span><span class="pmi-tx">Изменить описание</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openAvModal()"><span class="pmi-ic">😊</span><span class="pmi-tx">Сменить аватар</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openNicknameModal()"><span class="pmi-ic">📝</span><span class="pmi-tx">Изменить ник</span><span class="pmi-ar">›</span></div>
+        <div class="pmi" onclick="openUsernameModal()"><span class="pmi-ic">🆔</span><span class="pmi-tx">Изменить @юз</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openStoryCreate()"><span class="pmi-ic">📸</span><span class="pmi-tx">Опубликовать статус</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="openLinkPhone()"><span class="pmi-ic">📱</span><span class="pmi-tx" id="pr-phone-tx">Привязать номер</span><span class="pmi-ar">›</span></div>
         <div class="pmi" onclick="goTab('friends')"><span class="pmi-ic">👥</span><span class="pmi-tx">Мои друзья</span><span class="pmi-ar">›</span></div>
@@ -1714,6 +1721,7 @@ let msgUnsub = null;
 let feedUnsub = null;
 let chatsUnsub = null;
 let frUnsub = null;
+let meUnsub = null;
 const imgCache = {}; // mid -> base64 url
 
 // ══════════════════════════════
@@ -1732,7 +1740,14 @@ onAuthStateChanged(auth, async user => {
   document.getElementById('loading').style.display = 'none';
   if (user) {
     // Load profile
-    const snap = await getDoc(doc(db, 'users', user.uid));
+    let snap;
+    try { snap = await getDoc(doc(db, 'users', user.uid)); } catch(e) {
+      console.error('Profile load failed:', e);
+      document.getElementById('load-tx').textContent = 'Ошибка загрузки профиля — проверь интернет';
+      document.getElementById('loading').style.display = 'flex';
+      document.getElementById('load-retry').style.display = '';
+      return;
+    }
     if (snap.exists()) {
       ME = { uid: user.uid, ...snap.data() };
       // backfill usernameLower for old accounts
@@ -2031,6 +2046,23 @@ function launchApp() {
   updatePresence().catch(()=>{});
   // keep presence alive every 2 min
   setInterval(updatePresence, 120000);
+  // Real-time sync of the current user's own document (friends, avatar, etc.)
+  if (meUnsub) meUnsub();
+  meUnsub = onSnapshot(doc(db, 'users', ME.uid), snap => {
+    if (!snap.exists() || !ME) return;
+    const data = snap.data();
+    // Merge server-side fields into ME so all sessions stay in sync
+    ['friends','sentReq','recvReq','av','bio','displayName','displayNameLower','verified','stats','banned','phone'].forEach(f => {
+      if (data[f] !== undefined) ME[f] = data[f];
+    });
+    // Refresh profile tab if open
+    const profileTab = document.getElementById('tp-profile');
+    if (profileTab && profileTab.classList.contains('on')) renderProfile();
+    // Refresh friend request badges
+    const reqs = ME.recvReq || [];
+    setBadge && setBadge('nbd-fr', reqs.length);
+    setBadge && setBadge('tb-nbdg', reqs.length);
+  }, () => {}); // silent error (e.g. offline)
   // Apply saved theme
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'light') {
@@ -3347,6 +3379,63 @@ window.saveNickname = async () => {
   document.getElementById('nn-modal').classList.remove('on');
   renderProfile();
   toast('Ник изменён!');
+};
+
+// ── Change @username ────────────────────────────────────────────────────────────────────────
+window.openUsernameModal = () => {
+  let modal = document.getElementById('un-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'un-modal';
+    modal.className = 'modal on';
+    modal.innerHTML = `
+      <div class="modal-box">
+        <div class="modal-title">🆔 Изменить @юз</div>
+        <div style="font-size:.8rem;color:var(--t3);margin-bottom:.75rem">Юз — уникальный однословный адрес аккаунта. Латиница, цифры и _ . Мин 2, макс 20.</div>
+        <input class="bio-ta" id="un-inp" placeholder="Новый @юз" style="height:auto;padding:.7rem;" maxlength="20" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"/>
+        <div class="aerr" id="un-e"></div>
+        <div style="display:flex;gap:.6rem;margin-top:.75rem">
+          <button class="modal-close" onclick="document.getElementById('un-modal').classList.remove('on')">&#x2715; Отмена</button>
+          <button class="abtn" style="flex:1;padding:.55rem" id="un-btn" onclick="saveUsername()">&#x2714; Сохранить</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('un-inp').value = ME.username || '';
+  document.getElementById('un-e').textContent = '';
+  const btn = document.getElementById('un-btn');
+  if (btn) { btn.disabled = false; btn.innerHTML = '&#x2714; Сохранить'; }
+  document.getElementById('un-modal').classList.add('on');
+};
+
+window.saveUsername = async () => {
+  const raw = document.getElementById('un-inp').value.trim();
+  const val = raw.replace(/\s/g,'').toLowerCase();
+  const eEl = document.getElementById('un-e');
+  const btn = document.getElementById('un-btn');
+  eEl.textContent = '';
+  if (!val || val.length < 2) return eEl.textContent = 'Мин 2 символа';
+  if (val.length > 20) return eEl.textContent = 'Макс 20 символов';
+  if (!/^[a-z0-9_]+$/.test(val)) return eEl.textContent = 'Только латиница, цифры и _';
+  if (val === (ME.username||'').toLowerCase()) { document.getElementById('un-modal').classList.remove('on'); return; }
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Проверяю...';
+  try {
+    const q = query(collection(db,'users'), where('usernameLower','==',val), limit(1));
+    const snap = await getDocs(q);
+    if (!snap.empty && snap.docs[0].id !== ME.uid) {
+      eEl.textContent = 'Этот @юз уже занят';
+      return;
+    }
+    await updateDoc(doc(db,'users',ME.uid), { username: val, usernameLower: val });
+    ME.username = val; ME.usernameLower = val;
+    document.getElementById('un-modal').classList.remove('on');
+    renderProfile();
+    toast('Юз изменён! ✅');
+  } catch(e) {
+    eEl.textContent = 'Ошибка сохранения';
+  } finally {
+    btn.disabled = false; btn.innerHTML = '&#x2714; Сохранить';
+  }
 };
 
 // ── Link phone to account ──────────────────────────────────────────────
