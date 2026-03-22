@@ -27,7 +27,7 @@ messaging.onBackgroundMessage(payload => {
 });
 
 // ── PWA Cache ─────────────────────────────────────────────────────────────────
-const CACHE = 'vmeste-v2';
+const CACHE = 'vmeste-v3';
 const ASSETS = ['./index.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', e => {
