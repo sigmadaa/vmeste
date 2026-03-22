@@ -7712,7 +7712,7 @@ const CF_WORKER_URL = 'https://throbbing-fog-6b92fcm-push.boblenok4556.workers.d
 async function sendNotif(toUid, type, title, body, fromAv, payload) {
   if (!toUid || toUid === ME.uid) return;
   await addDoc(collection(db, 'notifications'), {
-    to: toUid, type, title, body,
+    to: toUid, from: ME.uid, type, title, body,
     fromAv: fromAv || ME.av || '💬',
     payload: payload || '',
     read: false,
