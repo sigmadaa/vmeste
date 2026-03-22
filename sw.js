@@ -1,4 +1,33 @@
-const CACHE = 'vmeste-v1';
+// ── Firebase Messaging (background push notifications) ────────────────────────
+importScripts('https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/11.4.0/firebase-messaging-compat.js');
+
+firebase.initializeApp({
+  apiKey: "AIzaSyBwDwvEmDyrXoR3DAGesHmxpJsflWV6Wng",
+  authDomain: "together-8ed20.firebaseapp.com",
+  projectId: "together-8ed20",
+  storageBucket: "together-8ed20.firebasestorage.app",
+  messagingSenderId: "252730649815",
+  appId: "1:252730649815:web:4710d0e2c3fc501f02d492",
+});
+
+const messaging = firebase.messaging();
+
+// Показывать уведомление когда приложение свёрнуто / закрыто
+messaging.onBackgroundMessage(payload => {
+  const { title, body } = payload.notification || {};
+  self.registration.showNotification(title || 'Вместе', {
+    body: body || '',
+    icon: './icon.svg',
+    badge: './icon.svg',
+    data: payload.data || {},
+    vibrate: [200, 100, 200],
+    requireInteraction: false,
+  });
+});
+
+// ── PWA Cache ─────────────────────────────────────────────────────────────────
+const CACHE = 'vmeste-v2';
 const ASSETS = ['./index.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', e => {
@@ -11,9 +40,12 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('notificationclick', e => {
   e.notification.close();
+  const data = e.notification.data || {};
+  const url = './' + (data.payload ? '?open=' + data.type + ':' + data.payload : '');
   e.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-      if (list.length) { list[0].focus(); return; }
+      const existing = list.find(c => c.url.includes('sigmadaa.github.io'));
+      if (existing) { existing.focus(); return; }
       return clients.openWindow('./');
     })
   );
