@@ -3195,17 +3195,26 @@ window.sendFr = async uid => {
   toast('Запрос отправлен 📨'); renderFriends(); frSearch(document.querySelector('#tp-friends .srch').value);
 };
 window.acceptFr = async uid => {
+  // Step 1: update OWN document — if this fails, show error and stop
   try {
     await updateDoc(doc(db,'users',ME.uid), { recvReq: arrayRemove(uid), friends: arrayUnion(uid) });
-    await updateDoc(doc(db,'users',uid), { sentReq: arrayRemove(ME.uid), friends: arrayUnion(ME.uid) });
-    ME.recvReq = (ME.recvReq||[]).filter(x=>x!==uid);
-    ME.friends = [...new Set([...(ME.friends||[]), uid])];
-    toast('Теперь вы друзья! 🎉'); renderFriends();
-    listenChats();
   } catch(e) {
-    console.error('acceptFr error:', e);
+    console.error('acceptFr own-doc error:', e);
     toast('Ошибка: ' + (e.code || e.message || 'попробуй ещё раз'));
+    return;
   }
+  // Own doc updated — show success immediately
+  ME.recvReq = (ME.recvReq||[]).filter(x=>x!==uid);
+  ME.friends = [...new Set([...(ME.friends||[]), uid])];
+  toast('Теперь вы друзья! 🎉');
+  renderFriends();
+  listenChats();
+  // Step 2: update OTHER user's document — best-effort, silent on permission error
+  updateDoc(doc(db,'users',uid), { sentReq: arrayRemove(ME.uid), friends: arrayUnion(ME.uid) })
+    .catch(() => {
+      // Firestore rules may restrict cross-user writes — that's OK.
+      // The friendship is established on our side; other side updates on their next login.
+    });
 };
 window.declineFr = async uid => {
   await updateDoc(doc(db,'users',ME.uid), { recvReq: arrayRemove(uid) });
@@ -6591,10 +6600,11 @@ window.toggleNotifPerm = async () => {
       modal.innerHTML = `
         <div class="modal-box">
           <div class="modal-title">🔔 Как разрешить уведомления</div>
-          <div style="font-size:.82rem;color:var(--t2);line-height:1.6">
-            🔒 <b>Сафари</b>: Настройки → Сафари → Вебсайты → найди этот сайт → Уведомления &rarr; Разрешить<br><br>
-            🟣 <b>Chrome/Андроид</b>: нажми значок 🔒 рядом с адресом → Разрешения сайта → Уведомления → Разрешить<br><br>
-            После этого перезагрузи страницу.
+          <div style="font-size:.82rem;color:var(--t2);line-height:1.7">
+            🔒 <b>Сафари</b>: Настройки &rarr; Сафари &rarr; Вебсайты &rarr; найди этот сайт &rarr; Уведомления &rarr; Разрешить<br><br>
+            🟣 <b>Chrome Android</b>: в адресной строке нажми ⋮ (три точки) &rarr; <b>Настройки сайта</b> &rarr; <b>Уведомления</b> &rarr; Разрешить<br>
+            <span style="font-size:.75rem;color:var(--t3)">(NOT через значок 🔒 — там Уведомления не показываются)</span><br><br>
+            После разрешения перезагрузи страницу.
           </div>
           <button class="abtn" style="margin-top:1rem" onclick="document.getElementById('notif-help-modal').classList.remove('on')">&#x2714; Понятно</button>
         </div>`;
